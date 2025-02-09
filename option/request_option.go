@@ -3,7 +3,7 @@
 package option
 
 import (
-	core "go-mod-path/generated/go/core"
+	core "github.com/trophyso/trophy-go/core"
 	http "net/http"
 	url "net/url"
 )

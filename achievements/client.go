@@ -4,10 +4,10 @@ package achievements
 
 import (
 	context "context"
-	generatedgo "go-mod-path/generated/go"
-	core "go-mod-path/generated/go/core"
-	internal "go-mod-path/generated/go/internal"
-	option "go-mod-path/generated/go/option"
+	trophygo "github.com/trophyso/trophy-go"
+	core "github.com/trophyso/trophy-go/core"
+	internal "github.com/trophyso/trophy-go/internal"
+	option "github.com/trophyso/trophy-go/option"
 	http "net/http"
 )
 
@@ -36,9 +36,9 @@ func (c *Client) Complete(
 	ctx context.Context,
 	// Unique reference of the achievement as set when created.
 	key string,
-	request *generatedgo.AchievementsCompleteRequest,
+	request *trophygo.AchievementsCompleteRequest,
 	opts ...option.RequestOption,
-) (*generatedgo.AchievementCompletionResponse, error) {
+) (*trophygo.AchievementCompletionResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -56,23 +56,23 @@ func (c *Client) Complete(
 	headers.Set("Content-Type", "application/json")
 	errorCodes := internal.ErrorCodes{
 		401: func(apiError *core.APIError) error {
-			return &generatedgo.UnauthorizedError{
+			return &trophygo.UnauthorizedError{
 				APIError: apiError,
 			}
 		},
 		404: func(apiError *core.APIError) error {
-			return &generatedgo.NotFoundError{
+			return &trophygo.NotFoundError{
 				APIError: apiError,
 			}
 		},
 		422: func(apiError *core.APIError) error {
-			return &generatedgo.UnprocessableEntityError{
+			return &trophygo.UnprocessableEntityError{
 				APIError: apiError,
 			}
 		},
 	}
 
-	var response *generatedgo.AchievementCompletionResponse
+	var response *trophygo.AchievementCompletionResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

@@ -3,12 +3,12 @@
 package client
 
 import (
-	achievements "go-mod-path/generated/go/achievements"
-	core "go-mod-path/generated/go/core"
-	internal "go-mod-path/generated/go/internal"
-	metrics "go-mod-path/generated/go/metrics"
-	option "go-mod-path/generated/go/option"
-	users "go-mod-path/generated/go/users"
+	achievements "github.com/trophyso/trophy-go/achievements"
+	core "github.com/trophyso/trophy-go/core"
+	internal "github.com/trophyso/trophy-go/internal"
+	metrics "github.com/trophyso/trophy-go/metrics"
+	option "github.com/trophyso/trophy-go/option"
+	users "github.com/trophyso/trophy-go/users"
 	http "net/http"
 )
 

@@ -4,7 +4,7 @@ package api
 
 import (
 	json "encoding/json"
-	core "go-mod-path/generated/go/core"
+	core "github.com/trophyso/trophy-go/core"
 )
 
 // Bad Request

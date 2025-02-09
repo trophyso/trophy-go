@@ -5,7 +5,7 @@ package api
 import (
 	json "encoding/json"
 	fmt "fmt"
-	internal "go-mod-path/generated/go/internal"
+	internal "github.com/trophyso/trophy-go/internal"
 )
 
 type MetricResponse struct {

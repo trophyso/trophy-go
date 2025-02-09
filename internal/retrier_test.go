@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"go-mod-path/generated/go/core"
+	"github.com/trophyso/trophy-go/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

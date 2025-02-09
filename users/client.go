@@ -4,10 +4,10 @@ package users
 
 import (
 	context "context"
-	generatedgo "go-mod-path/generated/go"
-	core "go-mod-path/generated/go/core"
-	internal "go-mod-path/generated/go/internal"
-	option "go-mod-path/generated/go/option"
+	trophygo "github.com/trophyso/trophy-go"
+	core "github.com/trophyso/trophy-go/core"
+	internal "github.com/trophyso/trophy-go/internal"
+	option "github.com/trophyso/trophy-go/option"
 	http "net/http"
 )
 
@@ -37,7 +37,7 @@ func (c *Client) Allmetrics(
 	// ID of the user
 	userId string,
 	opts ...option.RequestOption,
-) ([]*generatedgo.MetricResponse, error) {
+) ([]*trophygo.MetricResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -54,23 +54,23 @@ func (c *Client) Allmetrics(
 	)
 	errorCodes := internal.ErrorCodes{
 		401: func(apiError *core.APIError) error {
-			return &generatedgo.UnauthorizedError{
+			return &trophygo.UnauthorizedError{
 				APIError: apiError,
 			}
 		},
 		404: func(apiError *core.APIError) error {
-			return &generatedgo.NotFoundError{
+			return &trophygo.NotFoundError{
 				APIError: apiError,
 			}
 		},
 		422: func(apiError *core.APIError) error {
-			return &generatedgo.UnprocessableEntityError{
+			return &trophygo.UnprocessableEntityError{
 				APIError: apiError,
 			}
 		},
 	}
 
-	var response []*generatedgo.MetricResponse
+	var response []*trophygo.MetricResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -98,7 +98,7 @@ func (c *Client) Singlemetric(
 	// Unique key of the metric.
 	key string,
 	opts ...option.RequestOption,
-) (*generatedgo.MetricResponse, error) {
+) (*trophygo.MetricResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -116,23 +116,23 @@ func (c *Client) Singlemetric(
 	)
 	errorCodes := internal.ErrorCodes{
 		401: func(apiError *core.APIError) error {
-			return &generatedgo.UnauthorizedError{
+			return &trophygo.UnauthorizedError{
 				APIError: apiError,
 			}
 		},
 		404: func(apiError *core.APIError) error {
-			return &generatedgo.NotFoundError{
+			return &trophygo.NotFoundError{
 				APIError: apiError,
 			}
 		},
 		422: func(apiError *core.APIError) error {
-			return &generatedgo.UnprocessableEntityError{
+			return &trophygo.UnprocessableEntityError{
 				APIError: apiError,
 			}
 		},
 	}
 
-	var response *generatedgo.MetricResponse
+	var response *trophygo.MetricResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -158,7 +158,7 @@ func (c *Client) Allachievements(
 	// ID of the user.
 	userId string,
 	opts ...option.RequestOption,
-) ([]*generatedgo.AchievementResponse, error) {
+) ([]*trophygo.AchievementResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -175,23 +175,23 @@ func (c *Client) Allachievements(
 	)
 	errorCodes := internal.ErrorCodes{
 		401: func(apiError *core.APIError) error {
-			return &generatedgo.UnauthorizedError{
+			return &trophygo.UnauthorizedError{
 				APIError: apiError,
 			}
 		},
 		404: func(apiError *core.APIError) error {
-			return &generatedgo.NotFoundError{
+			return &trophygo.NotFoundError{
 				APIError: apiError,
 			}
 		},
 		422: func(apiError *core.APIError) error {
-			return &generatedgo.UnprocessableEntityError{
+			return &trophygo.UnprocessableEntityError{
 				APIError: apiError,
 			}
 		},
 	}
 
-	var response []*generatedgo.AchievementResponse
+	var response []*trophygo.AchievementResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

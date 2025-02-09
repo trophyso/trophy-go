@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"go-mod-path/generated/go/core"
+	"github.com/trophyso/trophy-go/core"
 )
 
 // ErrorDecoder decodes *http.Response errors and returns a

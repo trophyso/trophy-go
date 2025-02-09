@@ -4,7 +4,7 @@ package client
 
 import (
 	assert "github.com/stretchr/testify/assert"
-	option "go-mod-path/generated/go/option"
+	option "github.com/trophyso/trophy-go/option"
 	http "net/http"
 	testing "testing"
 	time "time"
