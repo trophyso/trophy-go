@@ -41,3 +41,7 @@ import "github.com/trophy-so/trophy-go"
 
 See the [Trophy API Docs](https://trophy.docs.buildwithfern.com/overview/introduction) for more
 information on the accessible endpoints.
+
+## License
+
+This library is distributed under the MIT license found in the [LICENSE](./LICENSE) file.
