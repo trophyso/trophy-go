@@ -30,11 +30,43 @@ go get github.com/trophy-so/trophy-go
 ## Usage
 
 ```go
-import "github.com/trophy-so/trophy-go"
+package main
 
-// Set up a Trophy client
+import (
+	"github.com/trophyso/trophy-go"
+	trophyclient "github.com/trophyso/trophy-go/client"
+	"github.com/trophyso/trophy-go/option"
 
+	"fmt"
+	"context"
+)
 
+func main() {
+	client := trophyclient.NewClient(
+		option.WithApiKey("YOUR_API_KEY"),
+	)
+
+	email := "jk.rowling@harrypotter.com"
+	
+	response, err := client.Metrics.Event(
+		context.TODO(),
+		"words-written",
+		&api.MetricsEventRequest{
+			User: &api.EventRequestUser{
+				Id: "user-id",
+				Email: &email,
+			},
+			Value: 750,
+		},
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	
+	fmt.Println(response)
+}
 ```
 
 ## Documentation
