@@ -31,11 +31,189 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
+// Create a new user.
+func (c *Client) Create(
+	ctx context.Context,
+	request *trophygo.UpsertedUser,
+	opts ...option.RequestOption,
+) (*trophygo.User, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://app.trophy.so/api",
+	)
+	endpointURL := baseURL + "/users"
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &trophygo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *trophygo.User
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Get a single user.
+func (c *Client) Get(
+	ctx context.Context,
+	// ID of the user to get.
+	id string,
+	opts ...option.RequestOption,
+) (*trophygo.User, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://app.trophy.so/api",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/users/%v",
+		id,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &trophygo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *trophygo.User
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Update a user.
+func (c *Client) Update(
+	ctx context.Context,
+	// ID of the user to update.
+	id string,
+	request *trophygo.UpdatedUser,
+	opts ...option.RequestOption,
+) (*trophygo.User, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://app.trophy.so/api",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/users/%v",
+		id,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &trophygo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *trophygo.User
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 // Get a single user's progress against all active metrics.
 func (c *Client) Allmetrics(
 	ctx context.Context,
 	// ID of the user
-	userId string,
+	id string,
 	opts ...option.RequestOption,
 ) ([]*trophygo.MetricResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -46,7 +224,7 @@ func (c *Client) Allmetrics(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/metrics",
-		userId,
+		id,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
@@ -94,7 +272,7 @@ func (c *Client) Allmetrics(
 func (c *Client) Singlemetric(
 	ctx context.Context,
 	// ID of the user.
-	userId string,
+	id string,
 	// Unique key of the metric.
 	key string,
 	opts ...option.RequestOption,
@@ -107,7 +285,7 @@ func (c *Client) Singlemetric(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/metrics/%v",
-		userId,
+		id,
 		key,
 	)
 	headers := internal.MergeHeaders(
@@ -156,7 +334,7 @@ func (c *Client) Singlemetric(
 func (c *Client) Allachievements(
 	ctx context.Context,
 	// ID of the user.
-	userId string,
+	id string,
 	opts ...option.RequestOption,
 ) ([]*trophygo.AchievementResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -167,7 +345,7 @@ func (c *Client) Allachievements(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/achievements",
-		userId,
+		id,
 	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),

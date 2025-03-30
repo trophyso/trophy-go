@@ -183,77 +183,245 @@ func (e *ErrorBody) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
-// The user that triggered the event.
-type EventRequestUser struct {
-	// The ID of the user in your database. Must be a string.
-	Id string `json:"id" url:"id"`
-	// The user's email address.
-	Email *string `json:"email,omitempty" url:"email,omitempty"`
-	// The name to refer to the user by in emails.
-	Name *string `json:"name,omitempty" url:"name,omitempty"`
-	// The user's timezone (used for email scheduling).
-	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
+type StreakFrequency string
+
+const (
+	StreakFrequencyDaily   StreakFrequency = "daily"
+	StreakFrequencyWeekly  StreakFrequency = "weekly"
+	StreakFrequencyMonthly StreakFrequency = "monthly"
+	StreakFrequencyYearly  StreakFrequency = "yearly"
+)
+
+func NewStreakFrequencyFromString(s string) (StreakFrequency, error) {
+	switch s {
+	case "daily":
+		return StreakFrequencyDaily, nil
+	case "weekly":
+		return StreakFrequencyWeekly, nil
+	case "monthly":
+		return StreakFrequencyMonthly, nil
+	case "yearly":
+		return StreakFrequencyYearly, nil
+	}
+	var t StreakFrequency
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s StreakFrequency) Ptr() *StreakFrequency {
+	return &s
+}
+
+type StreakResponse struct {
+	// The length of the user's current streak.
+	Length int `json:"length" url:"length"`
+	// The frequency of the streak.
+	Frequency StreakFrequency `json:"frequency" url:"frequency"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (e *EventRequestUser) GetId() string {
-	if e == nil {
+func (s *StreakResponse) GetLength() int {
+	if s == nil {
+		return 0
+	}
+	return s.Length
+}
+
+func (s *StreakResponse) GetFrequency() StreakFrequency {
+	if s == nil {
 		return ""
 	}
-	return e.Id
+	return s.Frequency
 }
 
-func (e *EventRequestUser) GetEmail() *string {
-	if e == nil {
-		return nil
-	}
-	return e.Email
+func (s *StreakResponse) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
 }
 
-func (e *EventRequestUser) GetName() *string {
-	if e == nil {
-		return nil
-	}
-	return e.Name
-}
-
-func (e *EventRequestUser) GetTz() *string {
-	if e == nil {
-		return nil
-	}
-	return e.Tz
-}
-
-func (e *EventRequestUser) GetExtraProperties() map[string]interface{} {
-	return e.extraProperties
-}
-
-func (e *EventRequestUser) UnmarshalJSON(data []byte) error {
-	type unmarshaler EventRequestUser
+func (s *StreakResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*e = EventRequestUser(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	*s = StreakResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
 	if err != nil {
 		return err
 	}
-	e.extraProperties = extraProperties
-	e.rawJSON = json.RawMessage(data)
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
 	return nil
 }
 
-func (e *EventRequestUser) String() string {
-	if len(e.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+func (s *StreakResponse) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := internal.StringifyJSON(e); err == nil {
+	if value, err := internal.StringifyJSON(s); err == nil {
 		return value
 	}
-	return fmt.Sprintf("%#v", e)
+	return fmt.Sprintf("%#v", s)
+}
+
+// An object with editable user fields.
+type UpdatedUser struct {
+	// The user's email address. Required if subscribeToEmails is true.
+	Email *string `json:"email,omitempty" url:"email,omitempty"`
+	// The name to refer to the user by in emails.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The user's timezone (used for email scheduling).
+	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
+	// Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
+	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatedUser) GetEmail() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Email
+}
+
+func (u *UpdatedUser) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdatedUser) GetTz() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Tz
+}
+
+func (u *UpdatedUser) GetSubscribeToEmails() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.SubscribeToEmails
+}
+
+func (u *UpdatedUser) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdatedUser) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatedUser
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatedUser(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatedUser) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// An object with editable user fields.
+type UpsertedUser struct {
+	// The user's email address. Required if subscribeToEmails is true.
+	Email *string `json:"email,omitempty" url:"email,omitempty"`
+	// The name to refer to the user by in emails.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The user's timezone (used for email scheduling).
+	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
+	// Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
+	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+	// The ID of the user in your database. Must be a string.
+	Id string `json:"id" url:"id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertedUser) GetEmail() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Email
+}
+
+func (u *UpsertedUser) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpsertedUser) GetTz() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Tz
+}
+
+func (u *UpsertedUser) GetSubscribeToEmails() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.SubscribeToEmails
+}
+
+func (u *UpsertedUser) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpsertedUser) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpsertedUser) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertedUser
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpsertedUser(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertedUser) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }

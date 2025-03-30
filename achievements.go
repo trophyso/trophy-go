@@ -10,7 +10,7 @@ import (
 
 type AchievementsCompleteRequest struct {
 	// The user that completed the achievement.
-	User *EventRequestUser `json:"user,omitempty" url:"-"`
+	User *UpsertedUser `json:"user,omitempty" url:"-"`
 }
 
 type AchievementCompletionResponse struct {

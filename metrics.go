@@ -10,7 +10,7 @@ import (
 
 type MetricsEventRequest struct {
 	// The user that triggered the event.
-	User *EventRequestUser `json:"user,omitempty" url:"-"`
+	User *UpsertedUser `json:"user,omitempty" url:"-"`
 	// The value to add to the user's current total for the given metric.
 	Value float64 `json:"value" url:"-"`
 }
@@ -24,6 +24,8 @@ type EventResponse struct {
 	Total float64 `json:"total" url:"total"`
 	// Changes to achievements as a result of this event.
 	Achievements []*EventResponseMetricsItem `json:"achievements,omitempty" url:"achievements,omitempty"`
+	// The user's current streak for the metric, if the metric has streaks enabled.
+	CurrentStreak *StreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -55,6 +57,13 @@ func (e *EventResponse) GetAchievements() []*EventResponseMetricsItem {
 		return nil
 	}
 	return e.Achievements
+}
+
+func (e *EventResponse) GetCurrentStreak() *StreakResponse {
+	if e == nil {
+		return nil
+	}
+	return e.CurrentStreak
 }
 
 func (e *EventResponse) GetExtraProperties() map[string]interface{} {
