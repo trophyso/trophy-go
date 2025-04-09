@@ -6,6 +6,7 @@ import (
 	json "encoding/json"
 	fmt "fmt"
 	internal "github.com/trophyso/trophy-go/internal"
+	time "time"
 )
 
 type AchievementsCompleteRequest struct {
@@ -15,8 +16,8 @@ type AchievementsCompleteRequest struct {
 
 type AchievementCompletionResponse struct {
 	// The unique ID of the completion.
-	CompletionId string               `json:"completionId" url:"completionId"`
-	Achievement  *AchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
+	CompletionId string                     `json:"completionId" url:"completionId"`
+	Achievement  *OneOffAchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -29,7 +30,7 @@ func (a *AchievementCompletionResponse) GetCompletionId() string {
 	return a.CompletionId
 }
 
-func (a *AchievementCompletionResponse) GetAchievement() *AchievementResponse {
+func (a *AchievementCompletionResponse) GetAchievement() *OneOffAchievementResponse {
 	if a == nil {
 		return nil
 	}
@@ -66,4 +67,105 @@ func (a *AchievementCompletionResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", a)
+}
+
+type OneOffAchievementResponse struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The date and time the achievement was completed, in ISO 8601 format.
+	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OneOffAchievementResponse) GetId() string {
+	if o == nil {
+		return ""
+	}
+	return o.Id
+}
+
+func (o *OneOffAchievementResponse) GetName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Name
+}
+
+func (o *OneOffAchievementResponse) GetBadgeUrl() *string {
+	if o == nil {
+		return nil
+	}
+	return o.BadgeUrl
+}
+
+func (o *OneOffAchievementResponse) GetKey() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Key
+}
+
+func (o *OneOffAchievementResponse) GetAchievedAt() *time.Time {
+	if o == nil {
+		return nil
+	}
+	return o.AchievedAt
+}
+
+func (o *OneOffAchievementResponse) GetExtraProperties() map[string]interface{} {
+	return o.extraProperties
+}
+
+func (o *OneOffAchievementResponse) UnmarshalJSON(data []byte) error {
+	type embed OneOffAchievementResponse
+	var unmarshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed: embed(*o),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*o = OneOffAchievementResponse(unmarshaler.embed)
+	o.AchievedAt = unmarshaler.AchievedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OneOffAchievementResponse) MarshalJSON() ([]byte, error) {
+	type embed OneOffAchievementResponse
+	var marshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed:      embed(*o),
+		AchievedAt: internal.NewOptionalDateTime(o.AchievedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (o *OneOffAchievementResponse) String() string {
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
 }

@@ -25,7 +25,7 @@ type MetricResponse struct {
 	// The user's current total for the metric.
 	Current float64 `json:"current" url:"current"`
 	// A list of the metric's achievements and the user's progress towards each.
-	Achievements []*AchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*MultiStageAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's current streak for the metric, if the metric has streaks enabled.
 	CurrentStreak *StreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 
@@ -82,7 +82,7 @@ func (m *MetricResponse) GetCurrent() float64 {
 	return m.Current
 }
 
-func (m *MetricResponse) GetAchievements() []*AchievementResponse {
+func (m *MetricResponse) GetAchievements() []*MultiStageAchievementResponse {
 	if m == nil {
 		return nil
 	}

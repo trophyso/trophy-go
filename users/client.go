@@ -31,7 +31,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create a new user.
+// Identify a new user.
 func (c *Client) Create(
 	ctx context.Context,
 	request *trophygo.UpsertedUser,
@@ -336,7 +336,7 @@ func (c *Client) Allachievements(
 	// ID of the user.
 	id string,
 	opts ...option.RequestOption,
-) ([]*trophygo.AchievementResponse, error) {
+) ([]*trophygo.MultiStageAchievementResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -369,7 +369,7 @@ func (c *Client) Allachievements(
 		},
 	}
 
-	var response []*trophygo.AchievementResponse
+	var response []*trophygo.MultiStageAchievementResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

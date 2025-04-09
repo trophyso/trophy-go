@@ -102,7 +102,7 @@ type EventResponseMetricsItem struct {
 	// The ID of the metric.
 	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
 	// A list of any new achievements that the user has now completed as a result of this event being submitted.
-	Completed []*AchievementResponse `json:"completed,omitempty" url:"completed,omitempty"`
+	Completed []*MultiStageAchievementResponse `json:"completed,omitempty" url:"completed,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -115,7 +115,7 @@ func (e *EventResponseMetricsItem) GetMetricId() *string {
 	return e.MetricId
 }
 
-func (e *EventResponseMetricsItem) GetCompleted() []*AchievementResponse {
+func (e *EventResponseMetricsItem) GetCompleted() []*MultiStageAchievementResponse {
 	if e == nil {
 		return nil
 	}
