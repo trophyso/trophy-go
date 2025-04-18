@@ -9,6 +9,98 @@ import (
 	time "time"
 )
 
+type BaseStreakResponse struct {
+	// The length of the user's current streak.
+	Length int `json:"length" url:"length"`
+	// The frequency of the streak.
+	Frequency StreakFrequency `json:"frequency" url:"frequency"`
+	// The date the streak started.
+	Started *string `json:"started,omitempty" url:"started,omitempty"`
+	// The start date of the current streak period.
+	PeriodStart *string `json:"periodStart,omitempty" url:"periodStart,omitempty"`
+	// The end date of the current streak period.
+	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
+	// The date the streak will expire if the user does not increment a metric.
+	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BaseStreakResponse) GetLength() int {
+	if b == nil {
+		return 0
+	}
+	return b.Length
+}
+
+func (b *BaseStreakResponse) GetFrequency() StreakFrequency {
+	if b == nil {
+		return ""
+	}
+	return b.Frequency
+}
+
+func (b *BaseStreakResponse) GetStarted() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Started
+}
+
+func (b *BaseStreakResponse) GetPeriodStart() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodStart
+}
+
+func (b *BaseStreakResponse) GetPeriodEnd() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodEnd
+}
+
+func (b *BaseStreakResponse) GetExpires() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Expires
+}
+
+func (b *BaseStreakResponse) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BaseStreakResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler BaseStreakResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BaseStreakResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BaseStreakResponse) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
 type ErrorBody struct {
 	Error string `json:"error" url:"error"`
 
@@ -209,62 +301,6 @@ func NewStreakFrequencyFromString(s string) (StreakFrequency, error) {
 
 func (s StreakFrequency) Ptr() *StreakFrequency {
 	return &s
-}
-
-type StreakResponse struct {
-	// The length of the user's current streak.
-	Length int `json:"length" url:"length"`
-	// The frequency of the streak.
-	Frequency StreakFrequency `json:"frequency" url:"frequency"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (s *StreakResponse) GetLength() int {
-	if s == nil {
-		return 0
-	}
-	return s.Length
-}
-
-func (s *StreakResponse) GetFrequency() StreakFrequency {
-	if s == nil {
-		return ""
-	}
-	return s.Frequency
-}
-
-func (s *StreakResponse) GetExtraProperties() map[string]interface{} {
-	return s.extraProperties
-}
-
-func (s *StreakResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler StreakResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*s = StreakResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *s)
-	if err != nil {
-		return err
-	}
-	s.extraProperties = extraProperties
-	s.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (s *StreakResponse) String() string {
-	if len(s.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(s); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", s)
 }
 
 // An object with editable user fields.

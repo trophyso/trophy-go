@@ -9,6 +9,11 @@ import (
 	time "time"
 )
 
+type UsersStreakRequest struct {
+	// The number of past streak periods to include in the streakHistory field of the  response.
+	HistoryPeriods *int `json:"-" url:"historyPeriods,omitempty"`
+}
+
 type MetricResponse struct {
 	// The unique ID of the metric.
 	Id string `json:"id" url:"id"`
@@ -18,16 +23,12 @@ type MetricResponse struct {
 	Name string `json:"name" url:"name"`
 	// The emoji to represent the metric.
 	Emoji string `json:"emoji" url:"emoji"`
-	// The frequency of the streak.
-	StreakFrequency StreakFrequency `json:"streakFrequency" url:"streakFrequency"`
 	// The status of the metric.
 	Status MetricStatus `json:"status" url:"status"`
 	// The user's current total for the metric.
 	Current float64 `json:"current" url:"current"`
 	// A list of the metric's achievements and the user's progress towards each.
 	Achievements []*MultiStageAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
-	// The user's current streak for the metric, if the metric has streaks enabled.
-	CurrentStreak *StreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -61,13 +62,6 @@ func (m *MetricResponse) GetEmoji() string {
 	return m.Emoji
 }
 
-func (m *MetricResponse) GetStreakFrequency() StreakFrequency {
-	if m == nil {
-		return ""
-	}
-	return m.StreakFrequency
-}
-
 func (m *MetricResponse) GetStatus() MetricStatus {
 	if m == nil {
 		return ""
@@ -87,13 +81,6 @@ func (m *MetricResponse) GetAchievements() []*MultiStageAchievementResponse {
 		return nil
 	}
 	return m.Achievements
-}
-
-func (m *MetricResponse) GetCurrentStreak() *StreakResponse {
-	if m == nil {
-		return nil
-	}
-	return m.CurrentStreak
 }
 
 func (m *MetricResponse) GetExtraProperties() map[string]interface{} {
@@ -149,6 +136,174 @@ func NewMetricStatusFromString(s string) (MetricStatus, error) {
 
 func (m MetricStatus) Ptr() *MetricStatus {
 	return &m
+}
+
+// An object representing the user's streak.
+type StreakResponse struct {
+	// The length of the user's current streak.
+	Length int `json:"length" url:"length"`
+	// The frequency of the streak.
+	Frequency StreakFrequency `json:"frequency" url:"frequency"`
+	// The date the streak started.
+	Started *string `json:"started,omitempty" url:"started,omitempty"`
+	// The start date of the current streak period.
+	PeriodStart *string `json:"periodStart,omitempty" url:"periodStart,omitempty"`
+	// The end date of the current streak period.
+	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
+	// The date the streak will expire if the user does not increment a metric.
+	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
+	// A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
+	StreakHistory []*StreakResponseStreakHistoryItem `json:"streakHistory,omitempty" url:"streakHistory,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakResponse) GetLength() int {
+	if s == nil {
+		return 0
+	}
+	return s.Length
+}
+
+func (s *StreakResponse) GetFrequency() StreakFrequency {
+	if s == nil {
+		return ""
+	}
+	return s.Frequency
+}
+
+func (s *StreakResponse) GetStarted() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Started
+}
+
+func (s *StreakResponse) GetPeriodStart() *string {
+	if s == nil {
+		return nil
+	}
+	return s.PeriodStart
+}
+
+func (s *StreakResponse) GetPeriodEnd() *string {
+	if s == nil {
+		return nil
+	}
+	return s.PeriodEnd
+}
+
+func (s *StreakResponse) GetExpires() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Expires
+}
+
+func (s *StreakResponse) GetStreakHistory() []*StreakResponseStreakHistoryItem {
+	if s == nil {
+		return nil
+	}
+	return s.StreakHistory
+}
+
+func (s *StreakResponse) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StreakResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakResponse) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+// An object representing a past streak period.
+type StreakResponseStreakHistoryItem struct {
+	// The date this streak period started.
+	PeriodStart string `json:"periodStart" url:"periodStart"`
+	// The date this streak period ended.
+	PeriodEnd string `json:"periodEnd" url:"periodEnd"`
+	// The length of the user's streak during this period.
+	Length int `json:"length" url:"length"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakResponseStreakHistoryItem) GetPeriodStart() string {
+	if s == nil {
+		return ""
+	}
+	return s.PeriodStart
+}
+
+func (s *StreakResponseStreakHistoryItem) GetPeriodEnd() string {
+	if s == nil {
+		return ""
+	}
+	return s.PeriodEnd
+}
+
+func (s *StreakResponseStreakHistoryItem) GetLength() int {
+	if s == nil {
+		return 0
+	}
+	return s.Length
+}
+
+func (s *StreakResponseStreakHistoryItem) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StreakResponseStreakHistoryItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakResponseStreakHistoryItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakResponseStreakHistoryItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakResponseStreakHistoryItem) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 // A user of your application.
