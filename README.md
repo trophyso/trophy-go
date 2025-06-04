@@ -47,7 +47,7 @@ func main() {
 	)
 
 	email := "jk.rowling@harrypotter.com"
-	
+
 	response, err := client.Metrics.Event(
 		context.TODO(),
 		"words-written",
@@ -64,14 +64,14 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	
+
 	fmt.Println(response)
 }
 ```
 
 ## Documentation
 
-See the [Trophy API Docs](https://trophy.docs.buildwithfern.com/overview/introduction) for more
+See the [Trophy API Docs](https://docs.trophy.so) for more
 information on the accessible endpoints.
 
 ## License
