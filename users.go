@@ -14,6 +14,101 @@ type UsersStreakRequest struct {
 	HistoryPeriods *int `json:"-" url:"historyPeriods,omitempty"`
 }
 
+type AchievementResponse struct {
+	MetricAchievementResponse *MetricAchievementResponse
+	StreakAchievementResponse *StreakAchievementResponse
+	ApiAchievementResponse    *ApiAchievementResponse
+
+	typ string
+}
+
+func NewAchievementResponseFromMetricAchievementResponse(value *MetricAchievementResponse) *AchievementResponse {
+	return &AchievementResponse{typ: "MetricAchievementResponse", MetricAchievementResponse: value}
+}
+
+func NewAchievementResponseFromStreakAchievementResponse(value *StreakAchievementResponse) *AchievementResponse {
+	return &AchievementResponse{typ: "StreakAchievementResponse", StreakAchievementResponse: value}
+}
+
+func NewAchievementResponseFromApiAchievementResponse(value *ApiAchievementResponse) *AchievementResponse {
+	return &AchievementResponse{typ: "ApiAchievementResponse", ApiAchievementResponse: value}
+}
+
+func (a *AchievementResponse) GetMetricAchievementResponse() *MetricAchievementResponse {
+	if a == nil {
+		return nil
+	}
+	return a.MetricAchievementResponse
+}
+
+func (a *AchievementResponse) GetStreakAchievementResponse() *StreakAchievementResponse {
+	if a == nil {
+		return nil
+	}
+	return a.StreakAchievementResponse
+}
+
+func (a *AchievementResponse) GetApiAchievementResponse() *ApiAchievementResponse {
+	if a == nil {
+		return nil
+	}
+	return a.ApiAchievementResponse
+}
+
+func (a *AchievementResponse) UnmarshalJSON(data []byte) error {
+	valueMetricAchievementResponse := new(MetricAchievementResponse)
+	if err := json.Unmarshal(data, &valueMetricAchievementResponse); err == nil {
+		a.typ = "MetricAchievementResponse"
+		a.MetricAchievementResponse = valueMetricAchievementResponse
+		return nil
+	}
+	valueStreakAchievementResponse := new(StreakAchievementResponse)
+	if err := json.Unmarshal(data, &valueStreakAchievementResponse); err == nil {
+		a.typ = "StreakAchievementResponse"
+		a.StreakAchievementResponse = valueStreakAchievementResponse
+		return nil
+	}
+	valueApiAchievementResponse := new(ApiAchievementResponse)
+	if err := json.Unmarshal(data, &valueApiAchievementResponse); err == nil {
+		a.typ = "ApiAchievementResponse"
+		a.ApiAchievementResponse = valueApiAchievementResponse
+		return nil
+	}
+	return fmt.Errorf("%s cannot be deserialized as a %T", data, a)
+}
+
+func (a AchievementResponse) MarshalJSON() ([]byte, error) {
+	if a.typ == "MetricAchievementResponse" || a.MetricAchievementResponse != nil {
+		return json.Marshal(a.MetricAchievementResponse)
+	}
+	if a.typ == "StreakAchievementResponse" || a.StreakAchievementResponse != nil {
+		return json.Marshal(a.StreakAchievementResponse)
+	}
+	if a.typ == "ApiAchievementResponse" || a.ApiAchievementResponse != nil {
+		return json.Marshal(a.ApiAchievementResponse)
+	}
+	return nil, fmt.Errorf("type %T does not include a non-empty union type", a)
+}
+
+type AchievementResponseVisitor interface {
+	VisitMetricAchievementResponse(*MetricAchievementResponse) error
+	VisitStreakAchievementResponse(*StreakAchievementResponse) error
+	VisitApiAchievementResponse(*ApiAchievementResponse) error
+}
+
+func (a *AchievementResponse) Accept(visitor AchievementResponseVisitor) error {
+	if a.typ == "MetricAchievementResponse" || a.MetricAchievementResponse != nil {
+		return visitor.VisitMetricAchievementResponse(a.MetricAchievementResponse)
+	}
+	if a.typ == "StreakAchievementResponse" || a.StreakAchievementResponse != nil {
+		return visitor.VisitStreakAchievementResponse(a.StreakAchievementResponse)
+	}
+	if a.typ == "ApiAchievementResponse" || a.ApiAchievementResponse != nil {
+		return visitor.VisitApiAchievementResponse(a.ApiAchievementResponse)
+	}
+	return fmt.Errorf("type %T does not include a non-empty union type", a)
+}
+
 type MetricResponse struct {
 	// The unique ID of the metric.
 	Id string `json:"id" url:"id"`
@@ -21,14 +116,12 @@ type MetricResponse struct {
 	Key string `json:"key" url:"key"`
 	// The name of the metric.
 	Name string `json:"name" url:"name"`
-	// The emoji to represent the metric.
-	Emoji string `json:"emoji" url:"emoji"`
 	// The status of the metric.
 	Status MetricStatus `json:"status" url:"status"`
 	// The user's current total for the metric.
 	Current float64 `json:"current" url:"current"`
 	// A list of the metric's achievements and the user's progress towards each.
-	Achievements []*MultiStageAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*MetricAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -55,13 +148,6 @@ func (m *MetricResponse) GetName() string {
 	return m.Name
 }
 
-func (m *MetricResponse) GetEmoji() string {
-	if m == nil {
-		return ""
-	}
-	return m.Emoji
-}
-
 func (m *MetricResponse) GetStatus() MetricStatus {
 	if m == nil {
 		return ""
@@ -76,7 +162,7 @@ func (m *MetricResponse) GetCurrent() float64 {
 	return m.Current
 }
 
-func (m *MetricResponse) GetAchievements() []*MultiStageAchievementResponse {
+func (m *MetricResponse) GetAchievements() []*MetricAchievementResponse {
 	if m == nil {
 		return nil
 	}

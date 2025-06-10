@@ -336,7 +336,7 @@ func (c *Client) Allachievements(
 	// ID of the user.
 	id string,
 	opts ...option.RequestOption,
-) ([]*trophygo.MultiStageAchievementResponse, error) {
+) ([]*trophygo.AchievementResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -369,7 +369,7 @@ func (c *Client) Allachievements(
 		},
 	}
 
-	var response []*trophygo.MultiStageAchievementResponse
+	var response []*trophygo.AchievementResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

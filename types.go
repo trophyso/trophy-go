@@ -9,6 +9,217 @@ import (
 	time "time"
 )
 
+type ApiAchievementResponse struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name string `json:"name" url:"name"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The date and time the achievement was completed, in ISO 8601 format.
+	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
+	// The trigger of the achievement, in this case always 'api'.
+	Trigger string `json:"trigger" url:"trigger"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApiAchievementResponse) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *ApiAchievementResponse) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *ApiAchievementResponse) GetBadgeUrl() *string {
+	if a == nil {
+		return nil
+	}
+	return a.BadgeUrl
+}
+
+func (a *ApiAchievementResponse) GetKey() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Key
+}
+
+func (a *ApiAchievementResponse) GetAchievedAt() *time.Time {
+	if a == nil {
+		return nil
+	}
+	return a.AchievedAt
+}
+
+func (a *ApiAchievementResponse) GetTrigger() string {
+	if a == nil {
+		return ""
+	}
+	return a.Trigger
+}
+
+func (a *ApiAchievementResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAchievementResponse) UnmarshalJSON(data []byte) error {
+	type embed ApiAchievementResponse
+	var unmarshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = ApiAchievementResponse(unmarshaler.embed)
+	a.AchievedAt = unmarshaler.AchievedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAchievementResponse) MarshalJSON() ([]byte, error) {
+	type embed ApiAchievementResponse
+	var marshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed:      embed(*a),
+		AchievedAt: internal.NewOptionalDateTime(a.AchievedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *ApiAchievementResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type BaseAchievementResponse struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name string `json:"name" url:"name"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The date and time the achievement was completed, in ISO 8601 format.
+	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BaseAchievementResponse) GetId() string {
+	if b == nil {
+		return ""
+	}
+	return b.Id
+}
+
+func (b *BaseAchievementResponse) GetName() string {
+	if b == nil {
+		return ""
+	}
+	return b.Name
+}
+
+func (b *BaseAchievementResponse) GetBadgeUrl() *string {
+	if b == nil {
+		return nil
+	}
+	return b.BadgeUrl
+}
+
+func (b *BaseAchievementResponse) GetKey() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Key
+}
+
+func (b *BaseAchievementResponse) GetAchievedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.AchievedAt
+}
+
+func (b *BaseAchievementResponse) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BaseAchievementResponse) UnmarshalJSON(data []byte) error {
+	type embed BaseAchievementResponse
+	var unmarshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BaseAchievementResponse(unmarshaler.embed)
+	b.AchievedAt = unmarshaler.AchievedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BaseAchievementResponse) MarshalJSON() ([]byte, error) {
+	type embed BaseAchievementResponse
+	var marshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed:      embed(*b),
+		AchievedAt: internal.NewOptionalDateTime(b.AchievedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (b *BaseAchievementResponse) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
 type BaseStreakResponse struct {
 	// The length of the user's current streak.
 	Length int `json:"length" url:"length"`
@@ -147,90 +358,99 @@ func (e *ErrorBody) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
-type MultiStageAchievementResponse struct {
+type MetricAchievementResponse struct {
 	// The unique ID of the achievement.
 	Id string `json:"id" url:"id"`
 	// The name of this achievement.
-	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	Name string `json:"name" url:"name"`
 	// The URL of the badge image for the achievement, if one has been uploaded.
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
-	// The ID of the metric associated with this achievement, if any.
-	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
-	// The value of the metric required to complete the achievement, if this achievement is associated with a metric.
-	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
-	// The name of the metric associated with this achievement, if any.
-	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
 	// The key used to reference this achievement in the API.
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
 	// The date and time the achievement was completed, in ISO 8601 format.
 	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
+	// The trigger of the achievement, in this case always 'metric'.
+	Trigger string `json:"trigger" url:"trigger"`
+	// The ID of the metric associated with this achievement, if any.
+	MetricId string `json:"metricId" url:"metricId"`
+	// The value of the metric required to complete the achievement, if this achievement is associated with a metric.
+	MetricValue float64 `json:"metricValue" url:"metricValue"`
+	// The name of the metric associated with this achievement, if any.
+	MetricName string `json:"metricName" url:"metricName"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (m *MultiStageAchievementResponse) GetId() string {
+func (m *MetricAchievementResponse) GetId() string {
 	if m == nil {
 		return ""
 	}
 	return m.Id
 }
 
-func (m *MultiStageAchievementResponse) GetName() *string {
+func (m *MetricAchievementResponse) GetName() string {
 	if m == nil {
-		return nil
+		return ""
 	}
 	return m.Name
 }
 
-func (m *MultiStageAchievementResponse) GetBadgeUrl() *string {
+func (m *MetricAchievementResponse) GetBadgeUrl() *string {
 	if m == nil {
 		return nil
 	}
 	return m.BadgeUrl
 }
 
-func (m *MultiStageAchievementResponse) GetMetricId() *string {
-	if m == nil {
-		return nil
-	}
-	return m.MetricId
-}
-
-func (m *MultiStageAchievementResponse) GetMetricValue() *float64 {
-	if m == nil {
-		return nil
-	}
-	return m.MetricValue
-}
-
-func (m *MultiStageAchievementResponse) GetMetricName() *string {
-	if m == nil {
-		return nil
-	}
-	return m.MetricName
-}
-
-func (m *MultiStageAchievementResponse) GetKey() *string {
+func (m *MetricAchievementResponse) GetKey() *string {
 	if m == nil {
 		return nil
 	}
 	return m.Key
 }
 
-func (m *MultiStageAchievementResponse) GetAchievedAt() *time.Time {
+func (m *MetricAchievementResponse) GetAchievedAt() *time.Time {
 	if m == nil {
 		return nil
 	}
 	return m.AchievedAt
 }
 
-func (m *MultiStageAchievementResponse) GetExtraProperties() map[string]interface{} {
+func (m *MetricAchievementResponse) GetTrigger() string {
+	if m == nil {
+		return ""
+	}
+	return m.Trigger
+}
+
+func (m *MetricAchievementResponse) GetMetricId() string {
+	if m == nil {
+		return ""
+	}
+	return m.MetricId
+}
+
+func (m *MetricAchievementResponse) GetMetricValue() float64 {
+	if m == nil {
+		return 0
+	}
+	return m.MetricValue
+}
+
+func (m *MetricAchievementResponse) GetMetricName() string {
+	if m == nil {
+		return ""
+	}
+	return m.MetricName
+}
+
+func (m *MetricAchievementResponse) GetExtraProperties() map[string]interface{} {
 	return m.extraProperties
 }
 
-func (m *MultiStageAchievementResponse) UnmarshalJSON(data []byte) error {
-	type embed MultiStageAchievementResponse
+func (m *MetricAchievementResponse) UnmarshalJSON(data []byte) error {
+	type embed MetricAchievementResponse
 	var unmarshaler = struct {
 		embed
 		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
@@ -240,7 +460,7 @@ func (m *MultiStageAchievementResponse) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*m = MultiStageAchievementResponse(unmarshaler.embed)
+	*m = MetricAchievementResponse(unmarshaler.embed)
 	m.AchievedAt = unmarshaler.AchievedAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *m)
 	if err != nil {
@@ -251,8 +471,8 @@ func (m *MultiStageAchievementResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (m *MultiStageAchievementResponse) MarshalJSON() ([]byte, error) {
-	type embed MultiStageAchievementResponse
+func (m *MetricAchievementResponse) MarshalJSON() ([]byte, error) {
+	type embed MetricAchievementResponse
 	var marshaler = struct {
 		embed
 		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
@@ -263,7 +483,7 @@ func (m *MultiStageAchievementResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(marshaler)
 }
 
-func (m *MultiStageAchievementResponse) String() string {
+func (m *MetricAchievementResponse) String() string {
 	if len(m.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
 			return value
@@ -273,6 +493,125 @@ func (m *MultiStageAchievementResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", m)
+}
+
+type StreakAchievementResponse struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name string `json:"name" url:"name"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The date and time the achievement was completed, in ISO 8601 format.
+	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
+	// The trigger of the achievement, in this case always 'streak'.
+	Trigger string `json:"trigger" url:"trigger"`
+	// The length of the streak required to complete the achievement.
+	StreakLength int `json:"streakLength" url:"streakLength"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakAchievementResponse) GetId() string {
+	if s == nil {
+		return ""
+	}
+	return s.Id
+}
+
+func (s *StreakAchievementResponse) GetName() string {
+	if s == nil {
+		return ""
+	}
+	return s.Name
+}
+
+func (s *StreakAchievementResponse) GetBadgeUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.BadgeUrl
+}
+
+func (s *StreakAchievementResponse) GetKey() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Key
+}
+
+func (s *StreakAchievementResponse) GetAchievedAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.AchievedAt
+}
+
+func (s *StreakAchievementResponse) GetTrigger() string {
+	if s == nil {
+		return ""
+	}
+	return s.Trigger
+}
+
+func (s *StreakAchievementResponse) GetStreakLength() int {
+	if s == nil {
+		return 0
+	}
+	return s.StreakLength
+}
+
+func (s *StreakAchievementResponse) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StreakAchievementResponse) UnmarshalJSON(data []byte) error {
+	type embed StreakAchievementResponse
+	var unmarshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*s = StreakAchievementResponse(unmarshaler.embed)
+	s.AchievedAt = unmarshaler.AchievedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakAchievementResponse) MarshalJSON() ([]byte, error) {
+	type embed StreakAchievementResponse
+	var marshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed:      embed(*s),
+		AchievedAt: internal.NewOptionalDateTime(s.AchievedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (s *StreakAchievementResponse) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 type StreakFrequency string

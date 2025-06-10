@@ -99,13 +99,22 @@ func (e *EventResponse) String() string {
 }
 
 type EventResponseMetricsItem struct {
-	// The ID of the metric.
+	// The trigger of the achievement, in this case either 'metric' or 'streak'.
+	Trigger *string `json:"trigger,omitempty" url:"trigger,omitempty"`
+	// The ID of the metric that these achievements are associated with, if any.
 	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
 	// A list of any new achievements that the user has now completed as a result of this event being submitted.
-	Completed []*MultiStageAchievementResponse `json:"completed,omitempty" url:"completed,omitempty"`
+	Completed []*EventResponseMetricsItemCompletedItem `json:"completed,omitempty" url:"completed,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (e *EventResponseMetricsItem) GetTrigger() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Trigger
 }
 
 func (e *EventResponseMetricsItem) GetMetricId() *string {
@@ -115,7 +124,7 @@ func (e *EventResponseMetricsItem) GetMetricId() *string {
 	return e.MetricId
 }
 
-func (e *EventResponseMetricsItem) GetCompleted() []*MultiStageAchievementResponse {
+func (e *EventResponseMetricsItem) GetCompleted() []*EventResponseMetricsItemCompletedItem {
 	if e == nil {
 		return nil
 	}
@@ -152,6 +161,76 @@ func (e *EventResponseMetricsItem) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
+}
+
+type EventResponseMetricsItemCompletedItem struct {
+	MetricAchievementResponse *MetricAchievementResponse
+	StreakAchievementResponse *StreakAchievementResponse
+
+	typ string
+}
+
+func NewEventResponseMetricsItemCompletedItemFromMetricAchievementResponse(value *MetricAchievementResponse) *EventResponseMetricsItemCompletedItem {
+	return &EventResponseMetricsItemCompletedItem{typ: "MetricAchievementResponse", MetricAchievementResponse: value}
+}
+
+func NewEventResponseMetricsItemCompletedItemFromStreakAchievementResponse(value *StreakAchievementResponse) *EventResponseMetricsItemCompletedItem {
+	return &EventResponseMetricsItemCompletedItem{typ: "StreakAchievementResponse", StreakAchievementResponse: value}
+}
+
+func (e *EventResponseMetricsItemCompletedItem) GetMetricAchievementResponse() *MetricAchievementResponse {
+	if e == nil {
+		return nil
+	}
+	return e.MetricAchievementResponse
+}
+
+func (e *EventResponseMetricsItemCompletedItem) GetStreakAchievementResponse() *StreakAchievementResponse {
+	if e == nil {
+		return nil
+	}
+	return e.StreakAchievementResponse
+}
+
+func (e *EventResponseMetricsItemCompletedItem) UnmarshalJSON(data []byte) error {
+	valueMetricAchievementResponse := new(MetricAchievementResponse)
+	if err := json.Unmarshal(data, &valueMetricAchievementResponse); err == nil {
+		e.typ = "MetricAchievementResponse"
+		e.MetricAchievementResponse = valueMetricAchievementResponse
+		return nil
+	}
+	valueStreakAchievementResponse := new(StreakAchievementResponse)
+	if err := json.Unmarshal(data, &valueStreakAchievementResponse); err == nil {
+		e.typ = "StreakAchievementResponse"
+		e.StreakAchievementResponse = valueStreakAchievementResponse
+		return nil
+	}
+	return fmt.Errorf("%s cannot be deserialized as a %T", data, e)
+}
+
+func (e EventResponseMetricsItemCompletedItem) MarshalJSON() ([]byte, error) {
+	if e.typ == "MetricAchievementResponse" || e.MetricAchievementResponse != nil {
+		return json.Marshal(e.MetricAchievementResponse)
+	}
+	if e.typ == "StreakAchievementResponse" || e.StreakAchievementResponse != nil {
+		return json.Marshal(e.StreakAchievementResponse)
+	}
+	return nil, fmt.Errorf("type %T does not include a non-empty union type", e)
+}
+
+type EventResponseMetricsItemCompletedItemVisitor interface {
+	VisitMetricAchievementResponse(*MetricAchievementResponse) error
+	VisitStreakAchievementResponse(*StreakAchievementResponse) error
+}
+
+func (e *EventResponseMetricsItemCompletedItem) Accept(visitor EventResponseMetricsItemCompletedItemVisitor) error {
+	if e.typ == "MetricAchievementResponse" || e.MetricAchievementResponse != nil {
+		return visitor.VisitMetricAchievementResponse(e.MetricAchievementResponse)
+	}
+	if e.typ == "StreakAchievementResponse" || e.StreakAchievementResponse != nil {
+		return visitor.VisitStreakAchievementResponse(e.StreakAchievementResponse)
+	}
+	return fmt.Errorf("type %T does not include a non-empty union type", e)
 }
 
 // An object representing the user's streak after incrementing a metric.
