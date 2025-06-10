@@ -210,7 +210,7 @@ func (c *Client) Update(
 }
 
 // Get a single user's progress against all active metrics.
-func (c *Client) Allmetrics(
+func (c *Client) AllMetrics(
 	ctx context.Context,
 	// ID of the user
 	id string,
@@ -269,7 +269,7 @@ func (c *Client) Allmetrics(
 }
 
 // Get a user's progress against a single active metric.
-func (c *Client) Singlemetric(
+func (c *Client) SingleMetric(
 	ctx context.Context,
 	// ID of the user.
 	id string,
@@ -331,7 +331,7 @@ func (c *Client) Singlemetric(
 }
 
 // Get all of a user's completed achievements.
-func (c *Client) Allachievements(
+func (c *Client) AllAchievements(
 	ctx context.Context,
 	// ID of the user.
 	id string,
