@@ -15,8 +15,8 @@ type AchievementsCompleteRequest struct {
 
 type AchievementCompletionResponse struct {
 	// The unique ID of the completion.
-	CompletionId string                  `json:"completionId" url:"completionId"`
-	Achievement  *ApiAchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
+	CompletionId string               `json:"completionId" url:"completionId"`
+	Achievement  *AchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -29,7 +29,7 @@ func (a *AchievementCompletionResponse) GetCompletionId() string {
 	return a.CompletionId
 }
 
-func (a *AchievementCompletionResponse) GetAchievement() *ApiAchievementResponse {
+func (a *AchievementCompletionResponse) GetAchievement() *AchievementResponse {
 	if a == nil {
 		return nil
 	}
