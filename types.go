@@ -14,6 +14,8 @@ type AchievementResponse struct {
 	Id string `json:"id" url:"id"`
 	// The name of this achievement.
 	Name string `json:"name" url:"name"`
+	// The trigger of the achievement, either 'metric', 'streak', or 'api'.
+	Trigger string `json:"trigger" url:"trigger"`
 	// The URL of the badge image for the achievement, if one has been uploaded.
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
 	// The date and time the achievement was completed, in ISO 8601 format.
@@ -45,6 +47,13 @@ func (a *AchievementResponse) GetName() string {
 		return ""
 	}
 	return a.Name
+}
+
+func (a *AchievementResponse) GetTrigger() string {
+	if a == nil {
+		return ""
+	}
+	return a.Trigger
 }
 
 func (a *AchievementResponse) GetBadgeUrl() *string {
