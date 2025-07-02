@@ -23,7 +23,7 @@ type EventResponse struct {
 	// The user's new total progress against the metric.
 	Total float64 `json:"total" url:"total"`
 	// Achievements completed as a result of this event.
-	Achievements []*AchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's current streak for the metric, if the metric has streaks enabled.
 	CurrentStreak *IncrementMetricStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 
@@ -52,7 +52,7 @@ func (e *EventResponse) GetTotal() float64 {
 	return e.Total
 }
 
-func (e *EventResponse) GetAchievements() []*AchievementResponse {
+func (e *EventResponse) GetAchievements() []*CompletedAchievementResponse {
 	if e == nil {
 		return nil
 	}

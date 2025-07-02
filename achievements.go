@@ -10,13 +10,13 @@ import (
 
 type AchievementsCompleteRequest struct {
 	// The user that completed the achievement.
-	User *UpsertedUser `json:"user,omitempty" url:"-"`
+	User *UpdatedUser `json:"user,omitempty" url:"-"`
 }
 
 type AchievementCompletionResponse struct {
 	// The unique ID of the completion.
-	CompletionId string               `json:"completionId" url:"completionId"`
-	Achievement  *AchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
+	CompletionId string                        `json:"completionId" url:"completionId"`
+	Achievement  *CompletedAchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -29,7 +29,7 @@ func (a *AchievementCompletionResponse) GetCompletionId() string {
 	return a.CompletionId
 }
 
-func (a *AchievementCompletionResponse) GetAchievement() *AchievementResponse {
+func (a *AchievementCompletionResponse) GetAchievement() *CompletedAchievementResponse {
 	if a == nil {
 		return nil
 	}
@@ -57,6 +57,152 @@ func (a *AchievementCompletionResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (a *AchievementCompletionResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AchievementWithStatsResponse struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name string `json:"name" url:"name"`
+	// The trigger of the achievement, either 'metric', 'streak', or 'api'.
+	Trigger string `json:"trigger" url:"trigger"`
+	// The description of this achievement.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API (only applicable if trigger = 'api')
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
+	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
+	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The number of users who have completed this achievement.
+	Completions *int `json:"completions,omitempty" url:"completions,omitempty"`
+	// The percentage of all users who have completed this achievement.
+	CompletedPercentage *float64 `json:"completedPercentage,omitempty" url:"completedPercentage,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementWithStatsResponse) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AchievementWithStatsResponse) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AchievementWithStatsResponse) GetTrigger() string {
+	if a == nil {
+		return ""
+	}
+	return a.Trigger
+}
+
+func (a *AchievementWithStatsResponse) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *AchievementWithStatsResponse) GetBadgeUrl() *string {
+	if a == nil {
+		return nil
+	}
+	return a.BadgeUrl
+}
+
+func (a *AchievementWithStatsResponse) GetKey() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Key
+}
+
+func (a *AchievementWithStatsResponse) GetStreakLength() *int {
+	if a == nil {
+		return nil
+	}
+	return a.StreakLength
+}
+
+func (a *AchievementWithStatsResponse) GetMetricId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricId
+}
+
+func (a *AchievementWithStatsResponse) GetMetricValue() *float64 {
+	if a == nil {
+		return nil
+	}
+	return a.MetricValue
+}
+
+func (a *AchievementWithStatsResponse) GetMetricName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricName
+}
+
+func (a *AchievementWithStatsResponse) GetCompletions() *int {
+	if a == nil {
+		return nil
+	}
+	return a.Completions
+}
+
+func (a *AchievementWithStatsResponse) GetCompletedPercentage() *float64 {
+	if a == nil {
+		return nil
+	}
+	return a.CompletedPercentage
+}
+
+func (a *AchievementWithStatsResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementWithStatsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler AchievementWithStatsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AchievementWithStatsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementWithStatsResponse) String() string {
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value

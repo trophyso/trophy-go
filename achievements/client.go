@@ -31,6 +31,60 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
+// Get all achievements and their completion stats.
+func (c *Client) All(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) ([]*trophygo.AchievementWithStatsResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://app.trophy.so/api",
+	)
+	endpointURL := baseURL + "/achievements"
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &trophygo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response []*trophygo.AchievementWithStatsResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 // Mark an achievement as completed for a user.
 func (c *Client) Complete(
 	ctx context.Context,

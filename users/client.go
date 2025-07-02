@@ -330,13 +330,83 @@ func (c *Client) SingleMetric(
 	return response, nil
 }
 
+// Get a summary of metric events over time for a user.
+func (c *Client) MetricEventSummary(
+	ctx context.Context,
+	// ID of the user.
+	id string,
+	// Unique key of the metric.
+	key string,
+	request *trophygo.UsersMetricEventSummaryRequest,
+	opts ...option.RequestOption,
+) ([]*trophygo.UsersMetricEventSummaryResponseItem, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://app.trophy.so/api",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/users/%v/metrics/%v/event-summary",
+		id,
+		key,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &trophygo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response []*trophygo.UsersMetricEventSummaryResponseItem
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 // Get all of a user's completed achievements.
 func (c *Client) AllAchievements(
 	ctx context.Context,
 	// ID of the user.
 	id string,
 	opts ...option.RequestOption,
-) ([]*trophygo.AchievementResponse, error) {
+) ([]*trophygo.CompletedAchievementResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -369,7 +439,7 @@ func (c *Client) AllAchievements(
 		},
 	}
 
-	var response []*trophygo.AchievementResponse
+	var response []*trophygo.CompletedAchievementResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

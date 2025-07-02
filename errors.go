@@ -31,7 +31,7 @@ func (b *BadRequestError) Unwrap() error {
 	return b.APIError
 }
 
-// Achievement Not Found
+// Achievements not found
 type NotFoundError struct {
 	*core.APIError
 	Body *ErrorBody

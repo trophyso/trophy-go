@@ -9,6 +9,15 @@ import (
 	time "time"
 )
 
+type UsersMetricEventSummaryRequest struct {
+	// The time period over which to aggregate the event data.
+	Aggregation UsersMetricEventSummaryRequestAggregation `json:"-" url:"aggregation"`
+	// The start date for the data range in YYYY-MM-DD format. The startDate must be before the endDate, and the date range must not exceed 400 days.
+	StartDate string `json:"-" url:"startDate"`
+	// The end date for the data range in YYYY-MM-DD format. The endDate must be after the startDate, and the date range must not exceed 400 days.
+	EndDate string `json:"-" url:"endDate"`
+}
+
 type UsersStreakRequest struct {
 	// The number of past streak periods to include in the streakHistory field of the  response.
 	HistoryPeriods *int `json:"-" url:"historyPeriods,omitempty"`
@@ -26,7 +35,7 @@ type MetricResponse struct {
 	// The user's current total for the metric.
 	Current float64 `json:"current" url:"current"`
 	// A list of the metric's achievements and the user's progress towards each.
-	Achievements []*AchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -67,7 +76,7 @@ func (m *MetricResponse) GetCurrent() float64 {
 	return m.Current
 }
 
-func (m *MetricResponse) GetAchievements() []*AchievementResponse {
+func (m *MetricResponse) GetAchievements() []*CompletedAchievementResponse {
 	if m == nil {
 		return nil
 	}
@@ -419,6 +428,96 @@ func (u *User) MarshalJSON() ([]byte, error) {
 }
 
 func (u *User) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UsersMetricEventSummaryRequestAggregation string
+
+const (
+	UsersMetricEventSummaryRequestAggregationDaily   UsersMetricEventSummaryRequestAggregation = "daily"
+	UsersMetricEventSummaryRequestAggregationWeekly  UsersMetricEventSummaryRequestAggregation = "weekly"
+	UsersMetricEventSummaryRequestAggregationMonthly UsersMetricEventSummaryRequestAggregation = "monthly"
+)
+
+func NewUsersMetricEventSummaryRequestAggregationFromString(s string) (UsersMetricEventSummaryRequestAggregation, error) {
+	switch s {
+	case "daily":
+		return UsersMetricEventSummaryRequestAggregationDaily, nil
+	case "weekly":
+		return UsersMetricEventSummaryRequestAggregationWeekly, nil
+	case "monthly":
+		return UsersMetricEventSummaryRequestAggregationMonthly, nil
+	}
+	var t UsersMetricEventSummaryRequestAggregation
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UsersMetricEventSummaryRequestAggregation) Ptr() *UsersMetricEventSummaryRequestAggregation {
+	return &u
+}
+
+type UsersMetricEventSummaryResponseItem struct {
+	// The date of the data point. For weekly or monthly aggregations, this is the first date of the period.
+	Date string `json:"date" url:"date"`
+	// The user's total for this metric at the end of this date.
+	Total float64 `json:"total" url:"total"`
+	// The change in the user's total for this metric during this period.
+	Change float64 `json:"change" url:"change"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UsersMetricEventSummaryResponseItem) GetDate() string {
+	if u == nil {
+		return ""
+	}
+	return u.Date
+}
+
+func (u *UsersMetricEventSummaryResponseItem) GetTotal() float64 {
+	if u == nil {
+		return 0
+	}
+	return u.Total
+}
+
+func (u *UsersMetricEventSummaryResponseItem) GetChange() float64 {
+	if u == nil {
+		return 0
+	}
+	return u.Change
+}
+
+func (u *UsersMetricEventSummaryResponseItem) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UsersMetricEventSummaryResponseItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UsersMetricEventSummaryResponseItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UsersMetricEventSummaryResponseItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UsersMetricEventSummaryResponseItem) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
