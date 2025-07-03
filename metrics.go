@@ -25,7 +25,9 @@ type EventResponse struct {
 	// Achievements completed as a result of this event.
 	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's current streak for the metric, if the metric has streaks enabled.
-	CurrentStreak *IncrementMetricStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
+	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
+	// The points added by this event, and a breakdown of the points awards that added points.
+	Points *PointsAward `json:"points,omitempty" url:"points,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -59,11 +61,18 @@ func (e *EventResponse) GetAchievements() []*CompletedAchievementResponse {
 	return e.Achievements
 }
 
-func (e *EventResponse) GetCurrentStreak() *IncrementMetricStreakResponse {
+func (e *EventResponse) GetCurrentStreak() *MetricEventStreakResponse {
 	if e == nil {
 		return nil
 	}
 	return e.CurrentStreak
+}
+
+func (e *EventResponse) GetPoints() *PointsAward {
+	if e == nil {
+		return nil
+	}
+	return e.Points
 }
 
 func (e *EventResponse) GetExtraProperties() map[string]interface{} {
@@ -96,106 +105,4 @@ func (e *EventResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
-}
-
-// An object representing the user's streak after incrementing a metric.
-type IncrementMetricStreakResponse struct {
-	// The length of the user's current streak.
-	Length int `json:"length" url:"length"`
-	// The frequency of the streak.
-	Frequency StreakFrequency `json:"frequency" url:"frequency"`
-	// The date the streak started.
-	Started *string `json:"started,omitempty" url:"started,omitempty"`
-	// The start date of the current streak period.
-	PeriodStart *string `json:"periodStart,omitempty" url:"periodStart,omitempty"`
-	// The end date of the current streak period.
-	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
-	// The date the streak will expire if the user does not increment a metric.
-	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
-	// Whether this metric event increased the user's streak length.
-	Extended *bool `json:"extended,omitempty" url:"extended,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (i *IncrementMetricStreakResponse) GetLength() int {
-	if i == nil {
-		return 0
-	}
-	return i.Length
-}
-
-func (i *IncrementMetricStreakResponse) GetFrequency() StreakFrequency {
-	if i == nil {
-		return ""
-	}
-	return i.Frequency
-}
-
-func (i *IncrementMetricStreakResponse) GetStarted() *string {
-	if i == nil {
-		return nil
-	}
-	return i.Started
-}
-
-func (i *IncrementMetricStreakResponse) GetPeriodStart() *string {
-	if i == nil {
-		return nil
-	}
-	return i.PeriodStart
-}
-
-func (i *IncrementMetricStreakResponse) GetPeriodEnd() *string {
-	if i == nil {
-		return nil
-	}
-	return i.PeriodEnd
-}
-
-func (i *IncrementMetricStreakResponse) GetExpires() *string {
-	if i == nil {
-		return nil
-	}
-	return i.Expires
-}
-
-func (i *IncrementMetricStreakResponse) GetExtended() *bool {
-	if i == nil {
-		return nil
-	}
-	return i.Extended
-}
-
-func (i *IncrementMetricStreakResponse) GetExtraProperties() map[string]interface{} {
-	return i.extraProperties
-}
-
-func (i *IncrementMetricStreakResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler IncrementMetricStreakResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*i = IncrementMetricStreakResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *i)
-	if err != nil {
-		return err
-	}
-	i.extraProperties = extraProperties
-	i.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (i *IncrementMetricStreakResponse) String() string {
-	if len(i.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(i); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", i)
 }

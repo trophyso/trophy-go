@@ -73,8 +73,8 @@ type AchievementWithStatsResponse struct {
 	Id string `json:"id" url:"id"`
 	// The name of this achievement.
 	Name string `json:"name" url:"name"`
-	// The trigger of the achievement, either 'metric', 'streak', or 'api'.
-	Trigger string `json:"trigger" url:"trigger"`
+	// The trigger of the achievement.
+	Trigger AchievementResponseTrigger `json:"trigger" url:"trigger"`
 	// The description of this achievement.
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The URL of the badge image for the achievement, if one has been uploaded.
@@ -89,6 +89,8 @@ type AchievementWithStatsResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The user's current streak for the metric, if the metric has streaks enabled.
+	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 	// The number of users who have completed this achievement.
 	Completions *int `json:"completions,omitempty" url:"completions,omitempty"`
 	// The percentage of all users who have completed this achievement.
@@ -112,7 +114,7 @@ func (a *AchievementWithStatsResponse) GetName() string {
 	return a.Name
 }
 
-func (a *AchievementWithStatsResponse) GetTrigger() string {
+func (a *AchievementWithStatsResponse) GetTrigger() AchievementResponseTrigger {
 	if a == nil {
 		return ""
 	}
@@ -166,6 +168,13 @@ func (a *AchievementWithStatsResponse) GetMetricName() *string {
 		return nil
 	}
 	return a.MetricName
+}
+
+func (a *AchievementWithStatsResponse) GetCurrentStreak() *MetricEventStreakResponse {
+	if a == nil {
+		return nil
+	}
+	return a.CurrentStreak
 }
 
 func (a *AchievementWithStatsResponse) GetCompletions() *int {

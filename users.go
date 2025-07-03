@@ -18,9 +18,79 @@ type UsersMetricEventSummaryRequest struct {
 	EndDate string `json:"-" url:"endDate"`
 }
 
+type UsersPointsRequest struct {
+	// The number of recent point awards to return.
+	Awards *int `json:"-" url:"awards,omitempty"`
+}
+
+type UsersPointsEventSummaryRequest struct {
+	// The time period over which to aggregate the event data.
+	Aggregation UsersPointsEventSummaryRequestAggregation `json:"-" url:"aggregation"`
+	// The start date for the data range in YYYY-MM-DD format. The startDate must be before the endDate, and the date range must not exceed 400 days.
+	StartDate string `json:"-" url:"startDate"`
+	// The end date for the data range in YYYY-MM-DD format. The endDate must be after the startDate, and the date range must not exceed 400 days.
+	EndDate string `json:"-" url:"endDate"`
+}
+
 type UsersStreakRequest struct {
 	// The number of past streak periods to include in the streakHistory field of the  response.
 	HistoryPeriods *int `json:"-" url:"historyPeriods,omitempty"`
+}
+
+type GetUserPointsResponse struct {
+	// The user's total points
+	Total *float64 `json:"total,omitempty" url:"total,omitempty"`
+	// Array of trigger awards that added points.
+	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetUserPointsResponse) GetTotal() *float64 {
+	if g == nil {
+		return nil
+	}
+	return g.Total
+}
+
+func (g *GetUserPointsResponse) GetAwards() []*PointsAward {
+	if g == nil {
+		return nil
+	}
+	return g.Awards
+}
+
+func (g *GetUserPointsResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetUserPointsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetUserPointsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetUserPointsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetUserPointsResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
 }
 
 type MetricResponse struct {
@@ -518,6 +588,96 @@ func (u *UsersMetricEventSummaryResponseItem) UnmarshalJSON(data []byte) error {
 }
 
 func (u *UsersMetricEventSummaryResponseItem) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UsersPointsEventSummaryRequestAggregation string
+
+const (
+	UsersPointsEventSummaryRequestAggregationDaily   UsersPointsEventSummaryRequestAggregation = "daily"
+	UsersPointsEventSummaryRequestAggregationWeekly  UsersPointsEventSummaryRequestAggregation = "weekly"
+	UsersPointsEventSummaryRequestAggregationMonthly UsersPointsEventSummaryRequestAggregation = "monthly"
+)
+
+func NewUsersPointsEventSummaryRequestAggregationFromString(s string) (UsersPointsEventSummaryRequestAggregation, error) {
+	switch s {
+	case "daily":
+		return UsersPointsEventSummaryRequestAggregationDaily, nil
+	case "weekly":
+		return UsersPointsEventSummaryRequestAggregationWeekly, nil
+	case "monthly":
+		return UsersPointsEventSummaryRequestAggregationMonthly, nil
+	}
+	var t UsersPointsEventSummaryRequestAggregation
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UsersPointsEventSummaryRequestAggregation) Ptr() *UsersPointsEventSummaryRequestAggregation {
+	return &u
+}
+
+type UsersPointsEventSummaryResponseItem struct {
+	// The date of the data point. For weekly or monthly aggregations, this is the first date of the period.
+	Date string `json:"date" url:"date"`
+	// The user's total points at the end of this date.
+	Total float64 `json:"total" url:"total"`
+	// The change in the user's total points during this period.
+	Change float64 `json:"change" url:"change"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UsersPointsEventSummaryResponseItem) GetDate() string {
+	if u == nil {
+		return ""
+	}
+	return u.Date
+}
+
+func (u *UsersPointsEventSummaryResponseItem) GetTotal() float64 {
+	if u == nil {
+		return 0
+	}
+	return u.Total
+}
+
+func (u *UsersPointsEventSummaryResponseItem) GetChange() float64 {
+	if u == nil {
+		return 0
+	}
+	return u.Change
+}
+
+func (u *UsersPointsEventSummaryResponseItem) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UsersPointsEventSummaryResponseItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UsersPointsEventSummaryResponseItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UsersPointsEventSummaryResponseItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UsersPointsEventSummaryResponseItem) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value

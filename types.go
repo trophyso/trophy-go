@@ -14,8 +14,8 @@ type AchievementResponse struct {
 	Id string `json:"id" url:"id"`
 	// The name of this achievement.
 	Name string `json:"name" url:"name"`
-	// The trigger of the achievement, either 'metric', 'streak', or 'api'.
-	Trigger string `json:"trigger" url:"trigger"`
+	// The trigger of the achievement.
+	Trigger AchievementResponseTrigger `json:"trigger" url:"trigger"`
 	// The description of this achievement.
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The URL of the badge image for the achievement, if one has been uploaded.
@@ -30,6 +30,8 @@ type AchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The user's current streak for the metric, if the metric has streaks enabled.
+	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -49,7 +51,7 @@ func (a *AchievementResponse) GetName() string {
 	return a.Name
 }
 
-func (a *AchievementResponse) GetTrigger() string {
+func (a *AchievementResponse) GetTrigger() AchievementResponseTrigger {
 	if a == nil {
 		return ""
 	}
@@ -105,6 +107,13 @@ func (a *AchievementResponse) GetMetricName() *string {
 	return a.MetricName
 }
 
+func (a *AchievementResponse) GetCurrentStreak() *MetricEventStreakResponse {
+	if a == nil {
+		return nil
+	}
+	return a.CurrentStreak
+}
+
 func (a *AchievementResponse) GetExtraProperties() map[string]interface{} {
 	return a.extraProperties
 }
@@ -135,6 +144,32 @@ func (a *AchievementResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", a)
+}
+
+// The trigger of the achievement.
+type AchievementResponseTrigger string
+
+const (
+	AchievementResponseTriggerMetric AchievementResponseTrigger = "metric"
+	AchievementResponseTriggerStreak AchievementResponseTrigger = "streak"
+	AchievementResponseTriggerApi    AchievementResponseTrigger = "api"
+)
+
+func NewAchievementResponseTriggerFromString(s string) (AchievementResponseTrigger, error) {
+	switch s {
+	case "metric":
+		return AchievementResponseTriggerMetric, nil
+	case "streak":
+		return AchievementResponseTriggerStreak, nil
+	case "api":
+		return AchievementResponseTriggerApi, nil
+	}
+	var t AchievementResponseTrigger
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AchievementResponseTrigger) Ptr() *AchievementResponseTrigger {
+	return &a
 }
 
 type BaseStreakResponse struct {
@@ -234,8 +269,8 @@ type CompletedAchievementResponse struct {
 	Id string `json:"id" url:"id"`
 	// The name of this achievement.
 	Name string `json:"name" url:"name"`
-	// The trigger of the achievement, either 'metric', 'streak', or 'api'.
-	Trigger string `json:"trigger" url:"trigger"`
+	// The trigger of the achievement.
+	Trigger AchievementResponseTrigger `json:"trigger" url:"trigger"`
 	// The description of this achievement.
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The URL of the badge image for the achievement, if one has been uploaded.
@@ -250,6 +285,8 @@ type CompletedAchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The user's current streak for the metric, if the metric has streaks enabled.
+	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 	// The date and time the achievement was completed, in ISO 8601 format.
 	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
 
@@ -271,7 +308,7 @@ func (c *CompletedAchievementResponse) GetName() string {
 	return c.Name
 }
 
-func (c *CompletedAchievementResponse) GetTrigger() string {
+func (c *CompletedAchievementResponse) GetTrigger() AchievementResponseTrigger {
 	if c == nil {
 		return ""
 	}
@@ -325,6 +362,13 @@ func (c *CompletedAchievementResponse) GetMetricName() *string {
 		return nil
 	}
 	return c.MetricName
+}
+
+func (c *CompletedAchievementResponse) GetCurrentStreak() *MetricEventStreakResponse {
+	if c == nil {
+		return nil
+	}
+	return c.CurrentStreak
 }
 
 func (c *CompletedAchievementResponse) GetAchievedAt() *time.Time {
@@ -428,6 +472,364 @@ func (e *ErrorBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
+}
+
+type MetricEventPointsResponse struct {
+	// The user's total points
+	Total *float64 `json:"total,omitempty" url:"total,omitempty"`
+	// Array of trigger awards that added points.
+	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
+	// The points added by this event.
+	Added *float64 `json:"added,omitempty" url:"added,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventPointsResponse) GetTotal() *float64 {
+	if m == nil {
+		return nil
+	}
+	return m.Total
+}
+
+func (m *MetricEventPointsResponse) GetAwards() []*PointsAward {
+	if m == nil {
+		return nil
+	}
+	return m.Awards
+}
+
+func (m *MetricEventPointsResponse) GetAdded() *float64 {
+	if m == nil {
+		return nil
+	}
+	return m.Added
+}
+
+func (m *MetricEventPointsResponse) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *MetricEventPointsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventPointsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventPointsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventPointsResponse) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+// An object representing the user's streak after sending a metric event.
+type MetricEventStreakResponse struct {
+	// The length of the user's current streak.
+	Length int `json:"length" url:"length"`
+	// The frequency of the streak.
+	Frequency StreakFrequency `json:"frequency" url:"frequency"`
+	// The date the streak started.
+	Started *string `json:"started,omitempty" url:"started,omitempty"`
+	// The start date of the current streak period.
+	PeriodStart *string `json:"periodStart,omitempty" url:"periodStart,omitempty"`
+	// The end date of the current streak period.
+	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
+	// The date the streak will expire if the user does not increment a metric.
+	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
+	// Whether this metric event increased the user's streak length.
+	Extended *bool `json:"extended,omitempty" url:"extended,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventStreakResponse) GetLength() int {
+	if m == nil {
+		return 0
+	}
+	return m.Length
+}
+
+func (m *MetricEventStreakResponse) GetFrequency() StreakFrequency {
+	if m == nil {
+		return ""
+	}
+	return m.Frequency
+}
+
+func (m *MetricEventStreakResponse) GetStarted() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Started
+}
+
+func (m *MetricEventStreakResponse) GetPeriodStart() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PeriodStart
+}
+
+func (m *MetricEventStreakResponse) GetPeriodEnd() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PeriodEnd
+}
+
+func (m *MetricEventStreakResponse) GetExpires() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Expires
+}
+
+func (m *MetricEventStreakResponse) GetExtended() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.Extended
+}
+
+func (m *MetricEventStreakResponse) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *MetricEventStreakResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventStreakResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventStreakResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventStreakResponse) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+type PointsAward struct {
+	// The ID of the trigger award
+	Id *string `json:"id,omitempty" url:"id,omitempty"`
+	// The points awarded by this trigger
+	Awarded *float64       `json:"awarded,omitempty" url:"awarded,omitempty"`
+	Trigger *PointsTrigger `json:"trigger,omitempty" url:"trigger,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsAward) GetId() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Id
+}
+
+func (p *PointsAward) GetAwarded() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.Awarded
+}
+
+func (p *PointsAward) GetTrigger() *PointsTrigger {
+	if p == nil {
+		return nil
+	}
+	return p.Trigger
+}
+
+func (p *PointsAward) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsAward) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsAward
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsAward(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsAward) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PointsTrigger struct {
+	// The ID of the trigger
+	Id *string `json:"id,omitempty" url:"id,omitempty"`
+	// The type of trigger
+	Type *PointsTriggerType `json:"type,omitempty" url:"type,omitempty"`
+	// The points awarded by this trigger.
+	Points *float64 `json:"points,omitempty" url:"points,omitempty"`
+	// If the trigger has type 'metric', the name of the metric
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// If the trigger has type 'metric', the threshold of the metric that triggers the points
+	MetricThreshold *float64 `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// If the trigger has type 'streak', the threshold of the streak that triggers the points
+	StreakLengthThreshold *float64 `json:"streakLengthThreshold,omitempty" url:"streakLengthThreshold,omitempty"`
+	// If the trigger has type 'achievement', the name of the achievement
+	AchievementName *string `json:"achievementName,omitempty" url:"achievementName,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsTrigger) GetId() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Id
+}
+
+func (p *PointsTrigger) GetType() *PointsTriggerType {
+	if p == nil {
+		return nil
+	}
+	return p.Type
+}
+
+func (p *PointsTrigger) GetPoints() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.Points
+}
+
+func (p *PointsTrigger) GetMetricName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.MetricName
+}
+
+func (p *PointsTrigger) GetMetricThreshold() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.MetricThreshold
+}
+
+func (p *PointsTrigger) GetStreakLengthThreshold() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.StreakLengthThreshold
+}
+
+func (p *PointsTrigger) GetAchievementName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.AchievementName
+}
+
+func (p *PointsTrigger) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsTrigger) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsTrigger
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsTrigger(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsTrigger) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// The type of trigger
+type PointsTriggerType string
+
+const (
+	PointsTriggerTypeMetric      PointsTriggerType = "metric"
+	PointsTriggerTypeAchievement PointsTriggerType = "achievement"
+	PointsTriggerTypeStreak      PointsTriggerType = "streak"
+)
+
+func NewPointsTriggerTypeFromString(s string) (PointsTriggerType, error) {
+	switch s {
+	case "metric":
+		return PointsTriggerTypeMetric, nil
+	case "achievement":
+		return PointsTriggerTypeAchievement, nil
+	case "streak":
+		return PointsTriggerTypeStreak, nil
+	}
+	var t PointsTriggerType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsTriggerType) Ptr() *PointsTriggerType {
+	return &p
 }
 
 type StreakFrequency string
