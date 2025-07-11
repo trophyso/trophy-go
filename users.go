@@ -37,62 +37,6 @@ type UsersStreakRequest struct {
 	HistoryPeriods *int `json:"-" url:"historyPeriods,omitempty"`
 }
 
-type GetUserPointsResponse struct {
-	// The user's total points
-	Total *float64 `json:"total,omitempty" url:"total,omitempty"`
-	// Array of trigger awards that added points.
-	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (g *GetUserPointsResponse) GetTotal() *float64 {
-	if g == nil {
-		return nil
-	}
-	return g.Total
-}
-
-func (g *GetUserPointsResponse) GetAwards() []*PointsAward {
-	if g == nil {
-		return nil
-	}
-	return g.Awards
-}
-
-func (g *GetUserPointsResponse) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GetUserPointsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetUserPointsResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GetUserPointsResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GetUserPointsResponse) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
 type MetricResponse struct {
 	// The unique ID of the metric.
 	Id string `json:"id" url:"id"`

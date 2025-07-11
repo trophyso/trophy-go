@@ -474,69 +474,60 @@ func (e *ErrorBody) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
-type MetricEventPointsResponse struct {
+type GetUserPointsResponse struct {
 	// The user's total points
 	Total *float64 `json:"total,omitempty" url:"total,omitempty"`
 	// Array of trigger awards that added points.
 	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
-	// The points added by this event.
-	Added *float64 `json:"added,omitempty" url:"added,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (m *MetricEventPointsResponse) GetTotal() *float64 {
-	if m == nil {
+func (g *GetUserPointsResponse) GetTotal() *float64 {
+	if g == nil {
 		return nil
 	}
-	return m.Total
+	return g.Total
 }
 
-func (m *MetricEventPointsResponse) GetAwards() []*PointsAward {
-	if m == nil {
+func (g *GetUserPointsResponse) GetAwards() []*PointsAward {
+	if g == nil {
 		return nil
 	}
-	return m.Awards
+	return g.Awards
 }
 
-func (m *MetricEventPointsResponse) GetAdded() *float64 {
-	if m == nil {
-		return nil
-	}
-	return m.Added
+func (g *GetUserPointsResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
 }
 
-func (m *MetricEventPointsResponse) GetExtraProperties() map[string]interface{} {
-	return m.extraProperties
-}
-
-func (m *MetricEventPointsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler MetricEventPointsResponse
+func (g *GetUserPointsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetUserPointsResponse
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*m = MetricEventPointsResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	*g = GetUserPointsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
 	}
-	m.extraProperties = extraProperties
-	m.rawJSON = json.RawMessage(data)
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
 	return nil
 }
 
-func (m *MetricEventPointsResponse) String() string {
-	if len(m.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+func (g *GetUserPointsResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := internal.StringifyJSON(m); err == nil {
+	if value, err := internal.StringifyJSON(g); err == nil {
 		return value
 	}
-	return fmt.Sprintf("%#v", m)
+	return fmt.Sprintf("%#v", g)
 }
 
 // An object representing the user's streak after sending a metric event.
@@ -645,7 +636,11 @@ type PointsAward struct {
 	// The ID of the trigger award
 	Id *string `json:"id,omitempty" url:"id,omitempty"`
 	// The points awarded by this trigger
-	Awarded *float64       `json:"awarded,omitempty" url:"awarded,omitempty"`
+	Awarded *float64 `json:"awarded,omitempty" url:"awarded,omitempty"`
+	// The date these points were awarded, in ISO 8601 format.
+	Date *string `json:"date,omitempty" url:"date,omitempty"`
+	// The user's total points after this award occurred.
+	Total   *float64       `json:"total,omitempty" url:"total,omitempty"`
 	Trigger *PointsTrigger `json:"trigger,omitempty" url:"trigger,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -664,6 +659,20 @@ func (p *PointsAward) GetAwarded() *float64 {
 		return nil
 	}
 	return p.Awarded
+}
+
+func (p *PointsAward) GetDate() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Date
+}
+
+func (p *PointsAward) GetTotal() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.Total
 }
 
 func (p *PointsAward) GetTrigger() *PointsTrigger {
