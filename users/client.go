@@ -31,7 +31,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Identify a new user.
+// Create a new user.
 func (c *Client) Create(
 	ctx context.Context,
 	request *trophygo.UpsertedUser,
@@ -147,10 +147,10 @@ func (c *Client) Get(
 	return response, nil
 }
 
-// Upsert a user (create or update).
-func (c *Client) Upsert(
+// Identify a user.
+func (c *Client) Identify(
 	ctx context.Context,
-	// ID of the user to upsert.
+	// ID of the user to identify.
 	id string,
 	request *trophygo.UpdatedUser,
 	opts ...option.RequestOption,
