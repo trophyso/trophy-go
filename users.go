@@ -328,6 +328,8 @@ type User struct {
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	// The user's timezone (used for email scheduling).
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
+	// The user's device tokens, used for push notifications.
+	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
 	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
 	// The ID of the user in your database. Must be a string.
@@ -362,6 +364,13 @@ func (u *User) GetTz() *string {
 		return nil
 	}
 	return u.Tz
+}
+
+func (u *User) GetDeviceTokens() []string {
+	if u == nil {
+		return nil
+	}
+	return u.DeviceTokens
 }
 
 func (u *User) GetSubscribeToEmails() *bool {
