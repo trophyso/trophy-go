@@ -330,7 +330,7 @@ type User struct {
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
 	// The user's device tokens, used for push notifications.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
-	// Whether the user should receive Trophy-powered emails. Cannot be false if an email is provided.
+	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
 	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
 	// The ID of the user in your database. Must be a string.
 	Id string `json:"id" url:"id"`
