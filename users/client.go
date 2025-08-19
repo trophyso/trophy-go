@@ -467,11 +467,12 @@ func (c *Client) MetricEventSummary(
 	return response, nil
 }
 
-// Get all of a user's completed achievements.
-func (c *Client) AllAchievements(
+// Get a user's achievements.
+func (c *Client) Achievements(
 	ctx context.Context,
 	// ID of the user.
 	id string,
+	request *trophygo.UsersAchievementsRequest,
 	opts ...option.RequestOption,
 ) ([]*trophygo.CompletedAchievementResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -484,6 +485,13 @@ func (c *Client) AllAchievements(
 		baseURL+"/users/%v/achievements",
 		id,
 	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -593,11 +601,13 @@ func (c *Client) Streak(
 	return response, nil
 }
 
-// Get a user's points.
+// Get a user's points for a specific points system.
 func (c *Client) Points(
 	ctx context.Context,
 	// ID of the user.
 	id string,
+	// Key of the points system.
+	key string,
 	request *trophygo.UsersPointsRequest,
 	opts ...option.RequestOption,
 ) (*trophygo.GetUserPointsResponse, error) {
@@ -608,8 +618,9 @@ func (c *Client) Points(
 		"https://app.trophy.so/api",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/users/%v/points",
+		baseURL+"/users/%v/points/%v",
 		id,
+		key,
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
@@ -660,11 +671,13 @@ func (c *Client) Points(
 	return response, nil
 }
 
-// Get a summary of points awards over time for a user.
+// Get a summary of points awards over time for a user for a specific points system.
 func (c *Client) PointsEventSummary(
 	ctx context.Context,
 	// ID of the user.
 	id string,
+	// Key of the points system.
+	key string,
 	request *trophygo.UsersPointsEventSummaryRequest,
 	opts ...option.RequestOption,
 ) ([]*trophygo.UsersPointsEventSummaryResponseItem, error) {
@@ -675,8 +688,9 @@ func (c *Client) PointsEventSummary(
 		"https://app.trophy.so/api",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/users/%v/points/event-summary",
+		baseURL+"/users/%v/points/%v/event-summary",
 		id,
+		key,
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {

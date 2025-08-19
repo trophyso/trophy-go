@@ -9,6 +9,11 @@ import (
 	time "time"
 )
 
+type UsersAchievementsRequest struct {
+	// When set to 'true', returns both completed and incomplete achievements for the user. When omitted or set to any other value, returns only completed achievements.
+	IncludeIncomplete *string `json:"-" url:"includeIncomplete,omitempty"`
+}
+
 type UsersMetricEventSummaryRequest struct {
 	// The time period over which to aggregate the event data.
 	Aggregation UsersMetricEventSummaryRequestAggregation `json:"-" url:"aggregation"`
@@ -332,6 +337,8 @@ type User struct {
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
 	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
+	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
 	// The ID of the user in your database. Must be a string.
 	Id string `json:"id" url:"id"`
 	// Whether the user is in the control group, meaning they do not receive emails or other communications from Trophy.
@@ -378,6 +385,13 @@ func (u *User) GetSubscribeToEmails() *bool {
 		return nil
 	}
 	return u.SubscribeToEmails
+}
+
+func (u *User) GetAttributes() map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Attributes
 }
 
 func (u *User) GetId() string {

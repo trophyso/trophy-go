@@ -53,11 +53,6 @@ func (c *Client) All(
 				APIError: apiError,
 			}
 		},
-		404: func(apiError *core.APIError) error {
-			return &trophygo.NotFoundError{
-				APIError: apiError,
-			}
-		},
 		422: func(apiError *core.APIError) error {
 			return &trophygo.UnprocessableEntityError{
 				APIError: apiError,

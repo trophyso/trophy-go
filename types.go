@@ -475,8 +475,16 @@ func (e *ErrorBody) String() string {
 }
 
 type GetUserPointsResponse struct {
+	// The ID of the points system
+	Id string `json:"id" url:"id"`
+	// The name of the points system
+	Name string `json:"name" url:"name"`
+	// The description of the points system
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the points system
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
 	// The user's total points
-	Total *float64 `json:"total,omitempty" url:"total,omitempty"`
+	Total float64 `json:"total" url:"total"`
 	// Array of trigger awards that added points.
 	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
 
@@ -484,9 +492,37 @@ type GetUserPointsResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (g *GetUserPointsResponse) GetTotal() *float64 {
+func (g *GetUserPointsResponse) GetId() string {
+	if g == nil {
+		return ""
+	}
+	return g.Id
+}
+
+func (g *GetUserPointsResponse) GetName() string {
+	if g == nil {
+		return ""
+	}
+	return g.Name
+}
+
+func (g *GetUserPointsResponse) GetDescription() *string {
 	if g == nil {
 		return nil
+	}
+	return g.Description
+}
+
+func (g *GetUserPointsResponse) GetBadgeUrl() *string {
+	if g == nil {
+		return nil
+	}
+	return g.BadgeUrl
+}
+
+func (g *GetUserPointsResponse) GetTotal() float64 {
+	if g == nil {
+		return 0
 	}
 	return g.Total
 }
@@ -528,6 +564,107 @@ func (g *GetUserPointsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+type MetricEventPointsResponse struct {
+	// The ID of the points system
+	Id string `json:"id" url:"id"`
+	// The name of the points system
+	Name string `json:"name" url:"name"`
+	// The description of the points system
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the points system
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The user's total points
+	Total float64 `json:"total" url:"total"`
+	// Array of trigger awards that added points.
+	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
+	// The points added by this event.
+	Added *float64 `json:"added,omitempty" url:"added,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventPointsResponse) GetId() string {
+	if m == nil {
+		return ""
+	}
+	return m.Id
+}
+
+func (m *MetricEventPointsResponse) GetName() string {
+	if m == nil {
+		return ""
+	}
+	return m.Name
+}
+
+func (m *MetricEventPointsResponse) GetDescription() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Description
+}
+
+func (m *MetricEventPointsResponse) GetBadgeUrl() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BadgeUrl
+}
+
+func (m *MetricEventPointsResponse) GetTotal() float64 {
+	if m == nil {
+		return 0
+	}
+	return m.Total
+}
+
+func (m *MetricEventPointsResponse) GetAwards() []*PointsAward {
+	if m == nil {
+		return nil
+	}
+	return m.Awards
+}
+
+func (m *MetricEventPointsResponse) GetAdded() *float64 {
+	if m == nil {
+		return nil
+	}
+	return m.Added
+}
+
+func (m *MetricEventPointsResponse) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *MetricEventPointsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventPointsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventPointsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventPointsResponse) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
 }
 
 // An object representing the user's streak after sending a metric event.
@@ -881,6 +1018,8 @@ type UpdatedUser struct {
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
 	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
+	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -919,6 +1058,13 @@ func (u *UpdatedUser) GetSubscribeToEmails() *bool {
 		return nil
 	}
 	return u.SubscribeToEmails
+}
+
+func (u *UpdatedUser) GetAttributes() map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Attributes
 }
 
 func (u *UpdatedUser) GetExtraProperties() map[string]interface{} {
@@ -965,6 +1111,8 @@ type UpsertedUser struct {
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
 	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
+	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
 	// The ID of the user in your database. Must be a string.
 	Id string `json:"id" url:"id"`
 
@@ -1005,6 +1153,13 @@ func (u *UpsertedUser) GetSubscribeToEmails() *bool {
 		return nil
 	}
 	return u.SubscribeToEmails
+}
+
+func (u *UpsertedUser) GetAttributes() map[string]string {
+	if u == nil {
+		return nil
+	}
+	return u.Attributes
 }
 
 func (u *UpsertedUser) GetId() string {

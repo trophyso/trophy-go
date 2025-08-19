@@ -34,6 +34,9 @@ func NewClient(opts ...option.RequestOption) *Client {
 // Get a breakdown of the number of users with points in each range.
 func (c *Client) Summary(
 	ctx context.Context,
+	// Key of the points system.
+	key string,
+	request *trophygo.PointsSummaryRequest,
 	opts ...option.RequestOption,
 ) (trophygo.PointsSummaryResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -42,7 +45,17 @@ func (c *Client) Summary(
 		c.baseURL,
 		"https://app.trophy.so/api",
 	)
-	endpointURL := baseURL + "/points/summary"
+	endpointURL := internal.EncodeURL(
+		baseURL+"/points/%v/summary",
+		key,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -55,6 +68,11 @@ func (c *Client) Summary(
 		},
 		404: func(apiError *core.APIError) error {
 			return &trophygo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
 				APIError: apiError,
 			}
 		},
@@ -80,18 +98,23 @@ func (c *Client) Summary(
 	return response, nil
 }
 
-// Get all points triggers.
-func (c *Client) Triggers(
+// Get a points system with all its triggers.
+func (c *Client) System(
 	ctx context.Context,
+	// Key of the points system.
+	key string,
 	opts ...option.RequestOption,
-) ([]*trophygo.PointsTriggerResponse, error) {
+) (*trophygo.PointsSystemResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
 		"https://app.trophy.so/api",
 	)
-	endpointURL := baseURL + "/points/triggers"
+	endpointURL := internal.EncodeURL(
+		baseURL+"/points/%v",
+		key,
+	)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -102,9 +125,14 @@ func (c *Client) Triggers(
 				APIError: apiError,
 			}
 		},
+		404: func(apiError *core.APIError) error {
+			return &trophygo.NotFoundError{
+				APIError: apiError,
+			}
+		},
 	}
 
-	var response []*trophygo.PointsTriggerResponse
+	var response *trophygo.PointsSystemResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

@@ -9,6 +9,11 @@ import (
 	time "time"
 )
 
+type PointsSummaryRequest struct {
+	// Optional colon-delimited user attribute filters in the format attributeKey:value,attributeKey:value. Only users matching ALL specified attributes will be included in the points breakdown.
+	UserAttributes *string `json:"-" url:"userAttributes,omitempty"`
+}
+
 type PointsRange struct {
 	// The start of the points range. Inclusive.
 	From *float64 `json:"from,omitempty" url:"from,omitempty"`
@@ -77,6 +82,89 @@ func (p *PointsRange) String() string {
 // A list of eleven points ranges, with the first starting and ending at 0, and the remaining 10 being calculated as 10 equally sized ranges from 1 to the greatest number of points a user has, rounded up to the nearest power of 10.
 type PointsSummaryResponse = []*PointsRange
 
+type PointsSystemResponse struct {
+	// The unique ID of the points system.
+	Id string `json:"id" url:"id"`
+	// The name of the points system.
+	Name string `json:"name" url:"name"`
+	// The description of the points system.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the points system, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// Array of active triggers for this points system.
+	Triggers []*PointsTriggerResponse `json:"triggers,omitempty" url:"triggers,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsSystemResponse) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PointsSystemResponse) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PointsSystemResponse) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PointsSystemResponse) GetBadgeUrl() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BadgeUrl
+}
+
+func (p *PointsSystemResponse) GetTriggers() []*PointsTriggerResponse {
+	if p == nil {
+		return nil
+	}
+	return p.Triggers
+}
+
+func (p *PointsSystemResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsSystemResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsSystemResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsSystemResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsSystemResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 type PointsTriggerResponse struct {
 	// The unique ID of the trigger.
 	Id *string `json:"id,omitempty" url:"id,omitempty"`
@@ -98,6 +186,10 @@ type PointsTriggerResponse struct {
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
 	// The name of the achievement associated with this trigger, if the trigger is an achievement.
 	AchievementName *string `json:"achievementName,omitempty" url:"achievementName,omitempty"`
+	// User attribute filters that must be met for this trigger to activate. Only present if the trigger has user attribute filters configured.
+	UserAttributes []*PointsTriggerResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Event attribute filter that must be met for this trigger to activate. Only present if the trigger has an event filter configured.
+	EventAttribute *PointsTriggerResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
 	// The date and time the trigger was created, in ISO 8601 format.
 	Created *time.Time `json:"created,omitempty" url:"created,omitempty"`
 	// The date and time the trigger was last updated, in ISO 8601 format.
@@ -177,6 +269,20 @@ func (p *PointsTriggerResponse) GetAchievementName() *string {
 	return p.AchievementName
 }
 
+func (p *PointsTriggerResponse) GetUserAttributes() []*PointsTriggerResponseUserAttributesItem {
+	if p == nil {
+		return nil
+	}
+	return p.UserAttributes
+}
+
+func (p *PointsTriggerResponse) GetEventAttribute() *PointsTriggerResponseEventAttribute {
+	if p == nil {
+		return nil
+	}
+	return p.EventAttribute
+}
+
 func (p *PointsTriggerResponse) GetCreated() *time.Time {
 	if p == nil {
 		return nil
@@ -245,6 +351,63 @@ func (p *PointsTriggerResponse) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+// Event attribute filter that must be met for this trigger to activate. Only present if the trigger has an event filter configured.
+type PointsTriggerResponseEventAttribute struct {
+	// The key of the event attribute.
+	Key string `json:"key" url:"key"`
+	// The required value of the event attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsTriggerResponseEventAttribute) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PointsTriggerResponseEventAttribute) GetValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.Value
+}
+
+func (p *PointsTriggerResponseEventAttribute) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsTriggerResponseEventAttribute) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsTriggerResponseEventAttribute
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsTriggerResponseEventAttribute(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsTriggerResponseEventAttribute) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 // The status of the trigger.
 type PointsTriggerResponseStatus string
 
@@ -292,4 +455,60 @@ func NewPointsTriggerResponseTypeFromString(s string) (PointsTriggerResponseType
 
 func (p PointsTriggerResponseType) Ptr() *PointsTriggerResponseType {
 	return &p
+}
+
+type PointsTriggerResponseUserAttributesItem struct {
+	// The key of the user attribute.
+	Key string `json:"key" url:"key"`
+	// The value of the user attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsTriggerResponseUserAttributesItem) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PointsTriggerResponseUserAttributesItem) GetValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.Value
+}
+
+func (p *PointsTriggerResponseUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsTriggerResponseUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsTriggerResponseUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsTriggerResponseUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsTriggerResponseUserAttributesItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }

@@ -10,13 +10,15 @@ import (
 
 type AchievementsCompleteRequest struct {
 	// The user that completed the achievement.
-	User *UpdatedUser `json:"user,omitempty" url:"-"`
+	User *UpsertedUser `json:"user,omitempty" url:"-"`
 }
 
 type AchievementCompletionResponse struct {
 	// The unique ID of the completion.
 	CompletionId string                        `json:"completionId" url:"completionId"`
 	Achievement  *CompletedAchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
+	// A map of points systems by key that were affected by this achievement completion.
+	Points map[string]*MetricEventPointsResponse `json:"points,omitempty" url:"points,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -34,6 +36,13 @@ func (a *AchievementCompletionResponse) GetAchievement() *CompletedAchievementRe
 		return nil
 	}
 	return a.Achievement
+}
+
+func (a *AchievementCompletionResponse) GetPoints() map[string]*MetricEventPointsResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Points
 }
 
 func (a *AchievementCompletionResponse) GetExtraProperties() map[string]interface{} {
@@ -94,7 +103,11 @@ type AchievementWithStatsResponse struct {
 	// The number of users who have completed this achievement.
 	Completions *int `json:"completions,omitempty" url:"completions,omitempty"`
 	// The percentage of all users who have completed this achievement.
-	CompletedPercentage *float64 `json:"completedPercentage,omitempty" url:"completedPercentage,omitempty"`
+	Rarity *float64 `json:"rarity,omitempty" url:"rarity,omitempty"`
+	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	UserAttributes []*AchievementWithStatsResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	EventAttribute *AchievementWithStatsResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -184,11 +197,25 @@ func (a *AchievementWithStatsResponse) GetCompletions() *int {
 	return a.Completions
 }
 
-func (a *AchievementWithStatsResponse) GetCompletedPercentage() *float64 {
+func (a *AchievementWithStatsResponse) GetRarity() *float64 {
 	if a == nil {
 		return nil
 	}
-	return a.CompletedPercentage
+	return a.Rarity
+}
+
+func (a *AchievementWithStatsResponse) GetUserAttributes() []*AchievementWithStatsResponseUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
+}
+
+func (a *AchievementWithStatsResponse) GetEventAttribute() *AchievementWithStatsResponseEventAttribute {
+	if a == nil {
+		return nil
+	}
+	return a.EventAttribute
 }
 
 func (a *AchievementWithStatsResponse) GetExtraProperties() map[string]interface{} {
@@ -212,6 +239,119 @@ func (a *AchievementWithStatsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (a *AchievementWithStatsResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+type AchievementWithStatsResponseEventAttribute struct {
+	// The key of the event attribute.
+	Key string `json:"key" url:"key"`
+	// The value of the event attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) GetValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.Value
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) UnmarshalJSON(data []byte) error {
+	type unmarshaler AchievementWithStatsResponseEventAttribute
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AchievementWithStatsResponseEventAttribute(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AchievementWithStatsResponseUserAttributesItem struct {
+	// The key of the user attribute.
+	Key string `json:"key" url:"key"`
+	// The value of the user attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) GetValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.Value
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AchievementWithStatsResponseUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AchievementWithStatsResponseUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) String() string {
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
