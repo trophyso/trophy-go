@@ -9,6 +9,7 @@ import (
 	metrics "github.com/trophyso/trophy-go/metrics"
 	option "github.com/trophyso/trophy-go/option"
 	points "github.com/trophyso/trophy-go/points"
+	streaks "github.com/trophyso/trophy-go/streaks"
 	users "github.com/trophyso/trophy-go/users"
 	http "net/http"
 )
@@ -21,6 +22,7 @@ type Client struct {
 	Achievements *achievements.Client
 	Metrics      *metrics.Client
 	Users        *users.Client
+	Streaks      *streaks.Client
 	Points       *points.Client
 }
 
@@ -38,6 +40,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Achievements: achievements.NewClient(opts...),
 		Metrics:      metrics.NewClient(opts...),
 		Users:        users.NewClient(opts...),
+		Streaks:      streaks.NewClient(opts...),
 		Points:       points.NewClient(opts...),
 	}
 }
