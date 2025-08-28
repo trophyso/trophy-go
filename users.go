@@ -173,6 +173,8 @@ type StreakResponse struct {
 	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
 	// A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
 	StreakHistory []*StreakResponseStreakHistoryItem `json:"streakHistory,omitempty" url:"streakHistory,omitempty"`
+	// The user's rank across all users. Null if the user has no active streak.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -225,6 +227,13 @@ func (s *StreakResponse) GetStreakHistory() []*StreakResponseStreakHistoryItem {
 		return nil
 	}
 	return s.StreakHistory
+}
+
+func (s *StreakResponse) GetRank() *int {
+	if s == nil {
+		return nil
+	}
+	return s.Rank
 }
 
 func (s *StreakResponse) GetExtraProperties() map[string]interface{} {
