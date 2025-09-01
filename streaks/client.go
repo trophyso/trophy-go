@@ -31,6 +31,63 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
+// Get the streak lengths of a list of users, ranked by streak length from longest to shortest.
+func (c *Client) List(
+	ctx context.Context,
+	request *trophygo.StreaksListRequest,
+	opts ...option.RequestOption,
+) (trophygo.BulkStreakResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://app.trophy.so/api",
+	)
+	endpointURL := baseURL + "/streaks"
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response trophygo.BulkStreakResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 // Get the top users by streak length (active or longest).
 func (c *Client) Rankings(
 	ctx context.Context,

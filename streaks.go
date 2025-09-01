@@ -8,11 +8,83 @@ import (
 	internal "github.com/trophyso/trophy-go/internal"
 )
 
+type StreaksListRequest struct {
+	// A list of up to 100 user IDs.
+	UserIds []*string `json:"-" url:"userIds,omitempty"`
+}
+
 type StreaksRankingsRequest struct {
 	// Number of users to return. Must be between 1 and 100.
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Whether to rank users by active streaks or longest streaks ever achieved.
 	Type *StreaksRankingsRequestType `json:"-" url:"type,omitempty"`
+}
+
+type BulkStreakResponse = []*BulkStreakResponseItem
+
+type BulkStreakResponseItem struct {
+	// The ID of the user.
+	UserId string `json:"userId" url:"userId"`
+	// The length of the user's streak.
+	StreakLength int `json:"streakLength" url:"streakLength"`
+	// The timestamp the streak was extended, as a string.
+	Extended *string `json:"extended,omitempty" url:"extended,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BulkStreakResponseItem) GetUserId() string {
+	if b == nil {
+		return ""
+	}
+	return b.UserId
+}
+
+func (b *BulkStreakResponseItem) GetStreakLength() int {
+	if b == nil {
+		return 0
+	}
+	return b.StreakLength
+}
+
+func (b *BulkStreakResponseItem) GetExtended() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Extended
+}
+
+func (b *BulkStreakResponseItem) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BulkStreakResponseItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler BulkStreakResponseItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BulkStreakResponseItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BulkStreakResponseItem) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
 }
 
 // A user with their streak length in the rankings.
