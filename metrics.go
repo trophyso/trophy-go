@@ -9,6 +9,8 @@ import (
 )
 
 type MetricsEventRequest struct {
+	// The idempotency key for the event.
+	IdempotencyKey *string `json:"-" url:"-"`
 	// The user that triggered the event.
 	User *UpsertedUser `json:"user,omitempty" url:"-"`
 	// The value to add to the user's current total for the given metric.

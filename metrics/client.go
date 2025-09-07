@@ -4,6 +4,7 @@ package metrics
 
 import (
 	context "context"
+	fmt "fmt"
 	trophygo "github.com/trophyso/trophy-go"
 	core "github.com/trophyso/trophy-go/core"
 	internal "github.com/trophyso/trophy-go/internal"
@@ -53,6 +54,9 @@ func (c *Client) Event(
 		c.header.Clone(),
 		options.ToHeader(),
 	)
+	if request.IdempotencyKey != nil {
+		headers.Add("Idempotency-Key", fmt.Sprintf("%v", *request.IdempotencyKey))
+	}
 	headers.Set("Content-Type", "application/json")
 	errorCodes := internal.ErrorCodes{
 		400: func(apiError *core.APIError) error {
