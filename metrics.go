@@ -30,6 +30,10 @@ type EventResponse struct {
 	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 	// A map of points systems by key that were affected by this event.
 	Points map[string]*MetricEventPointsResponse `json:"points,omitempty" url:"points,omitempty"`
+	// The idempotency key used for the event, if one was provided.
+	IdempotencyKey *string `json:"idempotencyKey,omitempty" url:"idempotencyKey,omitempty"`
+	// Whether the event was replayed due to idempotency.
+	IdempotentReplayed *bool `json:"idempotentReplayed,omitempty" url:"idempotentReplayed,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -75,6 +79,20 @@ func (e *EventResponse) GetPoints() map[string]*MetricEventPointsResponse {
 		return nil
 	}
 	return e.Points
+}
+
+func (e *EventResponse) GetIdempotencyKey() *string {
+	if e == nil {
+		return nil
+	}
+	return e.IdempotencyKey
+}
+
+func (e *EventResponse) GetIdempotentReplayed() *bool {
+	if e == nil {
+		return nil
+	}
+	return e.IdempotentReplayed
 }
 
 func (e *EventResponse) GetExtraProperties() map[string]interface{} {
