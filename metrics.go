@@ -28,10 +28,12 @@ type EventResponse struct {
 	Total float64 `json:"total" url:"total"`
 	// Achievements completed as a result of this event.
 	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
-	// The user's current streak for the metric, if the metric has streaks enabled.
+	// The user's current streak.
 	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
-	// A map of points systems by key that were affected by this event.
+	// A map of points systems by key.
 	Points map[string]*MetricEventPointsResponse `json:"points,omitempty" url:"points,omitempty"`
+	// A map of leaderboards by key.
+	Leaderboards map[string]*MetricEventLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
 	// The idempotency key used for the event, if one was provided.
 	IdempotencyKey *string `json:"idempotencyKey,omitempty" url:"idempotencyKey,omitempty"`
 	// Whether the event was replayed due to idempotency.
@@ -83,6 +85,13 @@ func (e *EventResponse) GetPoints() map[string]*MetricEventPointsResponse {
 	return e.Points
 }
 
+func (e *EventResponse) GetLeaderboards() map[string]*MetricEventLeaderboardResponse {
+	if e == nil {
+		return nil
+	}
+	return e.Leaderboards
+}
+
 func (e *EventResponse) GetIdempotencyKey() *string {
 	if e == nil {
 		return nil
@@ -127,4 +136,204 @@ func (e *EventResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
+}
+
+type MetricEventLeaderboardResponse struct {
+	// The end date of the current run of the leaderboard, or null if the run never ends.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The user's rank in the leaderboard, or null if the user is not on the leaderboard.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+	// The user's rank in the leaderboard before the event, or null if the user was not on the leaderboard before the event.
+	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
+	// The minimum value required to enter the leaderboard according to its current rankings.
+	Threshold float64 `json:"threshold" url:"threshold"`
+	// The unique ID of the leaderboard.
+	Id string `json:"id" url:"id"`
+	// The user-facing name of the leaderboard.
+	Name string `json:"name" url:"name"`
+	// The unique key used to reference the leaderboard in APIs.
+	Key string `json:"key" url:"key"`
+	// The status of the leaderboard.
+	Status *LeaderboardResponseStatus `json:"status,omitempty" url:"status,omitempty"`
+	// What the leaderboard ranks by.
+	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the metric to rank by, if rankBy is 'metric'.
+	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
+	// The name of the metric to rank by, if rankBy is 'metric'.
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The key of the points system to rank by, if rankBy is 'points'.
+	PointsSystemKey *string `json:"pointsSystemKey,omitempty" url:"pointsSystemKey,omitempty"`
+	// The name of the points system to rank by, if rankBy is 'points'.
+	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
+	// The user-facing description of the leaderboard.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The start date of the leaderboard in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// The maximum number of participants in the leaderboard.
+	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
+	RunUnit *string `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The interval between repetitions, relative to the start date and repetition type.
+	RunInterval int `json:"runInterval" url:"runInterval"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventLeaderboardResponse) GetEnd() *string {
+	if m == nil {
+		return nil
+	}
+	return m.End
+}
+
+func (m *MetricEventLeaderboardResponse) GetRank() *int {
+	if m == nil {
+		return nil
+	}
+	return m.Rank
+}
+
+func (m *MetricEventLeaderboardResponse) GetPreviousRank() *int {
+	if m == nil {
+		return nil
+	}
+	return m.PreviousRank
+}
+
+func (m *MetricEventLeaderboardResponse) GetThreshold() float64 {
+	if m == nil {
+		return 0
+	}
+	return m.Threshold
+}
+
+func (m *MetricEventLeaderboardResponse) GetId() string {
+	if m == nil {
+		return ""
+	}
+	return m.Id
+}
+
+func (m *MetricEventLeaderboardResponse) GetName() string {
+	if m == nil {
+		return ""
+	}
+	return m.Name
+}
+
+func (m *MetricEventLeaderboardResponse) GetKey() string {
+	if m == nil {
+		return ""
+	}
+	return m.Key
+}
+
+func (m *MetricEventLeaderboardResponse) GetStatus() *LeaderboardResponseStatus {
+	if m == nil {
+		return nil
+	}
+	return m.Status
+}
+
+func (m *MetricEventLeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
+	if m == nil {
+		return ""
+	}
+	return m.RankBy
+}
+
+func (m *MetricEventLeaderboardResponse) GetMetricKey() *string {
+	if m == nil {
+		return nil
+	}
+	return m.MetricKey
+}
+
+func (m *MetricEventLeaderboardResponse) GetMetricName() *string {
+	if m == nil {
+		return nil
+	}
+	return m.MetricName
+}
+
+func (m *MetricEventLeaderboardResponse) GetPointsSystemKey() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PointsSystemKey
+}
+
+func (m *MetricEventLeaderboardResponse) GetPointsSystemName() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PointsSystemName
+}
+
+func (m *MetricEventLeaderboardResponse) GetDescription() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Description
+}
+
+func (m *MetricEventLeaderboardResponse) GetStart() string {
+	if m == nil {
+		return ""
+	}
+	return m.Start
+}
+
+func (m *MetricEventLeaderboardResponse) GetMaxParticipants() int {
+	if m == nil {
+		return 0
+	}
+	return m.MaxParticipants
+}
+
+func (m *MetricEventLeaderboardResponse) GetRunUnit() *string {
+	if m == nil {
+		return nil
+	}
+	return m.RunUnit
+}
+
+func (m *MetricEventLeaderboardResponse) GetRunInterval() int {
+	if m == nil {
+		return 0
+	}
+	return m.RunInterval
+}
+
+func (m *MetricEventLeaderboardResponse) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *MetricEventLeaderboardResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventLeaderboardResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventLeaderboardResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventLeaderboardResponse) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
 }

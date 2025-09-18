@@ -566,6 +566,58 @@ func (g *GetUserPointsResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+// What the leaderboard ranks by.
+type LeaderboardResponseRankBy string
+
+const (
+	LeaderboardResponseRankByPoints LeaderboardResponseRankBy = "points"
+	LeaderboardResponseRankByStreak LeaderboardResponseRankBy = "streak"
+	LeaderboardResponseRankByMetric LeaderboardResponseRankBy = "metric"
+)
+
+func NewLeaderboardResponseRankByFromString(s string) (LeaderboardResponseRankBy, error) {
+	switch s {
+	case "points":
+		return LeaderboardResponseRankByPoints, nil
+	case "streak":
+		return LeaderboardResponseRankByStreak, nil
+	case "metric":
+		return LeaderboardResponseRankByMetric, nil
+	}
+	var t LeaderboardResponseRankBy
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l LeaderboardResponseRankBy) Ptr() *LeaderboardResponseRankBy {
+	return &l
+}
+
+// The status of the leaderboard.
+type LeaderboardResponseStatus string
+
+const (
+	LeaderboardResponseStatusActive    LeaderboardResponseStatus = "active"
+	LeaderboardResponseStatusScheduled LeaderboardResponseStatus = "scheduled"
+	LeaderboardResponseStatusFinished  LeaderboardResponseStatus = "finished"
+)
+
+func NewLeaderboardResponseStatusFromString(s string) (LeaderboardResponseStatus, error) {
+	switch s {
+	case "active":
+		return LeaderboardResponseStatusActive, nil
+	case "scheduled":
+		return LeaderboardResponseStatusScheduled, nil
+	case "finished":
+		return LeaderboardResponseStatusFinished, nil
+	}
+	var t LeaderboardResponseStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l LeaderboardResponseStatus) Ptr() *LeaderboardResponseStatus {
+	return &l
+}
+
 type MetricEventPointsResponse struct {
 	// The ID of the points system
 	Id string `json:"id" url:"id"`
