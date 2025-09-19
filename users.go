@@ -14,7 +14,7 @@ type UsersAchievementsRequest struct {
 	IncludeIncomplete *string `json:"-" url:"includeIncomplete,omitempty"`
 }
 
-type UsersLeaderboardsRequest struct {
+type UsersLeaderboardRequest struct {
 	// Specific run date in YYYY-MM-DD format. If not provided, returns the current run.
 	Run *string `json:"-" url:"run,omitempty"`
 }

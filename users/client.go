@@ -742,13 +742,13 @@ func (c *Client) PointsEventSummary(
 }
 
 // Get a user's rank, value, and history for a specific leaderboard.
-func (c *Client) Leaderboards(
+func (c *Client) Leaderboard(
 	ctx context.Context,
 	// The user's ID in your database.
 	id string,
 	// Unique key of the leaderboard as set when created.
 	key string,
-	request *trophygo.UsersLeaderboardsRequest,
+	request *trophygo.UsersLeaderboardRequest,
 	opts ...option.RequestOption,
 ) (*trophygo.UserLeaderboardResponse, error) {
 	options := core.NewRequestOptions(opts...)
