@@ -566,6 +566,180 @@ func (g *GetUserPointsResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+// A leaderboard with its configuration details.
+type LeaderboardResponse struct {
+	// The unique ID of the leaderboard.
+	Id string `json:"id" url:"id"`
+	// The user-facing name of the leaderboard.
+	Name string `json:"name" url:"name"`
+	// The unique key used to reference the leaderboard in APIs.
+	Key string `json:"key" url:"key"`
+	// The status of the leaderboard.
+	Status *LeaderboardResponseStatus `json:"status,omitempty" url:"status,omitempty"`
+	// What the leaderboard ranks by.
+	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the metric to rank by, if rankBy is 'metric'.
+	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
+	// The name of the metric to rank by, if rankBy is 'metric'.
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The key of the points system to rank by, if rankBy is 'points'.
+	PointsSystemKey *string `json:"pointsSystemKey,omitempty" url:"pointsSystemKey,omitempty"`
+	// The name of the points system to rank by, if rankBy is 'points'.
+	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
+	// The user-facing description of the leaderboard.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The start date of the leaderboard in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The maximum number of participants in the leaderboard.
+	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
+	RunUnit *string `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The interval between repetitions, relative to the start date and repetition type.
+	RunInterval int `json:"runInterval" url:"runInterval"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LeaderboardResponse) GetId() string {
+	if l == nil {
+		return ""
+	}
+	return l.Id
+}
+
+func (l *LeaderboardResponse) GetName() string {
+	if l == nil {
+		return ""
+	}
+	return l.Name
+}
+
+func (l *LeaderboardResponse) GetKey() string {
+	if l == nil {
+		return ""
+	}
+	return l.Key
+}
+
+func (l *LeaderboardResponse) GetStatus() *LeaderboardResponseStatus {
+	if l == nil {
+		return nil
+	}
+	return l.Status
+}
+
+func (l *LeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
+	if l == nil {
+		return ""
+	}
+	return l.RankBy
+}
+
+func (l *LeaderboardResponse) GetMetricKey() *string {
+	if l == nil {
+		return nil
+	}
+	return l.MetricKey
+}
+
+func (l *LeaderboardResponse) GetMetricName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.MetricName
+}
+
+func (l *LeaderboardResponse) GetPointsSystemKey() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PointsSystemKey
+}
+
+func (l *LeaderboardResponse) GetPointsSystemName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PointsSystemName
+}
+
+func (l *LeaderboardResponse) GetDescription() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Description
+}
+
+func (l *LeaderboardResponse) GetStart() string {
+	if l == nil {
+		return ""
+	}
+	return l.Start
+}
+
+func (l *LeaderboardResponse) GetEnd() *string {
+	if l == nil {
+		return nil
+	}
+	return l.End
+}
+
+func (l *LeaderboardResponse) GetMaxParticipants() int {
+	if l == nil {
+		return 0
+	}
+	return l.MaxParticipants
+}
+
+func (l *LeaderboardResponse) GetRunUnit() *string {
+	if l == nil {
+		return nil
+	}
+	return l.RunUnit
+}
+
+func (l *LeaderboardResponse) GetRunInterval() int {
+	if l == nil {
+		return 0
+	}
+	return l.RunInterval
+}
+
+func (l *LeaderboardResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *LeaderboardResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler LeaderboardResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = LeaderboardResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LeaderboardResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
 // What the leaderboard ranks by.
 type LeaderboardResponseRankBy string
 

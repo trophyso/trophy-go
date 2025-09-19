@@ -14,6 +14,11 @@ type UsersAchievementsRequest struct {
 	IncludeIncomplete *string `json:"-" url:"includeIncomplete,omitempty"`
 }
 
+type UsersLeaderboardsRequest struct {
+	// Specific run date in YYYY-MM-DD format. If not provided, returns the current run.
+	Run *string `json:"-" url:"run,omitempty"`
+}
+
 type UsersMetricEventSummaryRequest struct {
 	// The time period over which to aggregate the event data.
 	Aggregation UsersMetricEventSummaryRequestAggregation `json:"-" url:"aggregation"`
@@ -40,6 +45,108 @@ type UsersPointsEventSummaryRequest struct {
 type UsersStreakRequest struct {
 	// The number of past streak periods to include in the streakHistory field of the  response.
 	HistoryPeriods *int `json:"-" url:"historyPeriods,omitempty"`
+}
+
+// A leaderboard event representing a change in a user's rank or value.
+type LeaderboardEvent struct {
+	// The timestamp when the event occurred.
+	Time time.Time `json:"time" url:"time"`
+	// The user's rank before this event, or null if they were not on the leaderboard.
+	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
+	// The user's rank after this event, or null if they are no longer on the leaderboard.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+	// The user's value before this event, or null if they were not on the leaderboard.
+	PreviousValue *int `json:"previousValue,omitempty" url:"previousValue,omitempty"`
+	// The user's value after this event, or null if they are no longer on the leaderboard.
+	Value *int `json:"value,omitempty" url:"value,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LeaderboardEvent) GetTime() time.Time {
+	if l == nil {
+		return time.Time{}
+	}
+	return l.Time
+}
+
+func (l *LeaderboardEvent) GetPreviousRank() *int {
+	if l == nil {
+		return nil
+	}
+	return l.PreviousRank
+}
+
+func (l *LeaderboardEvent) GetRank() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Rank
+}
+
+func (l *LeaderboardEvent) GetPreviousValue() *int {
+	if l == nil {
+		return nil
+	}
+	return l.PreviousValue
+}
+
+func (l *LeaderboardEvent) GetValue() *int {
+	if l == nil {
+		return nil
+	}
+	return l.Value
+}
+
+func (l *LeaderboardEvent) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *LeaderboardEvent) UnmarshalJSON(data []byte) error {
+	type embed LeaderboardEvent
+	var unmarshaler = struct {
+		embed
+		Time *internal.DateTime `json:"time"`
+	}{
+		embed: embed(*l),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*l = LeaderboardEvent(unmarshaler.embed)
+	l.Time = unmarshaler.Time.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LeaderboardEvent) MarshalJSON() ([]byte, error) {
+	type embed LeaderboardEvent
+	var marshaler = struct {
+		embed
+		Time *internal.DateTime `json:"time"`
+	}{
+		embed: embed(*l),
+		Time:  internal.NewDateTime(l.Time),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (l *LeaderboardEvent) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type MetricResponse struct {
@@ -474,6 +581,207 @@ func (u *User) MarshalJSON() ([]byte, error) {
 }
 
 func (u *User) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// A user's data for a specific leaderboard including rank, value, and history.
+type UserLeaderboardResponse struct {
+	// The unique ID of the leaderboard.
+	Id string `json:"id" url:"id"`
+	// The user-facing name of the leaderboard.
+	Name string `json:"name" url:"name"`
+	// The unique key used to reference the leaderboard in APIs.
+	Key string `json:"key" url:"key"`
+	// The status of the leaderboard.
+	Status *LeaderboardResponseStatus `json:"status,omitempty" url:"status,omitempty"`
+	// What the leaderboard ranks by.
+	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the metric to rank by, if rankBy is 'metric'.
+	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
+	// The name of the metric to rank by, if rankBy is 'metric'.
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The key of the points system to rank by, if rankBy is 'points'.
+	PointsSystemKey *string `json:"pointsSystemKey,omitempty" url:"pointsSystemKey,omitempty"`
+	// The name of the points system to rank by, if rankBy is 'points'.
+	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
+	// The user-facing description of the leaderboard.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The start date of the leaderboard in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The maximum number of participants in the leaderboard.
+	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
+	RunUnit *string `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The interval between repetitions, relative to the start date and repetition type.
+	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The user's current rank in this leaderboard. Null if the user is not on the leaderboard.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+	// The user's current value in this leaderboard. Null if the user is not on the leaderboard.
+	Value *int `json:"value,omitempty" url:"value,omitempty"`
+	// An array of events showing the user's rank and value changes over time.
+	History []*LeaderboardEvent `json:"history,omitempty" url:"history,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UserLeaderboardResponse) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UserLeaderboardResponse) GetName() string {
+	if u == nil {
+		return ""
+	}
+	return u.Name
+}
+
+func (u *UserLeaderboardResponse) GetKey() string {
+	if u == nil {
+		return ""
+	}
+	return u.Key
+}
+
+func (u *UserLeaderboardResponse) GetStatus() *LeaderboardResponseStatus {
+	if u == nil {
+		return nil
+	}
+	return u.Status
+}
+
+func (u *UserLeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
+	if u == nil {
+		return ""
+	}
+	return u.RankBy
+}
+
+func (u *UserLeaderboardResponse) GetMetricKey() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricKey
+}
+
+func (u *UserLeaderboardResponse) GetMetricName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricName
+}
+
+func (u *UserLeaderboardResponse) GetPointsSystemKey() *string {
+	if u == nil {
+		return nil
+	}
+	return u.PointsSystemKey
+}
+
+func (u *UserLeaderboardResponse) GetPointsSystemName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.PointsSystemName
+}
+
+func (u *UserLeaderboardResponse) GetDescription() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Description
+}
+
+func (u *UserLeaderboardResponse) GetStart() string {
+	if u == nil {
+		return ""
+	}
+	return u.Start
+}
+
+func (u *UserLeaderboardResponse) GetEnd() *string {
+	if u == nil {
+		return nil
+	}
+	return u.End
+}
+
+func (u *UserLeaderboardResponse) GetMaxParticipants() int {
+	if u == nil {
+		return 0
+	}
+	return u.MaxParticipants
+}
+
+func (u *UserLeaderboardResponse) GetRunUnit() *string {
+	if u == nil {
+		return nil
+	}
+	return u.RunUnit
+}
+
+func (u *UserLeaderboardResponse) GetRunInterval() int {
+	if u == nil {
+		return 0
+	}
+	return u.RunInterval
+}
+
+func (u *UserLeaderboardResponse) GetRank() *int {
+	if u == nil {
+		return nil
+	}
+	return u.Rank
+}
+
+func (u *UserLeaderboardResponse) GetValue() *int {
+	if u == nil {
+		return nil
+	}
+	return u.Value
+}
+
+func (u *UserLeaderboardResponse) GetHistory() []*LeaderboardEvent {
+	if u == nil {
+		return nil
+	}
+	return u.History
+}
+
+func (u *UserLeaderboardResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UserLeaderboardResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UserLeaderboardResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UserLeaderboardResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UserLeaderboardResponse) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
