@@ -50,7 +50,7 @@ type UsersStreakRequest struct {
 // A leaderboard event representing a change in a user's rank or value.
 type LeaderboardEvent struct {
 	// The timestamp when the event occurred.
-	Time time.Time `json:"time" url:"time"`
+	Timestamp *time.Time `json:"timestamp,omitempty" url:"timestamp,omitempty"`
 	// The user's rank before this event, or null if they were not on the leaderboard.
 	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
 	// The user's rank after this event, or null if they are no longer on the leaderboard.
@@ -64,11 +64,11 @@ type LeaderboardEvent struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *LeaderboardEvent) GetTime() time.Time {
+func (l *LeaderboardEvent) GetTimestamp() *time.Time {
 	if l == nil {
-		return time.Time{}
+		return nil
 	}
-	return l.Time
+	return l.Timestamp
 }
 
 func (l *LeaderboardEvent) GetPreviousRank() *int {
@@ -107,7 +107,7 @@ func (l *LeaderboardEvent) UnmarshalJSON(data []byte) error {
 	type embed LeaderboardEvent
 	var unmarshaler = struct {
 		embed
-		Time *internal.DateTime `json:"time"`
+		Timestamp *internal.DateTime `json:"timestamp,omitempty"`
 	}{
 		embed: embed(*l),
 	}
@@ -115,7 +115,7 @@ func (l *LeaderboardEvent) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = LeaderboardEvent(unmarshaler.embed)
-	l.Time = unmarshaler.Time.Time()
+	l.Timestamp = unmarshaler.Timestamp.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
@@ -129,10 +129,10 @@ func (l *LeaderboardEvent) MarshalJSON() ([]byte, error) {
 	type embed LeaderboardEvent
 	var marshaler = struct {
 		embed
-		Time *internal.DateTime `json:"time"`
+		Timestamp *internal.DateTime `json:"timestamp,omitempty"`
 	}{
-		embed: embed(*l),
-		Time:  internal.NewDateTime(l.Time),
+		embed:     embed(*l),
+		Timestamp: internal.NewOptionalDateTime(l.Timestamp),
 	}
 	return json.Marshal(marshaler)
 }
