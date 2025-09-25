@@ -185,6 +185,14 @@ type BaseStreakResponse struct {
 	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
 	// The date the streak will expire if the user does not increment a metric.
 	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
+	// The number of available streak freezes. Only present if the organization has enabled streak freezes.
+	Freezes *int `json:"freezes,omitempty" url:"freezes,omitempty"`
+	// The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.
+	MaxFreezes *int `json:"maxFreezes,omitempty" url:"maxFreezes,omitempty"`
+	// The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnInterval *int `json:"freezeAutoEarnInterval,omitempty" url:"freezeAutoEarnInterval,omitempty"`
+	// The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnAmount *int `json:"freezeAutoEarnAmount,omitempty" url:"freezeAutoEarnAmount,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -232,6 +240,34 @@ func (b *BaseStreakResponse) GetExpires() *string {
 	return b.Expires
 }
 
+func (b *BaseStreakResponse) GetFreezes() *int {
+	if b == nil {
+		return nil
+	}
+	return b.Freezes
+}
+
+func (b *BaseStreakResponse) GetMaxFreezes() *int {
+	if b == nil {
+		return nil
+	}
+	return b.MaxFreezes
+}
+
+func (b *BaseStreakResponse) GetFreezeAutoEarnInterval() *int {
+	if b == nil {
+		return nil
+	}
+	return b.FreezeAutoEarnInterval
+}
+
+func (b *BaseStreakResponse) GetFreezeAutoEarnAmount() *int {
+	if b == nil {
+		return nil
+	}
+	return b.FreezeAutoEarnAmount
+}
+
 func (b *BaseStreakResponse) GetExtraProperties() map[string]interface{} {
 	return b.extraProperties
 }
@@ -262,6 +298,95 @@ func (b *BaseStreakResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", b)
+}
+
+// An issue encountered while bulk inserting data.
+type BulkInsertIssue struct {
+	// The ID of the user the issue relates to.
+	UserId string `json:"userId" url:"userId"`
+	// The severity level of the issue.
+	Level BulkInsertIssueLevel `json:"level" url:"level"`
+	// A human-readable description of the issue.
+	Reason string `json:"reason" url:"reason"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BulkInsertIssue) GetUserId() string {
+	if b == nil {
+		return ""
+	}
+	return b.UserId
+}
+
+func (b *BulkInsertIssue) GetLevel() BulkInsertIssueLevel {
+	if b == nil {
+		return ""
+	}
+	return b.Level
+}
+
+func (b *BulkInsertIssue) GetReason() string {
+	if b == nil {
+		return ""
+	}
+	return b.Reason
+}
+
+func (b *BulkInsertIssue) GetExtraProperties() map[string]interface{} {
+	return b.extraProperties
+}
+
+func (b *BulkInsertIssue) UnmarshalJSON(data []byte) error {
+	type unmarshaler BulkInsertIssue
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BulkInsertIssue(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BulkInsertIssue) String() string {
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+// The severity level of the issue.
+type BulkInsertIssueLevel string
+
+const (
+	BulkInsertIssueLevelError   BulkInsertIssueLevel = "error"
+	BulkInsertIssueLevelWarning BulkInsertIssueLevel = "warning"
+)
+
+func NewBulkInsertIssueLevelFromString(s string) (BulkInsertIssueLevel, error) {
+	switch s {
+	case "error":
+		return BulkInsertIssueLevelError, nil
+	case "warning":
+		return BulkInsertIssueLevelWarning, nil
+	}
+	var t BulkInsertIssueLevel
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (b BulkInsertIssueLevel) Ptr() *BulkInsertIssueLevel {
+	return &b
 }
 
 type CompletedAchievementResponse struct {
@@ -417,6 +542,54 @@ func (c *CompletedAchievementResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompletedAchievementResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Response containing any issues encountered while creating streak freezes.
+type CreateStreakFreezesResponse struct {
+	// Array of issues encountered during freeze creation.
+	Issues []*BulkInsertIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateStreakFreezesResponse) GetIssues() []*BulkInsertIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateStreakFreezesResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateStreakFreezesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateStreakFreezesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateStreakFreezesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateStreakFreezesResponse) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -907,6 +1080,14 @@ type MetricEventStreakResponse struct {
 	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
 	// The date the streak will expire if the user does not increment a metric.
 	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
+	// The number of available streak freezes. Only present if the organization has enabled streak freezes.
+	Freezes *int `json:"freezes,omitempty" url:"freezes,omitempty"`
+	// The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.
+	MaxFreezes *int `json:"maxFreezes,omitempty" url:"maxFreezes,omitempty"`
+	// The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnInterval *int `json:"freezeAutoEarnInterval,omitempty" url:"freezeAutoEarnInterval,omitempty"`
+	// The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnAmount *int `json:"freezeAutoEarnAmount,omitempty" url:"freezeAutoEarnAmount,omitempty"`
 	// Whether this metric event increased the user's streak length.
 	Extended *bool `json:"extended,omitempty" url:"extended,omitempty"`
 
@@ -954,6 +1135,34 @@ func (m *MetricEventStreakResponse) GetExpires() *string {
 		return nil
 	}
 	return m.Expires
+}
+
+func (m *MetricEventStreakResponse) GetFreezes() *int {
+	if m == nil {
+		return nil
+	}
+	return m.Freezes
+}
+
+func (m *MetricEventStreakResponse) GetMaxFreezes() *int {
+	if m == nil {
+		return nil
+	}
+	return m.MaxFreezes
+}
+
+func (m *MetricEventStreakResponse) GetFreezeAutoEarnInterval() *int {
+	if m == nil {
+		return nil
+	}
+	return m.FreezeAutoEarnInterval
+}
+
+func (m *MetricEventStreakResponse) GetFreezeAutoEarnAmount() *int {
+	if m == nil {
+		return nil
+	}
+	return m.FreezeAutoEarnAmount
 }
 
 func (m *MetricEventStreakResponse) GetExtended() *bool {

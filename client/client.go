@@ -4,6 +4,7 @@ package client
 
 import (
 	achievements "github.com/trophyso/trophy-go/achievements"
+	adminclient "github.com/trophyso/trophy-go/admin/client"
 	core "github.com/trophyso/trophy-go/core"
 	internal "github.com/trophyso/trophy-go/internal"
 	leaderboards "github.com/trophyso/trophy-go/leaderboards"
@@ -26,6 +27,7 @@ type Client struct {
 	Streaks      *streaks.Client
 	Points       *points.Client
 	Leaderboards *leaderboards.Client
+	Admin        *adminclient.Client
 }
 
 func NewClient(opts ...option.RequestOption) *Client {
@@ -45,5 +47,6 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Streaks:      streaks.NewClient(opts...),
 		Points:       points.NewClient(opts...),
 		Leaderboards: leaderboards.NewClient(opts...),
+		Admin:        adminclient.NewClient(opts...),
 	}
 }

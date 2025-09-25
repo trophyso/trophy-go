@@ -278,6 +278,14 @@ type StreakResponse struct {
 	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
 	// The date the streak will expire if the user does not increment a metric.
 	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
+	// The number of available streak freezes. Only present if the organization has enabled streak freezes.
+	Freezes *int `json:"freezes,omitempty" url:"freezes,omitempty"`
+	// The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.
+	MaxFreezes *int `json:"maxFreezes,omitempty" url:"maxFreezes,omitempty"`
+	// The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnInterval *int `json:"freezeAutoEarnInterval,omitempty" url:"freezeAutoEarnInterval,omitempty"`
+	// The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnAmount *int `json:"freezeAutoEarnAmount,omitempty" url:"freezeAutoEarnAmount,omitempty"`
 	// A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
 	StreakHistory []*StreakResponseStreakHistoryItem `json:"streakHistory,omitempty" url:"streakHistory,omitempty"`
 	// The user's rank across all users. Null if the user has no active streak.
@@ -327,6 +335,34 @@ func (s *StreakResponse) GetExpires() *string {
 		return nil
 	}
 	return s.Expires
+}
+
+func (s *StreakResponse) GetFreezes() *int {
+	if s == nil {
+		return nil
+	}
+	return s.Freezes
+}
+
+func (s *StreakResponse) GetMaxFreezes() *int {
+	if s == nil {
+		return nil
+	}
+	return s.MaxFreezes
+}
+
+func (s *StreakResponse) GetFreezeAutoEarnInterval() *int {
+	if s == nil {
+		return nil
+	}
+	return s.FreezeAutoEarnInterval
+}
+
+func (s *StreakResponse) GetFreezeAutoEarnAmount() *int {
+	if s == nil {
+		return nil
+	}
+	return s.FreezeAutoEarnAmount
 }
 
 func (s *StreakResponse) GetStreakHistory() []*StreakResponseStreakHistoryItem {
@@ -383,6 +419,8 @@ type StreakResponseStreakHistoryItem struct {
 	PeriodEnd string `json:"periodEnd" url:"periodEnd"`
 	// The length of the user's streak during this period.
 	Length int `json:"length" url:"length"`
+	// Whether the user used a streak freeze during this period. Only present if the organization has enabled streak freezes.
+	UsedFreeze *bool `json:"usedFreeze,omitempty" url:"usedFreeze,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -407,6 +445,13 @@ func (s *StreakResponseStreakHistoryItem) GetLength() int {
 		return 0
 	}
 	return s.Length
+}
+
+func (s *StreakResponseStreakHistoryItem) GetUsedFreeze() *bool {
+	if s == nil {
+		return nil
+	}
+	return s.UsedFreeze
 }
 
 func (s *StreakResponseStreakHistoryItem) GetExtraProperties() map[string]interface{} {

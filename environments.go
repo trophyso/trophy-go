@@ -7,7 +7,16 @@ package api
 // RequestOption to override the client's default environment,
 // if any.
 var Environments = struct {
-	Default string
+	Production struct {
+		Admin string
+		Api   string
+	}
 }{
-	Default: "https://app.trophy.so/api",
+	Production: struct {
+		Admin string
+		Api   string
+	}{
+		Admin: "admin.trophy.so",
+		Api:   "api.trophy.so",
+	},
 }
