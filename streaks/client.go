@@ -41,7 +41,7 @@ func (c *Client) List(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := baseURL + "/streaks"
 	queryParams, err := internal.QueryValues(request)
@@ -98,7 +98,7 @@ func (c *Client) Rankings(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := baseURL + "/streaks/rankings"
 	queryParams, err := internal.QueryValues(request)

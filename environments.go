@@ -16,7 +16,7 @@ var Environments = struct {
 		Admin string
 		Api   string
 	}{
-		Admin: "admin.trophy.so",
-		Api:   "api.trophy.so",
+		Admin: "https://admin.trophy.so/v1",
+		Api:   "https://api.trophy.so/v1",
 	},
 }

@@ -43,7 +43,7 @@ func (c *Client) Summary(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/points/%v/summary",
@@ -109,7 +109,7 @@ func (c *Client) System(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/points/%v",

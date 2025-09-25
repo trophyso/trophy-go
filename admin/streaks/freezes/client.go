@@ -42,7 +42,7 @@ func (c *Client) Create(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"admin.trophy.so",
+		"https://admin.trophy.so/v1",
 	)
 	endpointURL := baseURL + "/streaks/freezes"
 	headers := internal.MergeHeaders(

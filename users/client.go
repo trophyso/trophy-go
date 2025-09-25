@@ -41,7 +41,7 @@ func (c *Client) Create(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := baseURL + "/users"
 	headers := internal.MergeHeaders(
@@ -99,7 +99,7 @@ func (c *Client) Get(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v",
@@ -159,7 +159,7 @@ func (c *Client) Identify(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v",
@@ -221,7 +221,7 @@ func (c *Client) Update(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v",
@@ -287,7 +287,7 @@ func (c *Client) AllMetrics(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/metrics",
@@ -348,7 +348,7 @@ func (c *Client) SingleMetric(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/metrics/%v",
@@ -411,7 +411,7 @@ func (c *Client) MetricEventSummary(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/metrics/%v/event-summary",
@@ -479,7 +479,7 @@ func (c *Client) Achievements(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/achievements",
@@ -546,7 +546,7 @@ func (c *Client) Streak(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/streak",
@@ -615,7 +615,7 @@ func (c *Client) Points(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/points/%v",
@@ -685,7 +685,7 @@ func (c *Client) PointsEventSummary(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/points/%v/event-summary",
@@ -755,7 +755,7 @@ func (c *Client) Leaderboard(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/users/%v/leaderboards/%v",

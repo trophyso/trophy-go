@@ -40,7 +40,7 @@ func (c *Client) All(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := baseURL + "/achievements"
 	headers := internal.MergeHeaders(
@@ -92,7 +92,7 @@ func (c *Client) Complete(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/achievements/%v/complete",

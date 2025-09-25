@@ -44,7 +44,7 @@ func (c *Client) Event(
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
-		"api.trophy.so",
+		"https://api.trophy.so/v1",
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/metrics/%v/event",
