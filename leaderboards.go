@@ -101,8 +101,6 @@ type LeaderboardResponseWithRankings struct {
 	Name string `json:"name" url:"name"`
 	// The unique key used to reference the leaderboard in APIs.
 	Key string `json:"key" url:"key"`
-	// The status of the leaderboard.
-	Status *LeaderboardResponseStatus `json:"status,omitempty" url:"status,omitempty"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
@@ -114,7 +112,7 @@ type LeaderboardResponseWithRankings struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	Description string `json:"description" url:"description"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -122,9 +120,11 @@ type LeaderboardResponseWithRankings struct {
 	// The maximum number of participants in the leaderboard.
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
-	RunUnit *string `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type.
 	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The status of the leaderboard.
+	Status LeaderboardResponseWithRankingsStatus `json:"status" url:"status"`
 	// Array of user rankings for the leaderboard.
 	Rankings []*LeaderboardRanking `json:"rankings,omitempty" url:"rankings,omitempty"`
 
@@ -151,13 +151,6 @@ func (l *LeaderboardResponseWithRankings) GetKey() string {
 		return ""
 	}
 	return l.Key
-}
-
-func (l *LeaderboardResponseWithRankings) GetStatus() *LeaderboardResponseStatus {
-	if l == nil {
-		return nil
-	}
-	return l.Status
 }
 
 func (l *LeaderboardResponseWithRankings) GetRankBy() LeaderboardResponseRankBy {
@@ -195,9 +188,9 @@ func (l *LeaderboardResponseWithRankings) GetPointsSystemName() *string {
 	return l.PointsSystemName
 }
 
-func (l *LeaderboardResponseWithRankings) GetDescription() *string {
+func (l *LeaderboardResponseWithRankings) GetDescription() string {
 	if l == nil {
-		return nil
+		return ""
 	}
 	return l.Description
 }
@@ -223,7 +216,7 @@ func (l *LeaderboardResponseWithRankings) GetMaxParticipants() int {
 	return l.MaxParticipants
 }
 
-func (l *LeaderboardResponseWithRankings) GetRunUnit() *string {
+func (l *LeaderboardResponseWithRankings) GetRunUnit() *LeaderboardResponseRunUnit {
 	if l == nil {
 		return nil
 	}
@@ -235,6 +228,13 @@ func (l *LeaderboardResponseWithRankings) GetRunInterval() int {
 		return 0
 	}
 	return l.RunInterval
+}
+
+func (l *LeaderboardResponseWithRankings) GetStatus() LeaderboardResponseWithRankingsStatus {
+	if l == nil {
+		return ""
+	}
+	return l.Status
 }
 
 func (l *LeaderboardResponseWithRankings) GetRankings() []*LeaderboardRanking {
@@ -274,4 +274,229 @@ func (l *LeaderboardResponseWithRankings) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+// The status of the leaderboard.
+type LeaderboardResponseWithRankingsStatus string
+
+const (
+	LeaderboardResponseWithRankingsStatusActive    LeaderboardResponseWithRankingsStatus = "active"
+	LeaderboardResponseWithRankingsStatusScheduled LeaderboardResponseWithRankingsStatus = "scheduled"
+	LeaderboardResponseWithRankingsStatusFinished  LeaderboardResponseWithRankingsStatus = "finished"
+)
+
+func NewLeaderboardResponseWithRankingsStatusFromString(s string) (LeaderboardResponseWithRankingsStatus, error) {
+	switch s {
+	case "active":
+		return LeaderboardResponseWithRankingsStatusActive, nil
+	case "scheduled":
+		return LeaderboardResponseWithRankingsStatusScheduled, nil
+	case "finished":
+		return LeaderboardResponseWithRankingsStatusFinished, nil
+	}
+	var t LeaderboardResponseWithRankingsStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l LeaderboardResponseWithRankingsStatus) Ptr() *LeaderboardResponseWithRankingsStatus {
+	return &l
+}
+
+type LeaderboardsAllResponseItem struct {
+	// The unique ID of the leaderboard.
+	Id string `json:"id" url:"id"`
+	// The user-facing name of the leaderboard.
+	Name string `json:"name" url:"name"`
+	// The unique key used to reference the leaderboard in APIs.
+	Key string `json:"key" url:"key"`
+	// What the leaderboard ranks by.
+	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the metric to rank by, if rankBy is 'metric'.
+	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
+	// The name of the metric to rank by, if rankBy is 'metric'.
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The key of the points system to rank by, if rankBy is 'points'.
+	PointsSystemKey *string `json:"pointsSystemKey,omitempty" url:"pointsSystemKey,omitempty"`
+	// The name of the points system to rank by, if rankBy is 'points'.
+	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
+	// The user-facing description of the leaderboard.
+	Description string `json:"description" url:"description"`
+	// The start date of the leaderboard in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The maximum number of participants in the leaderboard.
+	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
+	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The interval between repetitions, relative to the start date and repetition type.
+	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The status of the leaderboard.
+	Status LeaderboardsAllResponseItemStatus `json:"status" url:"status"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LeaderboardsAllResponseItem) GetId() string {
+	if l == nil {
+		return ""
+	}
+	return l.Id
+}
+
+func (l *LeaderboardsAllResponseItem) GetName() string {
+	if l == nil {
+		return ""
+	}
+	return l.Name
+}
+
+func (l *LeaderboardsAllResponseItem) GetKey() string {
+	if l == nil {
+		return ""
+	}
+	return l.Key
+}
+
+func (l *LeaderboardsAllResponseItem) GetRankBy() LeaderboardResponseRankBy {
+	if l == nil {
+		return ""
+	}
+	return l.RankBy
+}
+
+func (l *LeaderboardsAllResponseItem) GetMetricKey() *string {
+	if l == nil {
+		return nil
+	}
+	return l.MetricKey
+}
+
+func (l *LeaderboardsAllResponseItem) GetMetricName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.MetricName
+}
+
+func (l *LeaderboardsAllResponseItem) GetPointsSystemKey() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PointsSystemKey
+}
+
+func (l *LeaderboardsAllResponseItem) GetPointsSystemName() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PointsSystemName
+}
+
+func (l *LeaderboardsAllResponseItem) GetDescription() string {
+	if l == nil {
+		return ""
+	}
+	return l.Description
+}
+
+func (l *LeaderboardsAllResponseItem) GetStart() string {
+	if l == nil {
+		return ""
+	}
+	return l.Start
+}
+
+func (l *LeaderboardsAllResponseItem) GetEnd() *string {
+	if l == nil {
+		return nil
+	}
+	return l.End
+}
+
+func (l *LeaderboardsAllResponseItem) GetMaxParticipants() int {
+	if l == nil {
+		return 0
+	}
+	return l.MaxParticipants
+}
+
+func (l *LeaderboardsAllResponseItem) GetRunUnit() *LeaderboardResponseRunUnit {
+	if l == nil {
+		return nil
+	}
+	return l.RunUnit
+}
+
+func (l *LeaderboardsAllResponseItem) GetRunInterval() int {
+	if l == nil {
+		return 0
+	}
+	return l.RunInterval
+}
+
+func (l *LeaderboardsAllResponseItem) GetStatus() LeaderboardsAllResponseItemStatus {
+	if l == nil {
+		return ""
+	}
+	return l.Status
+}
+
+func (l *LeaderboardsAllResponseItem) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *LeaderboardsAllResponseItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler LeaderboardsAllResponseItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = LeaderboardsAllResponseItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LeaderboardsAllResponseItem) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// The status of the leaderboard.
+type LeaderboardsAllResponseItemStatus string
+
+const (
+	LeaderboardsAllResponseItemStatusActive    LeaderboardsAllResponseItemStatus = "active"
+	LeaderboardsAllResponseItemStatusScheduled LeaderboardsAllResponseItemStatus = "scheduled"
+	LeaderboardsAllResponseItemStatusFinished  LeaderboardsAllResponseItemStatus = "finished"
+)
+
+func NewLeaderboardsAllResponseItemStatusFromString(s string) (LeaderboardsAllResponseItemStatus, error) {
+	switch s {
+	case "active":
+		return LeaderboardsAllResponseItemStatusActive, nil
+	case "scheduled":
+		return LeaderboardsAllResponseItemStatusScheduled, nil
+	case "finished":
+		return LeaderboardsAllResponseItemStatusFinished, nil
+	}
+	var t LeaderboardsAllResponseItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l LeaderboardsAllResponseItemStatus) Ptr() *LeaderboardsAllResponseItemStatus {
+	return &l
 }

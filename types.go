@@ -21,7 +21,7 @@ type AchievementResponse struct {
 	// The URL of the badge image for the achievement, if one has been uploaded.
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
 	// The key used to reference this achievement in the API (only applicable if trigger = 'api')
-	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	Key string `json:"key" url:"key"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
@@ -30,8 +30,6 @@ type AchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// The user's current streak for the metric, if the metric has streaks enabled.
-	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -72,9 +70,9 @@ func (a *AchievementResponse) GetBadgeUrl() *string {
 	return a.BadgeUrl
 }
 
-func (a *AchievementResponse) GetKey() *string {
+func (a *AchievementResponse) GetKey() string {
 	if a == nil {
-		return nil
+		return ""
 	}
 	return a.Key
 }
@@ -105,13 +103,6 @@ func (a *AchievementResponse) GetMetricName() *string {
 		return nil
 	}
 	return a.MetricName
-}
-
-func (a *AchievementResponse) GetCurrentStreak() *MetricEventStreakResponse {
-	if a == nil {
-		return nil
-	}
-	return a.CurrentStreak
 }
 
 func (a *AchievementResponse) GetExtraProperties() map[string]interface{} {
@@ -401,7 +392,7 @@ type CompletedAchievementResponse struct {
 	// The URL of the badge image for the achievement, if one has been uploaded.
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
 	// The key used to reference this achievement in the API (only applicable if trigger = 'api')
-	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	Key string `json:"key" url:"key"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
@@ -410,10 +401,8 @@ type CompletedAchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// The user's current streak for the metric, if the metric has streaks enabled.
-	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 	// The date and time the achievement was completed, in ISO 8601 format.
-	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
+	AchievedAt time.Time `json:"achievedAt" url:"achievedAt"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -454,9 +443,9 @@ func (c *CompletedAchievementResponse) GetBadgeUrl() *string {
 	return c.BadgeUrl
 }
 
-func (c *CompletedAchievementResponse) GetKey() *string {
+func (c *CompletedAchievementResponse) GetKey() string {
 	if c == nil {
-		return nil
+		return ""
 	}
 	return c.Key
 }
@@ -489,16 +478,9 @@ func (c *CompletedAchievementResponse) GetMetricName() *string {
 	return c.MetricName
 }
 
-func (c *CompletedAchievementResponse) GetCurrentStreak() *MetricEventStreakResponse {
+func (c *CompletedAchievementResponse) GetAchievedAt() time.Time {
 	if c == nil {
-		return nil
-	}
-	return c.CurrentStreak
-}
-
-func (c *CompletedAchievementResponse) GetAchievedAt() *time.Time {
-	if c == nil {
-		return nil
+		return time.Time{}
 	}
 	return c.AchievedAt
 }
@@ -511,7 +493,7 @@ func (c *CompletedAchievementResponse) UnmarshalJSON(data []byte) error {
 	type embed CompletedAchievementResponse
 	var unmarshaler = struct {
 		embed
-		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+		AchievedAt *internal.DateTime `json:"achievedAt"`
 	}{
 		embed: embed(*c),
 	}
@@ -519,7 +501,7 @@ func (c *CompletedAchievementResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CompletedAchievementResponse(unmarshaler.embed)
-	c.AchievedAt = unmarshaler.AchievedAt.TimePtr()
+	c.AchievedAt = unmarshaler.AchievedAt.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
@@ -533,10 +515,10 @@ func (c *CompletedAchievementResponse) MarshalJSON() ([]byte, error) {
 	type embed CompletedAchievementResponse
 	var marshaler = struct {
 		embed
-		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+		AchievedAt *internal.DateTime `json:"achievedAt"`
 	}{
 		embed:      embed(*c),
-		AchievedAt: internal.NewOptionalDateTime(c.AchievedAt),
+		AchievedAt: internal.NewDateTime(c.AchievedAt),
 	}
 	return json.Marshal(marshaler)
 }
@@ -650,14 +632,18 @@ func (e *ErrorBody) String() string {
 type GetUserPointsResponse struct {
 	// The ID of the points system
 	Id string `json:"id" url:"id"`
+	// The key of the points system
+	Key string `json:"key" url:"key"`
 	// The name of the points system
 	Name string `json:"name" url:"name"`
 	// The description of the points system
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The URL of the badge image for the points system
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The maximum number of points a user can be awarded in this points system
+	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
 	// The user's total points
-	Total float64 `json:"total" url:"total"`
+	Total int `json:"total" url:"total"`
 	// Array of trigger awards that added points.
 	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
 
@@ -670,6 +656,13 @@ func (g *GetUserPointsResponse) GetId() string {
 		return ""
 	}
 	return g.Id
+}
+
+func (g *GetUserPointsResponse) GetKey() string {
+	if g == nil {
+		return ""
+	}
+	return g.Key
 }
 
 func (g *GetUserPointsResponse) GetName() string {
@@ -693,7 +686,14 @@ func (g *GetUserPointsResponse) GetBadgeUrl() *string {
 	return g.BadgeUrl
 }
 
-func (g *GetUserPointsResponse) GetTotal() float64 {
+func (g *GetUserPointsResponse) GetMaxPoints() *float64 {
+	if g == nil {
+		return nil
+	}
+	return g.MaxPoints
+}
+
+func (g *GetUserPointsResponse) GetTotal() int {
 	if g == nil {
 		return 0
 	}
@@ -747,8 +747,6 @@ type LeaderboardResponse struct {
 	Name string `json:"name" url:"name"`
 	// The unique key used to reference the leaderboard in APIs.
 	Key string `json:"key" url:"key"`
-	// The status of the leaderboard.
-	Status *LeaderboardResponseStatus `json:"status,omitempty" url:"status,omitempty"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
@@ -760,7 +758,7 @@ type LeaderboardResponse struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	Description string `json:"description" url:"description"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -768,7 +766,7 @@ type LeaderboardResponse struct {
 	// The maximum number of participants in the leaderboard.
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
-	RunUnit *string `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type.
 	RunInterval int `json:"runInterval" url:"runInterval"`
 
@@ -795,13 +793,6 @@ func (l *LeaderboardResponse) GetKey() string {
 		return ""
 	}
 	return l.Key
-}
-
-func (l *LeaderboardResponse) GetStatus() *LeaderboardResponseStatus {
-	if l == nil {
-		return nil
-	}
-	return l.Status
 }
 
 func (l *LeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
@@ -839,9 +830,9 @@ func (l *LeaderboardResponse) GetPointsSystemName() *string {
 	return l.PointsSystemName
 }
 
-func (l *LeaderboardResponse) GetDescription() *string {
+func (l *LeaderboardResponse) GetDescription() string {
 	if l == nil {
-		return nil
+		return ""
 	}
 	return l.Description
 }
@@ -867,7 +858,7 @@ func (l *LeaderboardResponse) GetMaxParticipants() int {
 	return l.MaxParticipants
 }
 
-func (l *LeaderboardResponse) GetRunUnit() *string {
+func (l *LeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUnit {
 	if l == nil {
 		return nil
 	}
@@ -939,47 +930,51 @@ func (l LeaderboardResponseRankBy) Ptr() *LeaderboardResponseRankBy {
 	return &l
 }
 
-// The status of the leaderboard.
-type LeaderboardResponseStatus string
+// The repetition type for recurring leaderboards, or null for one-time leaderboards.
+type LeaderboardResponseRunUnit string
 
 const (
-	LeaderboardResponseStatusActive    LeaderboardResponseStatus = "active"
-	LeaderboardResponseStatusScheduled LeaderboardResponseStatus = "scheduled"
-	LeaderboardResponseStatusFinished  LeaderboardResponseStatus = "finished"
+	LeaderboardResponseRunUnitDay   LeaderboardResponseRunUnit = "day"
+	LeaderboardResponseRunUnitMonth LeaderboardResponseRunUnit = "month"
+	LeaderboardResponseRunUnitYear  LeaderboardResponseRunUnit = "year"
 )
 
-func NewLeaderboardResponseStatusFromString(s string) (LeaderboardResponseStatus, error) {
+func NewLeaderboardResponseRunUnitFromString(s string) (LeaderboardResponseRunUnit, error) {
 	switch s {
-	case "active":
-		return LeaderboardResponseStatusActive, nil
-	case "scheduled":
-		return LeaderboardResponseStatusScheduled, nil
-	case "finished":
-		return LeaderboardResponseStatusFinished, nil
+	case "day":
+		return LeaderboardResponseRunUnitDay, nil
+	case "month":
+		return LeaderboardResponseRunUnitMonth, nil
+	case "year":
+		return LeaderboardResponseRunUnitYear, nil
 	}
-	var t LeaderboardResponseStatus
+	var t LeaderboardResponseRunUnit
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (l LeaderboardResponseStatus) Ptr() *LeaderboardResponseStatus {
+func (l LeaderboardResponseRunUnit) Ptr() *LeaderboardResponseRunUnit {
 	return &l
 }
 
 type MetricEventPointsResponse struct {
 	// The ID of the points system
 	Id string `json:"id" url:"id"`
+	// The key of the points system
+	Key string `json:"key" url:"key"`
 	// The name of the points system
 	Name string `json:"name" url:"name"`
 	// The description of the points system
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The URL of the badge image for the points system
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The maximum number of points a user can be awarded in this points system
+	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
 	// The user's total points
-	Total float64 `json:"total" url:"total"`
+	Total int `json:"total" url:"total"`
 	// Array of trigger awards that added points.
 	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
 	// The points added by this event.
-	Added *float64 `json:"added,omitempty" url:"added,omitempty"`
+	Added int `json:"added" url:"added"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -990,6 +985,13 @@ func (m *MetricEventPointsResponse) GetId() string {
 		return ""
 	}
 	return m.Id
+}
+
+func (m *MetricEventPointsResponse) GetKey() string {
+	if m == nil {
+		return ""
+	}
+	return m.Key
 }
 
 func (m *MetricEventPointsResponse) GetName() string {
@@ -1013,7 +1015,14 @@ func (m *MetricEventPointsResponse) GetBadgeUrl() *string {
 	return m.BadgeUrl
 }
 
-func (m *MetricEventPointsResponse) GetTotal() float64 {
+func (m *MetricEventPointsResponse) GetMaxPoints() *float64 {
+	if m == nil {
+		return nil
+	}
+	return m.MaxPoints
+}
+
+func (m *MetricEventPointsResponse) GetTotal() int {
 	if m == nil {
 		return 0
 	}
@@ -1027,9 +1036,9 @@ func (m *MetricEventPointsResponse) GetAwards() []*PointsAward {
 	return m.Awards
 }
 
-func (m *MetricEventPointsResponse) GetAdded() *float64 {
+func (m *MetricEventPointsResponse) GetAdded() int {
 	if m == nil {
-		return nil
+		return 0
 	}
 	return m.Added
 }
@@ -1089,7 +1098,7 @@ type MetricEventStreakResponse struct {
 	// The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.
 	FreezeAutoEarnAmount *int `json:"freezeAutoEarnAmount,omitempty" url:"freezeAutoEarnAmount,omitempty"`
 	// Whether this metric event increased the user's streak length.
-	Extended *bool `json:"extended,omitempty" url:"extended,omitempty"`
+	Extended bool `json:"extended" url:"extended"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1165,9 +1174,9 @@ func (m *MetricEventStreakResponse) GetFreezeAutoEarnAmount() *int {
 	return m.FreezeAutoEarnAmount
 }
 
-func (m *MetricEventStreakResponse) GetExtended() *bool {
+func (m *MetricEventStreakResponse) GetExtended() bool {
 	if m == nil {
-		return nil
+		return false
 	}
 	return m.Extended
 }
@@ -1208,11 +1217,11 @@ type PointsAward struct {
 	// The ID of the trigger award
 	Id *string `json:"id,omitempty" url:"id,omitempty"`
 	// The points awarded by this trigger
-	Awarded *float64 `json:"awarded,omitempty" url:"awarded,omitempty"`
+	Awarded *int `json:"awarded,omitempty" url:"awarded,omitempty"`
 	// The date these points were awarded, in ISO 8601 format.
 	Date *string `json:"date,omitempty" url:"date,omitempty"`
 	// The user's total points after this award occurred.
-	Total   *float64       `json:"total,omitempty" url:"total,omitempty"`
+	Total   *int           `json:"total,omitempty" url:"total,omitempty"`
 	Trigger *PointsTrigger `json:"trigger,omitempty" url:"trigger,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -1226,7 +1235,7 @@ func (p *PointsAward) GetId() *string {
 	return p.Id
 }
 
-func (p *PointsAward) GetAwarded() *float64 {
+func (p *PointsAward) GetAwarded() *int {
 	if p == nil {
 		return nil
 	}
@@ -1240,7 +1249,7 @@ func (p *PointsAward) GetDate() *string {
 	return p.Date
 }
 
-func (p *PointsAward) GetTotal() *float64 {
+func (p *PointsAward) GetTotal() *int {
 	if p == nil {
 		return nil
 	}
@@ -1292,15 +1301,19 @@ type PointsTrigger struct {
 	// The type of trigger
 	Type *PointsTriggerType `json:"type,omitempty" url:"type,omitempty"`
 	// The points awarded by this trigger.
-	Points *float64 `json:"points,omitempty" url:"points,omitempty"`
+	Points *int `json:"points,omitempty" url:"points,omitempty"`
 	// If the trigger has type 'metric', the name of the metric
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
 	// If the trigger has type 'metric', the threshold of the metric that triggers the points
-	MetricThreshold *float64 `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
 	// If the trigger has type 'streak', the threshold of the streak that triggers the points
-	StreakLengthThreshold *float64 `json:"streakLengthThreshold,omitempty" url:"streakLengthThreshold,omitempty"`
+	StreakLengthThreshold *int `json:"streakLengthThreshold,omitempty" url:"streakLengthThreshold,omitempty"`
 	// If the trigger has type 'achievement', the name of the achievement
 	AchievementName *string `json:"achievementName,omitempty" url:"achievementName,omitempty"`
+	// If the trigger has type 'time', the unit of time after which to award points
+	TimeUnit *PointsTriggerTimeUnit `json:"timeUnit,omitempty" url:"timeUnit,omitempty"`
+	// If the trigger has type 'time', the numer of units of timeUnit after which to award points
+	TimeInterval *int `json:"timeInterval,omitempty" url:"timeInterval,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1320,7 +1333,7 @@ func (p *PointsTrigger) GetType() *PointsTriggerType {
 	return p.Type
 }
 
-func (p *PointsTrigger) GetPoints() *float64 {
+func (p *PointsTrigger) GetPoints() *int {
 	if p == nil {
 		return nil
 	}
@@ -1334,14 +1347,14 @@ func (p *PointsTrigger) GetMetricName() *string {
 	return p.MetricName
 }
 
-func (p *PointsTrigger) GetMetricThreshold() *float64 {
+func (p *PointsTrigger) GetMetricThreshold() *int {
 	if p == nil {
 		return nil
 	}
 	return p.MetricThreshold
 }
 
-func (p *PointsTrigger) GetStreakLengthThreshold() *float64 {
+func (p *PointsTrigger) GetStreakLengthThreshold() *int {
 	if p == nil {
 		return nil
 	}
@@ -1353,6 +1366,20 @@ func (p *PointsTrigger) GetAchievementName() *string {
 		return nil
 	}
 	return p.AchievementName
+}
+
+func (p *PointsTrigger) GetTimeUnit() *PointsTriggerTimeUnit {
+	if p == nil {
+		return nil
+	}
+	return p.TimeUnit
+}
+
+func (p *PointsTrigger) GetTimeInterval() *int {
+	if p == nil {
+		return nil
+	}
+	return p.TimeInterval
 }
 
 func (p *PointsTrigger) GetExtraProperties() map[string]interface{} {
@@ -1387,13 +1414,38 @@ func (p *PointsTrigger) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+// If the trigger has type 'time', the unit of time after which to award points
+type PointsTriggerTimeUnit string
+
+const (
+	PointsTriggerTimeUnitHour PointsTriggerTimeUnit = "hour"
+	PointsTriggerTimeUnitDay  PointsTriggerTimeUnit = "day"
+)
+
+func NewPointsTriggerTimeUnitFromString(s string) (PointsTriggerTimeUnit, error) {
+	switch s {
+	case "hour":
+		return PointsTriggerTimeUnitHour, nil
+	case "day":
+		return PointsTriggerTimeUnitDay, nil
+	}
+	var t PointsTriggerTimeUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsTriggerTimeUnit) Ptr() *PointsTriggerTimeUnit {
+	return &p
+}
+
 // The type of trigger
 type PointsTriggerType string
 
 const (
-	PointsTriggerTypeMetric      PointsTriggerType = "metric"
-	PointsTriggerTypeAchievement PointsTriggerType = "achievement"
-	PointsTriggerTypeStreak      PointsTriggerType = "streak"
+	PointsTriggerTypeMetric       PointsTriggerType = "metric"
+	PointsTriggerTypeAchievement  PointsTriggerType = "achievement"
+	PointsTriggerTypeStreak       PointsTriggerType = "streak"
+	PointsTriggerTypeTime         PointsTriggerType = "time"
+	PointsTriggerTypeUserCreation PointsTriggerType = "user_creation"
 )
 
 func NewPointsTriggerTypeFromString(s string) (PointsTriggerType, error) {
@@ -1404,6 +1456,10 @@ func NewPointsTriggerTypeFromString(s string) (PointsTriggerType, error) {
 		return PointsTriggerTypeAchievement, nil
 	case "streak":
 		return PointsTriggerTypeStreak, nil
+	case "time":
+		return PointsTriggerTypeTime, nil
+	case "user_creation":
+		return PointsTriggerTypeUserCreation, nil
 	}
 	var t PointsTriggerType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1444,15 +1500,15 @@ func (s StreakFrequency) Ptr() *StreakFrequency {
 // An object with editable user fields.
 type UpdatedUser struct {
 	// The user's email address. Required if subscribeToEmails is true.
-	Email *string `json:"email,omitempty" url:"email,omitempty"`
+	Email string `json:"email" url:"email"`
 	// The name to refer to the user by in emails.
-	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	Name string `json:"name" url:"name"`
 	// The user's timezone (used for email scheduling).
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
 	// The user's device tokens, used for push notifications.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
-	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+	SubscribeToEmails bool `json:"subscribeToEmails" url:"subscribeToEmails"`
 	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
 	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
 
@@ -1460,16 +1516,16 @@ type UpdatedUser struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *UpdatedUser) GetEmail() *string {
+func (u *UpdatedUser) GetEmail() string {
 	if u == nil {
-		return nil
+		return ""
 	}
 	return u.Email
 }
 
-func (u *UpdatedUser) GetName() *string {
+func (u *UpdatedUser) GetName() string {
 	if u == nil {
-		return nil
+		return ""
 	}
 	return u.Name
 }
@@ -1488,9 +1544,9 @@ func (u *UpdatedUser) GetDeviceTokens() []string {
 	return u.DeviceTokens
 }
 
-func (u *UpdatedUser) GetSubscribeToEmails() *bool {
+func (u *UpdatedUser) GetSubscribeToEmails() bool {
 	if u == nil {
-		return nil
+		return false
 	}
 	return u.SubscribeToEmails
 }
@@ -1537,15 +1593,15 @@ func (u *UpdatedUser) String() string {
 // An object with editable user fields.
 type UpsertedUser struct {
 	// The user's email address. Required if subscribeToEmails is true.
-	Email *string `json:"email,omitempty" url:"email,omitempty"`
+	Email string `json:"email" url:"email"`
 	// The name to refer to the user by in emails.
-	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	Name string `json:"name" url:"name"`
 	// The user's timezone (used for email scheduling).
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
 	// The user's device tokens, used for push notifications.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
-	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+	SubscribeToEmails bool `json:"subscribeToEmails" url:"subscribeToEmails"`
 	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
 	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
 	// The ID of the user in your database. Must be a string.
@@ -1555,16 +1611,16 @@ type UpsertedUser struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *UpsertedUser) GetEmail() *string {
+func (u *UpsertedUser) GetEmail() string {
 	if u == nil {
-		return nil
+		return ""
 	}
 	return u.Email
 }
 
-func (u *UpsertedUser) GetName() *string {
+func (u *UpsertedUser) GetName() string {
 	if u == nil {
-		return nil
+		return ""
 	}
 	return u.Name
 }
@@ -1583,9 +1639,9 @@ func (u *UpsertedUser) GetDeviceTokens() []string {
 	return u.DeviceTokens
 }
 
-func (u *UpsertedUser) GetSubscribeToEmails() *bool {
+func (u *UpsertedUser) GetSubscribeToEmails() bool {
 	if u == nil {
-		return nil
+		return false
 	}
 	return u.SubscribeToEmails
 }
@@ -1634,4 +1690,1109 @@ func (u *UpsertedUser) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+// A user's data for a specific leaderboard including rank, value, and history.
+type WebhookUserLeaderboardResponse struct {
+	// The unique ID of the leaderboard.
+	Id string `json:"id" url:"id"`
+	// The user-facing name of the leaderboard.
+	Name string `json:"name" url:"name"`
+	// The unique key used to reference the leaderboard in APIs.
+	Key string `json:"key" url:"key"`
+	// What the leaderboard ranks by.
+	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the metric to rank by, if rankBy is 'metric'.
+	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
+	// The name of the metric to rank by, if rankBy is 'metric'.
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The key of the points system to rank by, if rankBy is 'points'.
+	PointsSystemKey *string `json:"pointsSystemKey,omitempty" url:"pointsSystemKey,omitempty"`
+	// The name of the points system to rank by, if rankBy is 'points'.
+	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
+	// The user-facing description of the leaderboard.
+	Description string `json:"description" url:"description"`
+	// The start date of the leaderboard in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The maximum number of participants in the leaderboard.
+	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
+	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The interval between repetitions, relative to the start date and repetition type.
+	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The user's current rank in this leaderboard. Null if the user is not on the leaderboard.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+	// The user's current value in this leaderboard. Null if the user is not on the leaderboard.
+	Value *int `json:"value,omitempty" url:"value,omitempty"`
+	// The user's rank before this event, or null if they were not on the leaderboard.
+	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
+	// The user's value before this event, or null if they were not on the leaderboard.
+	PreviousValue *int `json:"previousValue,omitempty" url:"previousValue,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhookUserLeaderboardResponse) GetId() string {
+	if w == nil {
+		return ""
+	}
+	return w.Id
+}
+
+func (w *WebhookUserLeaderboardResponse) GetName() string {
+	if w == nil {
+		return ""
+	}
+	return w.Name
+}
+
+func (w *WebhookUserLeaderboardResponse) GetKey() string {
+	if w == nil {
+		return ""
+	}
+	return w.Key
+}
+
+func (w *WebhookUserLeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
+	if w == nil {
+		return ""
+	}
+	return w.RankBy
+}
+
+func (w *WebhookUserLeaderboardResponse) GetMetricKey() *string {
+	if w == nil {
+		return nil
+	}
+	return w.MetricKey
+}
+
+func (w *WebhookUserLeaderboardResponse) GetMetricName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.MetricName
+}
+
+func (w *WebhookUserLeaderboardResponse) GetPointsSystemKey() *string {
+	if w == nil {
+		return nil
+	}
+	return w.PointsSystemKey
+}
+
+func (w *WebhookUserLeaderboardResponse) GetPointsSystemName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.PointsSystemName
+}
+
+func (w *WebhookUserLeaderboardResponse) GetDescription() string {
+	if w == nil {
+		return ""
+	}
+	return w.Description
+}
+
+func (w *WebhookUserLeaderboardResponse) GetStart() string {
+	if w == nil {
+		return ""
+	}
+	return w.Start
+}
+
+func (w *WebhookUserLeaderboardResponse) GetEnd() *string {
+	if w == nil {
+		return nil
+	}
+	return w.End
+}
+
+func (w *WebhookUserLeaderboardResponse) GetMaxParticipants() int {
+	if w == nil {
+		return 0
+	}
+	return w.MaxParticipants
+}
+
+func (w *WebhookUserLeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUnit {
+	if w == nil {
+		return nil
+	}
+	return w.RunUnit
+}
+
+func (w *WebhookUserLeaderboardResponse) GetRunInterval() int {
+	if w == nil {
+		return 0
+	}
+	return w.RunInterval
+}
+
+func (w *WebhookUserLeaderboardResponse) GetRank() *int {
+	if w == nil {
+		return nil
+	}
+	return w.Rank
+}
+
+func (w *WebhookUserLeaderboardResponse) GetValue() *int {
+	if w == nil {
+		return nil
+	}
+	return w.Value
+}
+
+func (w *WebhookUserLeaderboardResponse) GetPreviousRank() *int {
+	if w == nil {
+		return nil
+	}
+	return w.PreviousRank
+}
+
+func (w *WebhookUserLeaderboardResponse) GetPreviousValue() *int {
+	if w == nil {
+		return nil
+	}
+	return w.PreviousValue
+}
+
+func (w *WebhookUserLeaderboardResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhookUserLeaderboardResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WebhookUserLeaderboardResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WebhookUserLeaderboardResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhookUserLeaderboardResponse) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksAchievementCompletedPayload struct {
+	// The webhook event type.
+	// The user who completed the achievement.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The achievement completion that occurred.
+	Achievement *CompletedAchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
+	type_       string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksAchievementCompletedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksAchievementCompletedPayload) GetAchievement() *CompletedAchievementResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Achievement
+}
+
+func (w *WebhooksAchievementCompletedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksAchievementCompletedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksAchievementCompletedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksAchievementCompletedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksAchievementCompletedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "achievement.completed" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "achievement.completed", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksAchievementCompletedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksAchievementCompletedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "achievement.completed",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksAchievementCompletedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksLeaderboardChangedPayload struct {
+	// The webhook event type.
+	// The leaderboard run that changed.
+	Leaderboard *LeaderboardResponseWithRankings `json:"leaderboard,omitempty" url:"leaderboard,omitempty"`
+	type_       string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksLeaderboardChangedPayload) GetLeaderboard() *LeaderboardResponseWithRankings {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboard
+}
+
+func (w *WebhooksLeaderboardChangedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksLeaderboardChangedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksLeaderboardChangedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksLeaderboardChangedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksLeaderboardChangedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "leaderboard.changed" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "leaderboard.changed", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksLeaderboardChangedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksLeaderboardChangedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "leaderboard.changed",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksLeaderboardChangedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksLeaderboardFinishedPayload struct {
+	// The webhook event type.
+	// The leaderboard run that finished and its final rankings.
+	Leaderboard *LeaderboardResponseWithRankings `json:"leaderboard,omitempty" url:"leaderboard,omitempty"`
+	type_       string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksLeaderboardFinishedPayload) GetLeaderboard() *LeaderboardResponseWithRankings {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboard
+}
+
+func (w *WebhooksLeaderboardFinishedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksLeaderboardFinishedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksLeaderboardFinishedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksLeaderboardFinishedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksLeaderboardFinishedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "leaderboard.finished" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "leaderboard.finished", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksLeaderboardFinishedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksLeaderboardFinishedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "leaderboard.finished",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksLeaderboardFinishedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksLeaderboardRankChangedPayload struct {
+	// The webhook event type.
+	// The user whose rank changed.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The user's leaderboard data that changed.
+	Leaderboard *WebhookUserLeaderboardResponse `json:"leaderboard,omitempty" url:"leaderboard,omitempty"`
+	type_       string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksLeaderboardRankChangedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksLeaderboardRankChangedPayload) GetLeaderboard() *WebhookUserLeaderboardResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboard
+}
+
+func (w *WebhooksLeaderboardRankChangedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksLeaderboardRankChangedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksLeaderboardRankChangedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksLeaderboardRankChangedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksLeaderboardRankChangedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "leaderboard.rank_changed" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "leaderboard.rank_changed", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksLeaderboardRankChangedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksLeaderboardRankChangedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "leaderboard.rank_changed",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksLeaderboardRankChangedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksLeaderboardStartedPayload struct {
+	// The webhook event type.
+	// The leaderboard run that started and its initial rankings.
+	Leaderboard *LeaderboardResponseWithRankings `json:"leaderboard,omitempty" url:"leaderboard,omitempty"`
+	type_       string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksLeaderboardStartedPayload) GetLeaderboard() *LeaderboardResponseWithRankings {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboard
+}
+
+func (w *WebhooksLeaderboardStartedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksLeaderboardStartedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksLeaderboardStartedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksLeaderboardStartedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksLeaderboardStartedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "leaderboard.started" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "leaderboard.started", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksLeaderboardStartedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksLeaderboardStartedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "leaderboard.started",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksLeaderboardStartedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksPointsChangedPayload struct {
+	// The webhook event type.
+	// The user whose points increased or decreased.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The user's points after the event.
+	Points *GetUserPointsResponse `json:"points,omitempty" url:"points,omitempty"`
+	type_  string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksPointsChangedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksPointsChangedPayload) GetPoints() *GetUserPointsResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Points
+}
+
+func (w *WebhooksPointsChangedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksPointsChangedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksPointsChangedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksPointsChangedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksPointsChangedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "points.changed" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "points.changed", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksPointsChangedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksPointsChangedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "points.changed",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksPointsChangedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksStreakExtendedPayload struct {
+	// The webhook event type.
+	// The user who extended the streak.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The streak that was extended.
+	Streak *BaseStreakResponse `json:"streak,omitempty" url:"streak,omitempty"`
+	type_  string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksStreakExtendedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksStreakExtendedPayload) GetStreak() *BaseStreakResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Streak
+}
+
+func (w *WebhooksStreakExtendedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksStreakExtendedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksStreakExtendedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksStreakExtendedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksStreakExtendedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "streak.extended" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "streak.extended", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksStreakExtendedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksStreakExtendedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "streak.extended",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksStreakExtendedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksStreakFreezeConsumedPayload struct {
+	// The webhook event type.
+	// The user whose streak freeze was consumed.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The number of freezes consumed.
+	Consumed int `json:"consumed" url:"consumed"`
+	// The total number of freezes the user has left after the consumption.
+	Freezes int `json:"freezes" url:"freezes"`
+	type_   string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) GetConsumed() int {
+	if w == nil {
+		return 0
+	}
+	return w.Consumed
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) GetFreezes() int {
+	if w == nil {
+		return 0
+	}
+	return w.Freezes
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksStreakFreezeConsumedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksStreakFreezeConsumedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "streak.freeze_consumed" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "streak.freeze_consumed", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksStreakFreezeConsumedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "streak.freeze_consumed",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksStreakFreezeConsumedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksStreakFreezeEarnedPayload struct {
+	// The webhook event type.
+	// The user who earned streak freezes.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The number of freezes earned.
+	Earned int `json:"earned" url:"earned"`
+	// The total number of freezes the user has after the event.
+	Freezes int `json:"freezes" url:"freezes"`
+	type_   string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) GetEarned() int {
+	if w == nil {
+		return 0
+	}
+	return w.Earned
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) GetFreezes() int {
+	if w == nil {
+		return 0
+	}
+	return w.Freezes
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksStreakFreezeEarnedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksStreakFreezeEarnedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "streak.freeze_earned" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "streak.freeze_earned", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksStreakFreezeEarnedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "streak.freeze_earned",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksStreakFreezeEarnedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksStreakLostPayload struct {
+	// The webhook event type.
+	// The user who lost the streak.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The length of the streak that was lost.
+	Length int `json:"length" url:"length"`
+	type_  string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksStreakLostPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksStreakLostPayload) GetLength() int {
+	if w == nil {
+		return 0
+	}
+	return w.Length
+}
+
+func (w *WebhooksStreakLostPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksStreakLostPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksStreakLostPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksStreakLostPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksStreakLostPayload(unmarshaler.embed)
+	if unmarshaler.Type != "streak.lost" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "streak.lost", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksStreakLostPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksStreakLostPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "streak.lost",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksStreakLostPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksStreakStartedPayload struct {
+	// The webhook event type.
+	// The user who started the streak.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The streak that was started.
+	Streak *BaseStreakResponse `json:"streak,omitempty" url:"streak,omitempty"`
+	type_  string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksStreakStartedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksStreakStartedPayload) GetStreak() *BaseStreakResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Streak
+}
+
+func (w *WebhooksStreakStartedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksStreakStartedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksStreakStartedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksStreakStartedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksStreakStartedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "streak.started" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "streak.started", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksStreakStartedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksStreakStartedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "streak.started",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksStreakStartedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
 }

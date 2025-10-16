@@ -35,7 +35,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 func (c *Client) All(
 	ctx context.Context,
 	opts ...option.RequestOption,
-) ([]*trophygo.LeaderboardResponse, error) {
+) ([]*trophygo.LeaderboardsAllResponseItem, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -60,7 +60,7 @@ func (c *Client) All(
 		},
 	}
 
-	var response []*trophygo.LeaderboardResponse
+	var response []*trophygo.LeaderboardsAllResponseItem
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

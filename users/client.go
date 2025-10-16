@@ -750,7 +750,7 @@ func (c *Client) Leaderboard(
 	key string,
 	request *trophygo.UsersLeaderboardRequest,
 	opts ...option.RequestOption,
-) (*trophygo.UserLeaderboardResponse, error) {
+) (*trophygo.UserLeaderboardResponseWithHistory, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -791,7 +791,7 @@ func (c *Client) Leaderboard(
 		},
 	}
 
-	var response *trophygo.UserLeaderboardResponse
+	var response *trophygo.UserLeaderboardResponseWithHistory
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

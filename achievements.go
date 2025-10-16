@@ -6,6 +6,7 @@ import (
 	json "encoding/json"
 	fmt "fmt"
 	internal "github.com/trophyso/trophy-go/internal"
+	time "time"
 )
 
 type AchievementsCompleteRequest struct {
@@ -15,8 +16,8 @@ type AchievementsCompleteRequest struct {
 
 type AchievementCompletionResponse struct {
 	// The unique ID of the completion.
-	CompletionId string                        `json:"completionId" url:"completionId"`
-	Achievement  *CompletedAchievementResponse `json:"achievement,omitempty" url:"achievement,omitempty"`
+	CompletionId string                                    `json:"completionId" url:"completionId"`
+	Achievement  *AchievementCompletionResponseAchievement `json:"achievement,omitempty" url:"achievement,omitempty"`
 	// A map of points systems by key that were affected by this achievement completion.
 	Points map[string]*MetricEventPointsResponse `json:"points,omitempty" url:"points,omitempty"`
 
@@ -31,7 +32,7 @@ func (a *AchievementCompletionResponse) GetCompletionId() string {
 	return a.CompletionId
 }
 
-func (a *AchievementCompletionResponse) GetAchievement() *CompletedAchievementResponse {
+func (a *AchievementCompletionResponse) GetAchievement() *AchievementCompletionResponseAchievement {
 	if a == nil {
 		return nil
 	}
@@ -77,6 +78,170 @@ func (a *AchievementCompletionResponse) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+type AchievementCompletionResponseAchievement struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name string `json:"name" url:"name"`
+	// The trigger of the achievement.
+	Trigger AchievementResponseTrigger `json:"trigger" url:"trigger"`
+	// The description of this achievement.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API (only applicable if trigger = 'api')
+	Key string `json:"key" url:"key"`
+	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
+	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
+	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The date and time the achievement was completed, in ISO 8601 format.
+	AchievedAt time.Time `json:"achievedAt" url:"achievedAt"`
+	// The user's current streak for the metric, if the metric has streaks enabled.
+	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementCompletionResponseAchievement) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AchievementCompletionResponseAchievement) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AchievementCompletionResponseAchievement) GetTrigger() AchievementResponseTrigger {
+	if a == nil {
+		return ""
+	}
+	return a.Trigger
+}
+
+func (a *AchievementCompletionResponseAchievement) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *AchievementCompletionResponseAchievement) GetBadgeUrl() *string {
+	if a == nil {
+		return nil
+	}
+	return a.BadgeUrl
+}
+
+func (a *AchievementCompletionResponseAchievement) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AchievementCompletionResponseAchievement) GetStreakLength() *int {
+	if a == nil {
+		return nil
+	}
+	return a.StreakLength
+}
+
+func (a *AchievementCompletionResponseAchievement) GetMetricId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricId
+}
+
+func (a *AchievementCompletionResponseAchievement) GetMetricValue() *float64 {
+	if a == nil {
+		return nil
+	}
+	return a.MetricValue
+}
+
+func (a *AchievementCompletionResponseAchievement) GetMetricName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricName
+}
+
+func (a *AchievementCompletionResponseAchievement) GetAchievedAt() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.AchievedAt
+}
+
+func (a *AchievementCompletionResponseAchievement) GetCurrentStreak() *MetricEventStreakResponse {
+	if a == nil {
+		return nil
+	}
+	return a.CurrentStreak
+}
+
+func (a *AchievementCompletionResponseAchievement) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementCompletionResponseAchievement) UnmarshalJSON(data []byte) error {
+	type embed AchievementCompletionResponseAchievement
+	var unmarshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = AchievementCompletionResponseAchievement(unmarshaler.embed)
+	a.AchievedAt = unmarshaler.AchievedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementCompletionResponseAchievement) MarshalJSON() ([]byte, error) {
+	type embed AchievementCompletionResponseAchievement
+	var marshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt"`
+	}{
+		embed:      embed(*a),
+		AchievedAt: internal.NewDateTime(a.AchievedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *AchievementCompletionResponseAchievement) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 type AchievementWithStatsResponse struct {
 	// The unique ID of the achievement.
 	Id string `json:"id" url:"id"`
@@ -89,7 +254,7 @@ type AchievementWithStatsResponse struct {
 	// The URL of the badge image for the achievement, if one has been uploaded.
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
 	// The key used to reference this achievement in the API (only applicable if trigger = 'api')
-	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	Key string `json:"key" url:"key"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
@@ -98,12 +263,10 @@ type AchievementWithStatsResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// The user's current streak for the metric, if the metric has streaks enabled.
-	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 	// The number of users who have completed this achievement.
-	Completions *int `json:"completions,omitempty" url:"completions,omitempty"`
+	Completions int `json:"completions" url:"completions"`
 	// The percentage of all users who have completed this achievement.
-	Rarity *float64 `json:"rarity,omitempty" url:"rarity,omitempty"`
+	Rarity float64 `json:"rarity" url:"rarity"`
 	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
 	UserAttributes []*AchievementWithStatsResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
 	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
@@ -148,9 +311,9 @@ func (a *AchievementWithStatsResponse) GetBadgeUrl() *string {
 	return a.BadgeUrl
 }
 
-func (a *AchievementWithStatsResponse) GetKey() *string {
+func (a *AchievementWithStatsResponse) GetKey() string {
 	if a == nil {
-		return nil
+		return ""
 	}
 	return a.Key
 }
@@ -183,23 +346,16 @@ func (a *AchievementWithStatsResponse) GetMetricName() *string {
 	return a.MetricName
 }
 
-func (a *AchievementWithStatsResponse) GetCurrentStreak() *MetricEventStreakResponse {
+func (a *AchievementWithStatsResponse) GetCompletions() int {
 	if a == nil {
-		return nil
-	}
-	return a.CurrentStreak
-}
-
-func (a *AchievementWithStatsResponse) GetCompletions() *int {
-	if a == nil {
-		return nil
+		return 0
 	}
 	return a.Completions
 }
 
-func (a *AchievementWithStatsResponse) GetRarity() *float64 {
+func (a *AchievementWithStatsResponse) GetRarity() float64 {
 	if a == nil {
-		return nil
+		return 0
 	}
 	return a.Rarity
 }

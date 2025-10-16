@@ -146,15 +146,13 @@ type MetricEventLeaderboardResponse struct {
 	// The user's rank in the leaderboard before the event, or null if the user was not on the leaderboard before the event.
 	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
 	// The minimum value required to enter the leaderboard according to its current rankings.
-	Threshold float64 `json:"threshold" url:"threshold"`
+	Threshold int `json:"threshold" url:"threshold"`
 	// The unique ID of the leaderboard.
 	Id string `json:"id" url:"id"`
 	// The user-facing name of the leaderboard.
 	Name string `json:"name" url:"name"`
 	// The unique key used to reference the leaderboard in APIs.
 	Key string `json:"key" url:"key"`
-	// The status of the leaderboard.
-	Status *LeaderboardResponseStatus `json:"status,omitempty" url:"status,omitempty"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
@@ -166,13 +164,13 @@ type MetricEventLeaderboardResponse struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	Description string `json:"description" url:"description"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The maximum number of participants in the leaderboard.
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
-	RunUnit *string `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type.
 	RunInterval int `json:"runInterval" url:"runInterval"`
 
@@ -201,7 +199,7 @@ func (m *MetricEventLeaderboardResponse) GetPreviousRank() *int {
 	return m.PreviousRank
 }
 
-func (m *MetricEventLeaderboardResponse) GetThreshold() float64 {
+func (m *MetricEventLeaderboardResponse) GetThreshold() int {
 	if m == nil {
 		return 0
 	}
@@ -227,13 +225,6 @@ func (m *MetricEventLeaderboardResponse) GetKey() string {
 		return ""
 	}
 	return m.Key
-}
-
-func (m *MetricEventLeaderboardResponse) GetStatus() *LeaderboardResponseStatus {
-	if m == nil {
-		return nil
-	}
-	return m.Status
 }
 
 func (m *MetricEventLeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
@@ -271,9 +262,9 @@ func (m *MetricEventLeaderboardResponse) GetPointsSystemName() *string {
 	return m.PointsSystemName
 }
 
-func (m *MetricEventLeaderboardResponse) GetDescription() *string {
+func (m *MetricEventLeaderboardResponse) GetDescription() string {
 	if m == nil {
-		return nil
+		return ""
 	}
 	return m.Description
 }
@@ -292,7 +283,7 @@ func (m *MetricEventLeaderboardResponse) GetMaxParticipants() int {
 	return m.MaxParticipants
 }
 
-func (m *MetricEventLeaderboardResponse) GetRunUnit() *string {
+func (m *MetricEventLeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUnit {
 	if m == nil {
 		return nil
 	}

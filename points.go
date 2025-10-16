@@ -16,33 +16,33 @@ type PointsSummaryRequest struct {
 
 type PointsRange struct {
 	// The start of the points range. Inclusive.
-	From *float64 `json:"from,omitempty" url:"from,omitempty"`
+	From int `json:"from" url:"from"`
 	// The end of the points range. Inclusive.
-	To *float64 `json:"to,omitempty" url:"to,omitempty"`
+	To int `json:"to" url:"to"`
 	// The number of users in this points range.
-	Users *float64 `json:"users,omitempty" url:"users,omitempty"`
+	Users int `json:"users" url:"users"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (p *PointsRange) GetFrom() *float64 {
+func (p *PointsRange) GetFrom() int {
 	if p == nil {
-		return nil
+		return 0
 	}
 	return p.From
 }
 
-func (p *PointsRange) GetTo() *float64 {
+func (p *PointsRange) GetTo() int {
 	if p == nil {
-		return nil
+		return 0
 	}
 	return p.To
 }
 
-func (p *PointsRange) GetUsers() *float64 {
+func (p *PointsRange) GetUsers() int {
 	if p == nil {
-		return nil
+		return 0
 	}
 	return p.Users
 }
@@ -91,6 +91,8 @@ type PointsSystemResponse struct {
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The URL of the badge image for the points system, if one has been uploaded.
 	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The maximum number of points a user can be awarded in this points system
+	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
 	// Array of active triggers for this points system.
 	Triggers []*PointsTriggerResponse `json:"triggers,omitempty" url:"triggers,omitempty"`
 
@@ -124,6 +126,13 @@ func (p *PointsSystemResponse) GetBadgeUrl() *string {
 		return nil
 	}
 	return p.BadgeUrl
+}
+
+func (p *PointsSystemResponse) GetMaxPoints() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.MaxPoints
 }
 
 func (p *PointsSystemResponse) GetTriggers() []*PointsTriggerResponse {
@@ -167,62 +176,66 @@ func (p *PointsSystemResponse) String() string {
 
 type PointsTriggerResponse struct {
 	// The unique ID of the trigger.
-	Id *string `json:"id,omitempty" url:"id,omitempty"`
+	Id string `json:"id" url:"id"`
 	// The type of trigger.
-	Type *PointsTriggerResponseType `json:"type,omitempty" url:"type,omitempty"`
+	Type PointsTriggerResponseType `json:"type" url:"type"`
 	// The points awarded by this trigger.
-	Points *float64 `json:"points,omitempty" url:"points,omitempty"`
+	Points int `json:"points" url:"points"`
 	// The status of the trigger.
-	Status *PointsTriggerResponseStatus `json:"status,omitempty" url:"status,omitempty"`
+	Status PointsTriggerResponseStatus `json:"status" url:"status"`
 	// The unique ID of the achievement associated with this trigger, if the trigger is an achievement.
 	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
 	// The unique ID of the metric associated with this trigger, if the trigger is a metric.
 	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
 	// The amount that a user must increase the metric to earn the points, if the trigger is a metric.
-	MetricThreshold *float64 `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
 	// The number of consecutive streak periods that a user must complete to earn the points, if the trigger is a streak.
-	StreakLengthThreshold *float64 `json:"streakLengthThreshold,omitempty" url:"streakLengthThreshold,omitempty"`
+	StreakLengthThreshold *int `json:"streakLengthThreshold,omitempty" url:"streakLengthThreshold,omitempty"`
 	// The name of the metric associated with this trigger, if the trigger is a metric.
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
 	// The name of the achievement associated with this trigger, if the trigger is an achievement.
 	AchievementName *string `json:"achievementName,omitempty" url:"achievementName,omitempty"`
+	// The time unit of the trigger, if the trigger is a time interval.
+	TimeUnit *PointsTriggerResponseTimeUnit `json:"timeUnit,omitempty" url:"timeUnit,omitempty"`
+	// The interval of the trigger in the time unit, if the trigger is a time interval.
+	TimeInterval *int `json:"timeInterval,omitempty" url:"timeInterval,omitempty"`
 	// User attribute filters that must be met for this trigger to activate. Only present if the trigger has user attribute filters configured.
 	UserAttributes []*PointsTriggerResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
 	// Event attribute filter that must be met for this trigger to activate. Only present if the trigger has an event filter configured.
 	EventAttribute *PointsTriggerResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
 	// The date and time the trigger was created, in ISO 8601 format.
-	Created *time.Time `json:"created,omitempty" url:"created,omitempty"`
+	Created time.Time `json:"created" url:"created"`
 	// The date and time the trigger was last updated, in ISO 8601 format.
-	Updated *time.Time `json:"updated,omitempty" url:"updated,omitempty"`
+	Updated time.Time `json:"updated" url:"updated"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (p *PointsTriggerResponse) GetId() *string {
+func (p *PointsTriggerResponse) GetId() string {
 	if p == nil {
-		return nil
+		return ""
 	}
 	return p.Id
 }
 
-func (p *PointsTriggerResponse) GetType() *PointsTriggerResponseType {
+func (p *PointsTriggerResponse) GetType() PointsTriggerResponseType {
 	if p == nil {
-		return nil
+		return ""
 	}
 	return p.Type
 }
 
-func (p *PointsTriggerResponse) GetPoints() *float64 {
+func (p *PointsTriggerResponse) GetPoints() int {
 	if p == nil {
-		return nil
+		return 0
 	}
 	return p.Points
 }
 
-func (p *PointsTriggerResponse) GetStatus() *PointsTriggerResponseStatus {
+func (p *PointsTriggerResponse) GetStatus() PointsTriggerResponseStatus {
 	if p == nil {
-		return nil
+		return ""
 	}
 	return p.Status
 }
@@ -241,14 +254,14 @@ func (p *PointsTriggerResponse) GetMetricId() *string {
 	return p.MetricId
 }
 
-func (p *PointsTriggerResponse) GetMetricThreshold() *float64 {
+func (p *PointsTriggerResponse) GetMetricThreshold() *int {
 	if p == nil {
 		return nil
 	}
 	return p.MetricThreshold
 }
 
-func (p *PointsTriggerResponse) GetStreakLengthThreshold() *float64 {
+func (p *PointsTriggerResponse) GetStreakLengthThreshold() *int {
 	if p == nil {
 		return nil
 	}
@@ -269,6 +282,20 @@ func (p *PointsTriggerResponse) GetAchievementName() *string {
 	return p.AchievementName
 }
 
+func (p *PointsTriggerResponse) GetTimeUnit() *PointsTriggerResponseTimeUnit {
+	if p == nil {
+		return nil
+	}
+	return p.TimeUnit
+}
+
+func (p *PointsTriggerResponse) GetTimeInterval() *int {
+	if p == nil {
+		return nil
+	}
+	return p.TimeInterval
+}
+
 func (p *PointsTriggerResponse) GetUserAttributes() []*PointsTriggerResponseUserAttributesItem {
 	if p == nil {
 		return nil
@@ -283,16 +310,16 @@ func (p *PointsTriggerResponse) GetEventAttribute() *PointsTriggerResponseEventA
 	return p.EventAttribute
 }
 
-func (p *PointsTriggerResponse) GetCreated() *time.Time {
+func (p *PointsTriggerResponse) GetCreated() time.Time {
 	if p == nil {
-		return nil
+		return time.Time{}
 	}
 	return p.Created
 }
 
-func (p *PointsTriggerResponse) GetUpdated() *time.Time {
+func (p *PointsTriggerResponse) GetUpdated() time.Time {
 	if p == nil {
-		return nil
+		return time.Time{}
 	}
 	return p.Updated
 }
@@ -305,8 +332,8 @@ func (p *PointsTriggerResponse) UnmarshalJSON(data []byte) error {
 	type embed PointsTriggerResponse
 	var unmarshaler = struct {
 		embed
-		Created *internal.DateTime `json:"created,omitempty"`
-		Updated *internal.DateTime `json:"updated,omitempty"`
+		Created *internal.DateTime `json:"created"`
+		Updated *internal.DateTime `json:"updated"`
 	}{
 		embed: embed(*p),
 	}
@@ -314,8 +341,8 @@ func (p *PointsTriggerResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*p = PointsTriggerResponse(unmarshaler.embed)
-	p.Created = unmarshaler.Created.TimePtr()
-	p.Updated = unmarshaler.Updated.TimePtr()
+	p.Created = unmarshaler.Created.Time()
+	p.Updated = unmarshaler.Updated.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
 		return err
@@ -329,12 +356,12 @@ func (p *PointsTriggerResponse) MarshalJSON() ([]byte, error) {
 	type embed PointsTriggerResponse
 	var marshaler = struct {
 		embed
-		Created *internal.DateTime `json:"created,omitempty"`
-		Updated *internal.DateTime `json:"updated,omitempty"`
+		Created *internal.DateTime `json:"created"`
+		Updated *internal.DateTime `json:"updated"`
 	}{
 		embed:   embed(*p),
-		Created: internal.NewOptionalDateTime(p.Created),
-		Updated: internal.NewOptionalDateTime(p.Updated),
+		Created: internal.NewDateTime(p.Created),
+		Updated: internal.NewDateTime(p.Updated),
 	}
 	return json.Marshal(marshaler)
 }
@@ -431,13 +458,38 @@ func (p PointsTriggerResponseStatus) Ptr() *PointsTriggerResponseStatus {
 	return &p
 }
 
+// The time unit of the trigger, if the trigger is a time interval.
+type PointsTriggerResponseTimeUnit string
+
+const (
+	PointsTriggerResponseTimeUnitHour PointsTriggerResponseTimeUnit = "hour"
+	PointsTriggerResponseTimeUnitDay  PointsTriggerResponseTimeUnit = "day"
+)
+
+func NewPointsTriggerResponseTimeUnitFromString(s string) (PointsTriggerResponseTimeUnit, error) {
+	switch s {
+	case "hour":
+		return PointsTriggerResponseTimeUnitHour, nil
+	case "day":
+		return PointsTriggerResponseTimeUnitDay, nil
+	}
+	var t PointsTriggerResponseTimeUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsTriggerResponseTimeUnit) Ptr() *PointsTriggerResponseTimeUnit {
+	return &p
+}
+
 // The type of trigger.
 type PointsTriggerResponseType string
 
 const (
-	PointsTriggerResponseTypeMetric      PointsTriggerResponseType = "metric"
-	PointsTriggerResponseTypeAchievement PointsTriggerResponseType = "achievement"
-	PointsTriggerResponseTypeStreak      PointsTriggerResponseType = "streak"
+	PointsTriggerResponseTypeMetric       PointsTriggerResponseType = "metric"
+	PointsTriggerResponseTypeAchievement  PointsTriggerResponseType = "achievement"
+	PointsTriggerResponseTypeStreak       PointsTriggerResponseType = "streak"
+	PointsTriggerResponseTypeTime         PointsTriggerResponseType = "time"
+	PointsTriggerResponseTypeUserCreation PointsTriggerResponseType = "user_creation"
 )
 
 func NewPointsTriggerResponseTypeFromString(s string) (PointsTriggerResponseType, error) {
@@ -448,6 +500,10 @@ func NewPointsTriggerResponseTypeFromString(s string) (PointsTriggerResponseType
 		return PointsTriggerResponseTypeAchievement, nil
 	case "streak":
 		return PointsTriggerResponseTypeStreak, nil
+	case "time":
+		return PointsTriggerResponseTypeTime, nil
+	case "user_creation":
+		return PointsTriggerResponseTypeUserCreation, nil
 	}
 	var t PointsTriggerResponseType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
