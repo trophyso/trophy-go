@@ -749,6 +749,8 @@ type LeaderboardResponse struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the attribute to break down this leaderboard by.
+	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -800,6 +802,13 @@ func (l *LeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
 		return ""
 	}
 	return l.RankBy
+}
+
+func (l *LeaderboardResponse) GetBreakdownAttribute() *string {
+	if l == nil {
+		return nil
+	}
+	return l.BreakdownAttribute
 }
 
 func (l *LeaderboardResponse) GetMetricKey() *string {
@@ -1702,6 +1711,8 @@ type WebhookUserLeaderboardResponse struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the attribute to break down this leaderboard by.
+	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -1761,6 +1772,13 @@ func (w *WebhookUserLeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
 		return ""
 	}
 	return w.RankBy
+}
+
+func (w *WebhookUserLeaderboardResponse) GetBreakdownAttribute() *string {
+	if w == nil {
+		return nil
+	}
+	return w.BreakdownAttribute
 }
 
 func (w *WebhookUserLeaderboardResponse) GetMetricKey() *string {

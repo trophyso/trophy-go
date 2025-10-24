@@ -34,6 +34,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 // Get all achievements and their completion stats.
 func (c *Client) All(
 	ctx context.Context,
+	request *trophygo.AchievementsAllRequest,
 	opts ...option.RequestOption,
 ) ([]*trophygo.AchievementWithStatsResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -43,6 +44,13 @@ func (c *Client) All(
 		"https://api.trophy.so/v1",
 	)
 	endpointURL := baseURL + "/achievements"
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),

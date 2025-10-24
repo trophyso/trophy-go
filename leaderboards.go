@@ -17,6 +17,8 @@ type LeaderboardsGetRequest struct {
 	Run *string `json:"-" url:"run,omitempty"`
 	// When provided, offset is relative to this user's position on the leaderboard. If the user is not found in the leaderboard, returns empty rankings array.
 	UserId *string `json:"-" url:"userId,omitempty"`
+	// Attribute key and value to filter the rankings by, separated by a colon. This parameter is required, and only valid for leaderboards with a breakdown attribute.
+	UserAttributes *string `json:"-" url:"userAttributes,omitempty"`
 }
 
 // A user's ranking in a leaderboard.
@@ -103,6 +105,8 @@ type LeaderboardResponseWithRankings struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the attribute to break down this leaderboard by.
+	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -158,6 +162,13 @@ func (l *LeaderboardResponseWithRankings) GetRankBy() LeaderboardResponseRankBy 
 		return ""
 	}
 	return l.RankBy
+}
+
+func (l *LeaderboardResponseWithRankings) GetBreakdownAttribute() *string {
+	if l == nil {
+		return nil
+	}
+	return l.BreakdownAttribute
 }
 
 func (l *LeaderboardResponseWithRankings) GetMetricKey() *string {
@@ -311,6 +322,8 @@ type LeaderboardsAllResponseItem struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the attribute to break down this leaderboard by.
+	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -364,6 +377,13 @@ func (l *LeaderboardsAllResponseItem) GetRankBy() LeaderboardResponseRankBy {
 		return ""
 	}
 	return l.RankBy
+}
+
+func (l *LeaderboardsAllResponseItem) GetBreakdownAttribute() *string {
+	if l == nil {
+		return nil
+	}
+	return l.BreakdownAttribute
 }
 
 func (l *LeaderboardsAllResponseItem) GetMetricKey() *string {

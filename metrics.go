@@ -147,6 +147,8 @@ type MetricEventLeaderboardResponse struct {
 	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
 	// The minimum value required to enter the leaderboard according to its current rankings.
 	Threshold int `json:"threshold" url:"threshold"`
+	// For leaderboards with a breakdown attribute, the value of the attribute for the user.
+	BreakdownAttributeValue *string `json:"breakdownAttributeValue,omitempty" url:"breakdownAttributeValue,omitempty"`
 	// The unique ID of the leaderboard.
 	Id string `json:"id" url:"id"`
 	// The user-facing name of the leaderboard.
@@ -155,6 +157,8 @@ type MetricEventLeaderboardResponse struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// The key of the attribute to break down this leaderboard by.
+	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -206,6 +210,13 @@ func (m *MetricEventLeaderboardResponse) GetThreshold() int {
 	return m.Threshold
 }
 
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttributeValue() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttributeValue
+}
+
 func (m *MetricEventLeaderboardResponse) GetId() string {
 	if m == nil {
 		return ""
@@ -232,6 +243,13 @@ func (m *MetricEventLeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
 		return ""
 	}
 	return m.RankBy
+}
+
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttribute() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttribute
 }
 
 func (m *MetricEventLeaderboardResponse) GetMetricKey() *string {

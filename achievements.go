@@ -9,6 +9,11 @@ import (
 	time "time"
 )
 
+type AchievementsAllRequest struct {
+	// Optional colon-delimited user attributes in the format attribute:value,attribute:value. Only achievements accessible to a user with the provided attributes will be returned.
+	UserAttributes *string `json:"-" url:"userAttributes,omitempty"`
+}
+
 type AchievementsCompleteRequest struct {
 	// The user that completed the achievement.
 	User *UpsertedUser `json:"user,omitempty" url:"-"`
