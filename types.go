@@ -1509,15 +1509,15 @@ func (s StreakFrequency) Ptr() *StreakFrequency {
 // An object with editable user fields.
 type UpdatedUser struct {
 	// The user's email address. Required if subscribeToEmails is true.
-	Email string `json:"email" url:"email"`
+	Email *string `json:"email,omitempty" url:"email,omitempty"`
 	// The name to refer to the user by in emails.
-	Name string `json:"name" url:"name"`
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	// The user's timezone (used for email scheduling).
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
 	// The user's device tokens, used for push notifications.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
-	SubscribeToEmails bool `json:"subscribeToEmails" url:"subscribeToEmails"`
+	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
 	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
 	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
 
@@ -1525,16 +1525,16 @@ type UpdatedUser struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *UpdatedUser) GetEmail() string {
+func (u *UpdatedUser) GetEmail() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.Email
 }
 
-func (u *UpdatedUser) GetName() string {
+func (u *UpdatedUser) GetName() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.Name
 }
@@ -1553,9 +1553,9 @@ func (u *UpdatedUser) GetDeviceTokens() []string {
 	return u.DeviceTokens
 }
 
-func (u *UpdatedUser) GetSubscribeToEmails() bool {
+func (u *UpdatedUser) GetSubscribeToEmails() *bool {
 	if u == nil {
-		return false
+		return nil
 	}
 	return u.SubscribeToEmails
 }
@@ -1602,15 +1602,15 @@ func (u *UpdatedUser) String() string {
 // An object with editable user fields.
 type UpsertedUser struct {
 	// The user's email address. Required if subscribeToEmails is true.
-	Email string `json:"email" url:"email"`
+	Email *string `json:"email,omitempty" url:"email,omitempty"`
 	// The name to refer to the user by in emails.
-	Name string `json:"name" url:"name"`
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	// The user's timezone (used for email scheduling).
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
 	// The user's device tokens, used for push notifications.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
-	SubscribeToEmails bool `json:"subscribeToEmails" url:"subscribeToEmails"`
+	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
 	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
 	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
 	// The ID of the user in your database. Must be a string.
@@ -1620,16 +1620,16 @@ type UpsertedUser struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *UpsertedUser) GetEmail() string {
+func (u *UpsertedUser) GetEmail() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.Email
 }
 
-func (u *UpsertedUser) GetName() string {
+func (u *UpsertedUser) GetName() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.Name
 }
@@ -1648,9 +1648,9 @@ func (u *UpsertedUser) GetDeviceTokens() []string {
 	return u.DeviceTokens
 }
 
-func (u *UpsertedUser) GetSubscribeToEmails() bool {
+func (u *UpsertedUser) GetSubscribeToEmails() *bool {
 	if u == nil {
-		return false
+		return nil
 	}
 	return u.SubscribeToEmails
 }

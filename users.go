@@ -488,20 +488,20 @@ func (s *StreakResponseStreakHistoryItem) String() string {
 
 // A user of your application.
 type User struct {
-	// The user's email address. Required if subscribeToEmails is true.
-	Email string `json:"email" url:"email"`
-	// The name to refer to the user by in emails.
-	Name string `json:"name" url:"name"`
-	// The user's timezone (used for email scheduling).
+	// The ID of the user in your database. Must be a string.
+	Id string `json:"id" url:"id"`
+	// The user's email address.
+	Email *string `json:"email,omitempty" url:"email,omitempty"`
+	// The name of the user.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The user's timezone.
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
-	// The user's device tokens, used for push notifications.
+	// The user's device tokens.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
-	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
+	// Whether the user is opted into receiving Trophy-powered emails.
 	SubscribeToEmails bool `json:"subscribeToEmails" url:"subscribeToEmails"`
 	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
 	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
-	// The ID of the user in your database. Must be a string.
-	Id string `json:"id" url:"id"`
 	// Whether the user is in the control group, meaning they do not receive emails or other communications from Trophy.
 	Control bool `json:"control" url:"control"`
 	// The date and time the user was created, in ISO 8601 format.
@@ -513,16 +513,23 @@ type User struct {
 	rawJSON         json.RawMessage
 }
 
-func (u *User) GetEmail() string {
+func (u *User) GetId() string {
 	if u == nil {
 		return ""
+	}
+	return u.Id
+}
+
+func (u *User) GetEmail() *string {
+	if u == nil {
+		return nil
 	}
 	return u.Email
 }
 
-func (u *User) GetName() string {
+func (u *User) GetName() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.Name
 }
@@ -553,13 +560,6 @@ func (u *User) GetAttributes() map[string]string {
 		return nil
 	}
 	return u.Attributes
-}
-
-func (u *User) GetId() string {
-	if u == nil {
-		return ""
-	}
-	return u.Id
 }
 
 func (u *User) GetControl() bool {
