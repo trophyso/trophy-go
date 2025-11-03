@@ -1484,7 +1484,6 @@ const (
 	StreakFrequencyDaily   StreakFrequency = "daily"
 	StreakFrequencyWeekly  StreakFrequency = "weekly"
 	StreakFrequencyMonthly StreakFrequency = "monthly"
-	StreakFrequencyYearly  StreakFrequency = "yearly"
 )
 
 func NewStreakFrequencyFromString(s string) (StreakFrequency, error) {
@@ -1495,8 +1494,6 @@ func NewStreakFrequencyFromString(s string) (StreakFrequency, error) {
 		return StreakFrequencyWeekly, nil
 	case "monthly":
 		return StreakFrequencyMonthly, nil
-	case "yearly":
-		return StreakFrequencyYearly, nil
 	}
 	var t StreakFrequency
 	return "", fmt.Errorf("%s is not a valid %T", s, t)

@@ -30,9 +30,9 @@ type EventResponse struct {
 	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's current streak.
 	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
-	// A map of points systems by key.
+	// A map of points systems by key. Only contains points systems that were affected by the event.
 	Points map[string]*MetricEventPointsResponse `json:"points,omitempty" url:"points,omitempty"`
-	// A map of leaderboards by key.
+	// A map of leaderboards by key. Only contains leaderboards that were affected by the event.
 	Leaderboards map[string]*MetricEventLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
 	// The idempotency key used for the event, if one was provided.
 	IdempotencyKey *string `json:"idempotencyKey,omitempty" url:"idempotencyKey,omitempty"`
