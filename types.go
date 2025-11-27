@@ -401,8 +401,8 @@ type CompletedAchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// The date and time the achievement was completed, in ISO 8601 format.
-	AchievedAt time.Time `json:"achievedAt" url:"achievedAt"`
+	// The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
+	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -478,9 +478,9 @@ func (c *CompletedAchievementResponse) GetMetricName() *string {
 	return c.MetricName
 }
 
-func (c *CompletedAchievementResponse) GetAchievedAt() time.Time {
+func (c *CompletedAchievementResponse) GetAchievedAt() *time.Time {
 	if c == nil {
-		return time.Time{}
+		return nil
 	}
 	return c.AchievedAt
 }
@@ -493,7 +493,7 @@ func (c *CompletedAchievementResponse) UnmarshalJSON(data []byte) error {
 	type embed CompletedAchievementResponse
 	var unmarshaler = struct {
 		embed
-		AchievedAt *internal.DateTime `json:"achievedAt"`
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
 	}{
 		embed: embed(*c),
 	}
@@ -501,7 +501,7 @@ func (c *CompletedAchievementResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CompletedAchievementResponse(unmarshaler.embed)
-	c.AchievedAt = unmarshaler.AchievedAt.Time()
+	c.AchievedAt = unmarshaler.AchievedAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
@@ -515,10 +515,10 @@ func (c *CompletedAchievementResponse) MarshalJSON() ([]byte, error) {
 	type embed CompletedAchievementResponse
 	var marshaler = struct {
 		embed
-		AchievedAt *internal.DateTime `json:"achievedAt"`
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
 	}{
 		embed:      embed(*c),
-		AchievedAt: internal.NewDateTime(c.AchievedAt),
+		AchievedAt: internal.NewOptionalDateTime(c.AchievedAt),
 	}
 	return json.Marshal(marshaler)
 }

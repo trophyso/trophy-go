@@ -104,8 +104,8 @@ type AchievementCompletionResponseAchievement struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// The date and time the achievement was completed, in ISO 8601 format.
-	AchievedAt time.Time `json:"achievedAt" url:"achievedAt"`
+	// The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
+	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
 	// The user's current streak for the metric, if the metric has streaks enabled.
 	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 
@@ -183,9 +183,9 @@ func (a *AchievementCompletionResponseAchievement) GetMetricName() *string {
 	return a.MetricName
 }
 
-func (a *AchievementCompletionResponseAchievement) GetAchievedAt() time.Time {
+func (a *AchievementCompletionResponseAchievement) GetAchievedAt() *time.Time {
 	if a == nil {
-		return time.Time{}
+		return nil
 	}
 	return a.AchievedAt
 }
@@ -205,7 +205,7 @@ func (a *AchievementCompletionResponseAchievement) UnmarshalJSON(data []byte) er
 	type embed AchievementCompletionResponseAchievement
 	var unmarshaler = struct {
 		embed
-		AchievedAt *internal.DateTime `json:"achievedAt"`
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
 	}{
 		embed: embed(*a),
 	}
@@ -213,7 +213,7 @@ func (a *AchievementCompletionResponseAchievement) UnmarshalJSON(data []byte) er
 		return err
 	}
 	*a = AchievementCompletionResponseAchievement(unmarshaler.embed)
-	a.AchievedAt = unmarshaler.AchievedAt.Time()
+	a.AchievedAt = unmarshaler.AchievedAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *a)
 	if err != nil {
 		return err
@@ -227,10 +227,10 @@ func (a *AchievementCompletionResponseAchievement) MarshalJSON() ([]byte, error)
 	type embed AchievementCompletionResponseAchievement
 	var marshaler = struct {
 		embed
-		AchievedAt *internal.DateTime `json:"achievedAt"`
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
 	}{
 		embed:      embed(*a),
-		AchievedAt: internal.NewDateTime(a.AchievedAt),
+		AchievedAt: internal.NewOptionalDateTime(a.AchievedAt),
 	}
 	return json.Marshal(marshaler)
 }
