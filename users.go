@@ -17,6 +17,8 @@ type UsersAchievementsRequest struct {
 type UsersLeaderboardRequest struct {
 	// Specific run date in YYYY-MM-DD format. If not provided, returns the current run.
 	Run *string `json:"-" url:"run,omitempty"`
+	// The number of events to return in the history array.
+	NumEvents *int `json:"-" url:"numEvents,omitempty"`
 }
 
 type UsersMetricEventSummaryRequest struct {
@@ -658,7 +660,7 @@ type UserLeaderboardResponse struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description string `json:"description" url:"description"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -667,8 +669,8 @@ type UserLeaderboardResponse struct {
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
-	// The interval between repetitions, relative to the start date and repetition type.
-	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
 	// The user's current rank in this leaderboard. Null if the user is not on the leaderboard.
 	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 	// The user's current value in this leaderboard. Null if the user is not on the leaderboard.
@@ -741,9 +743,9 @@ func (u *UserLeaderboardResponse) GetPointsSystemName() *string {
 	return u.PointsSystemName
 }
 
-func (u *UserLeaderboardResponse) GetDescription() string {
+func (u *UserLeaderboardResponse) GetDescription() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.Description
 }
@@ -776,9 +778,9 @@ func (u *UserLeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUnit {
 	return u.RunUnit
 }
 
-func (u *UserLeaderboardResponse) GetRunInterval() int {
+func (u *UserLeaderboardResponse) GetRunInterval() *int {
 	if u == nil {
-		return 0
+		return nil
 	}
 	return u.RunInterval
 }
@@ -850,7 +852,7 @@ type UserLeaderboardResponseWithHistory struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description string `json:"description" url:"description"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -859,8 +861,8 @@ type UserLeaderboardResponseWithHistory struct {
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
-	// The interval between repetitions, relative to the start date and repetition type.
-	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
 	// The user's current rank in this leaderboard. Null if the user is not on the leaderboard.
 	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 	// The user's current value in this leaderboard. Null if the user is not on the leaderboard.
@@ -935,9 +937,9 @@ func (u *UserLeaderboardResponseWithHistory) GetPointsSystemName() *string {
 	return u.PointsSystemName
 }
 
-func (u *UserLeaderboardResponseWithHistory) GetDescription() string {
+func (u *UserLeaderboardResponseWithHistory) GetDescription() *string {
 	if u == nil {
-		return ""
+		return nil
 	}
 	return u.Description
 }
@@ -970,9 +972,9 @@ func (u *UserLeaderboardResponseWithHistory) GetRunUnit() *LeaderboardResponseRu
 	return u.RunUnit
 }
 
-func (u *UserLeaderboardResponseWithHistory) GetRunInterval() int {
+func (u *UserLeaderboardResponseWithHistory) GetRunInterval() *int {
 	if u == nil {
-		return 0
+		return nil
 	}
 	return u.RunInterval
 }

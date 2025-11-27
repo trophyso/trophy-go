@@ -760,7 +760,7 @@ type LeaderboardResponse struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description string `json:"description" url:"description"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -769,8 +769,8 @@ type LeaderboardResponse struct {
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
-	// The interval between repetitions, relative to the start date and repetition type.
-	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -839,9 +839,9 @@ func (l *LeaderboardResponse) GetPointsSystemName() *string {
 	return l.PointsSystemName
 }
 
-func (l *LeaderboardResponse) GetDescription() string {
+func (l *LeaderboardResponse) GetDescription() *string {
 	if l == nil {
-		return ""
+		return nil
 	}
 	return l.Description
 }
@@ -874,9 +874,9 @@ func (l *LeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUnit {
 	return l.RunUnit
 }
 
-func (l *LeaderboardResponse) GetRunInterval() int {
+func (l *LeaderboardResponse) GetRunInterval() *int {
 	if l == nil {
-		return 0
+		return nil
 	}
 	return l.RunInterval
 }
@@ -1719,7 +1719,7 @@ type WebhookUserLeaderboardResponse struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description string `json:"description" url:"description"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -1728,8 +1728,8 @@ type WebhookUserLeaderboardResponse struct {
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
-	// The interval between repetitions, relative to the start date and repetition type.
-	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
 	// The user's current rank in this leaderboard. Null if the user is not on the leaderboard.
 	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 	// The user's current value in this leaderboard. Null if the user is not on the leaderboard.
@@ -1806,9 +1806,9 @@ func (w *WebhookUserLeaderboardResponse) GetPointsSystemName() *string {
 	return w.PointsSystemName
 }
 
-func (w *WebhookUserLeaderboardResponse) GetDescription() string {
+func (w *WebhookUserLeaderboardResponse) GetDescription() *string {
 	if w == nil {
-		return ""
+		return nil
 	}
 	return w.Description
 }
@@ -1841,9 +1841,9 @@ func (w *WebhookUserLeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUni
 	return w.RunUnit
 }
 
-func (w *WebhookUserLeaderboardResponse) GetRunInterval() int {
+func (w *WebhookUserLeaderboardResponse) GetRunInterval() *int {
 	if w == nil {
-		return 0
+		return nil
 	}
 	return w.RunInterval
 }

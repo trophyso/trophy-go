@@ -116,7 +116,7 @@ type LeaderboardResponseWithRankings struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description string `json:"description" url:"description"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -125,8 +125,8 @@ type LeaderboardResponseWithRankings struct {
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
-	// The interval between repetitions, relative to the start date and repetition type.
-	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
 	// The status of the leaderboard.
 	Status LeaderboardResponseWithRankingsStatus `json:"status" url:"status"`
 	// Array of user rankings for the leaderboard.
@@ -199,9 +199,9 @@ func (l *LeaderboardResponseWithRankings) GetPointsSystemName() *string {
 	return l.PointsSystemName
 }
 
-func (l *LeaderboardResponseWithRankings) GetDescription() string {
+func (l *LeaderboardResponseWithRankings) GetDescription() *string {
 	if l == nil {
-		return ""
+		return nil
 	}
 	return l.Description
 }
@@ -234,9 +234,9 @@ func (l *LeaderboardResponseWithRankings) GetRunUnit() *LeaderboardResponseRunUn
 	return l.RunUnit
 }
 
-func (l *LeaderboardResponseWithRankings) GetRunInterval() int {
+func (l *LeaderboardResponseWithRankings) GetRunInterval() *int {
 	if l == nil {
-		return 0
+		return nil
 	}
 	return l.RunInterval
 }
@@ -333,7 +333,7 @@ type LeaderboardsAllResponseItem struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description string `json:"description" url:"description"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
@@ -342,8 +342,8 @@ type LeaderboardsAllResponseItem struct {
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
-	// The interval between repetitions, relative to the start date and repetition type.
-	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
 	// The status of the leaderboard.
 	Status LeaderboardsAllResponseItemStatus `json:"status" url:"status"`
 
@@ -414,9 +414,9 @@ func (l *LeaderboardsAllResponseItem) GetPointsSystemName() *string {
 	return l.PointsSystemName
 }
 
-func (l *LeaderboardsAllResponseItem) GetDescription() string {
+func (l *LeaderboardsAllResponseItem) GetDescription() *string {
 	if l == nil {
-		return ""
+		return nil
 	}
 	return l.Description
 }
@@ -449,9 +449,9 @@ func (l *LeaderboardsAllResponseItem) GetRunUnit() *LeaderboardResponseRunUnit {
 	return l.RunUnit
 }
 
-func (l *LeaderboardsAllResponseItem) GetRunInterval() int {
+func (l *LeaderboardsAllResponseItem) GetRunInterval() *int {
 	if l == nil {
-		return 0
+		return nil
 	}
 	return l.RunInterval
 }

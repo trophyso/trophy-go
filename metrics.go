@@ -168,15 +168,15 @@ type MetricEventLeaderboardResponse struct {
 	// The name of the points system to rank by, if rankBy is 'points'.
 	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
 	// The user-facing description of the leaderboard.
-	Description string `json:"description" url:"description"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The maximum number of participants in the leaderboard.
 	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
-	// The interval between repetitions, relative to the start date and repetition type.
-	RunInterval int `json:"runInterval" url:"runInterval"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -280,9 +280,9 @@ func (m *MetricEventLeaderboardResponse) GetPointsSystemName() *string {
 	return m.PointsSystemName
 }
 
-func (m *MetricEventLeaderboardResponse) GetDescription() string {
+func (m *MetricEventLeaderboardResponse) GetDescription() *string {
 	if m == nil {
-		return ""
+		return nil
 	}
 	return m.Description
 }
@@ -308,9 +308,9 @@ func (m *MetricEventLeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUni
 	return m.RunUnit
 }
 
-func (m *MetricEventLeaderboardResponse) GetRunInterval() int {
+func (m *MetricEventLeaderboardResponse) GetRunInterval() *int {
 	if m == nil {
-		return 0
+		return nil
 	}
 	return m.RunInterval
 }
