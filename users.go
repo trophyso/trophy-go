@@ -1032,6 +1032,956 @@ func (u *UserLeaderboardResponseWithHistory) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+// The user's activity summary for the wrapped year.
+type WrappedActivity struct {
+	// The number of days the user was active during the year.
+	DaysActive int `json:"daysActive" url:"daysActive"`
+	// The number of weeks the user was active during the year.
+	WeeksActive int `json:"weeksActive" url:"weeksActive"`
+	// The number of months the user was active during the year.
+	MonthsActive int `json:"monthsActive" url:"monthsActive"`
+	// Data about the user's most active day.
+	MostActiveDay *WrappedMostActiveDay `json:"mostActiveDay,omitempty" url:"mostActiveDay,omitempty"`
+	// Data about the user's most active week.
+	MostActiveWeek *WrappedMostActiveWeek `json:"mostActiveWeek,omitempty" url:"mostActiveWeek,omitempty"`
+	// Data about the user's most active month.
+	MostActiveMonth *WrappedMostActiveMonth `json:"mostActiveMonth,omitempty" url:"mostActiveMonth,omitempty"`
+	// Data about the user's activity for the entire year.
+	EntireYear *WrappedEntireYear `json:"entireYear,omitempty" url:"entireYear,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedActivity) GetDaysActive() int {
+	if w == nil {
+		return 0
+	}
+	return w.DaysActive
+}
+
+func (w *WrappedActivity) GetWeeksActive() int {
+	if w == nil {
+		return 0
+	}
+	return w.WeeksActive
+}
+
+func (w *WrappedActivity) GetMonthsActive() int {
+	if w == nil {
+		return 0
+	}
+	return w.MonthsActive
+}
+
+func (w *WrappedActivity) GetMostActiveDay() *WrappedMostActiveDay {
+	if w == nil {
+		return nil
+	}
+	return w.MostActiveDay
+}
+
+func (w *WrappedActivity) GetMostActiveWeek() *WrappedMostActiveWeek {
+	if w == nil {
+		return nil
+	}
+	return w.MostActiveWeek
+}
+
+func (w *WrappedActivity) GetMostActiveMonth() *WrappedMostActiveMonth {
+	if w == nil {
+		return nil
+	}
+	return w.MostActiveMonth
+}
+
+func (w *WrappedActivity) GetEntireYear() *WrappedEntireYear {
+	if w == nil {
+		return nil
+	}
+	return w.EntireYear
+}
+
+func (w *WrappedActivity) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedActivity) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedActivity
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedActivity(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedActivity) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// Activity data for a specific period (day, week, month, or year).
+type WrappedActivityPeriod struct {
+	// The user's metrics during this period, keyed by metric key.
+	Metrics map[string]*WrappedMetric `json:"metrics,omitempty" url:"metrics,omitempty"`
+	// The user's points during this period, keyed by points system key.
+	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
+	// Achievements completed during this period.
+	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
+	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedActivityPeriod) GetMetrics() map[string]*WrappedMetric {
+	if w == nil {
+		return nil
+	}
+	return w.Metrics
+}
+
+func (w *WrappedActivityPeriod) GetPoints() map[string]*WrappedPoints {
+	if w == nil {
+		return nil
+	}
+	return w.Points
+}
+
+func (w *WrappedActivityPeriod) GetAchievements() []*CompletedAchievementResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Achievements
+}
+
+func (w *WrappedActivityPeriod) GetLeaderboards() map[string]*UserLeaderboardResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboards
+}
+
+func (w *WrappedActivityPeriod) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedActivityPeriod) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedActivityPeriod
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedActivityPeriod(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedActivityPeriod) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// The user's activity data for the entire year.
+type WrappedEntireYear struct {
+	// The user's metrics during this period, keyed by metric key.
+	Metrics map[string]*WrappedMetric `json:"metrics,omitempty" url:"metrics,omitempty"`
+	// The user's points during this period, keyed by points system key.
+	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
+	// Achievements completed during this period.
+	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
+	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
+	// The user's longest streak during the year.
+	LongestStreak *WrappedStreak `json:"longestStreak,omitempty" url:"longestStreak,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedEntireYear) GetMetrics() map[string]*WrappedMetric {
+	if w == nil {
+		return nil
+	}
+	return w.Metrics
+}
+
+func (w *WrappedEntireYear) GetPoints() map[string]*WrappedPoints {
+	if w == nil {
+		return nil
+	}
+	return w.Points
+}
+
+func (w *WrappedEntireYear) GetAchievements() []*CompletedAchievementResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Achievements
+}
+
+func (w *WrappedEntireYear) GetLeaderboards() map[string]*UserLeaderboardResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboards
+}
+
+func (w *WrappedEntireYear) GetLongestStreak() *WrappedStreak {
+	if w == nil {
+		return nil
+	}
+	return w.LongestStreak
+}
+
+func (w *WrappedEntireYear) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedEntireYear) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedEntireYear
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedEntireYear(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedEntireYear) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// A user's metric data for a wrapped period.
+type WrappedMetric struct {
+	// The name of the metric.
+	Name string `json:"name" url:"name"`
+	// The units of the metric.
+	Units *string `json:"units,omitempty" url:"units,omitempty"`
+	// The user's current total for the metric.
+	CurrentTotal float64 `json:"currentTotal" url:"currentTotal"`
+	// The change in the metric value during the period.
+	ChangeThisPeriod float64 `json:"changeThisPeriod" url:"changeThisPeriod"`
+	// The percentage change in the metric value during the period.
+	PercentChange float64 `json:"percentChange" url:"percentChange"`
+	// The user's percentile rank for this metric during the period. Only included for weekly, monthly, and yearly aggregation periods.
+	PercentileThisPeriod *float64 `json:"percentileThisPeriod,omitempty" url:"percentileThisPeriod,omitempty"`
+	// Metric data broken down by attribute key and value.
+	ByAttribute map[string]map[string]*WrappedMetricByAttributeValueValue `json:"byAttribute,omitempty" url:"byAttribute,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedMetric) GetName() string {
+	if w == nil {
+		return ""
+	}
+	return w.Name
+}
+
+func (w *WrappedMetric) GetUnits() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Units
+}
+
+func (w *WrappedMetric) GetCurrentTotal() float64 {
+	if w == nil {
+		return 0
+	}
+	return w.CurrentTotal
+}
+
+func (w *WrappedMetric) GetChangeThisPeriod() float64 {
+	if w == nil {
+		return 0
+	}
+	return w.ChangeThisPeriod
+}
+
+func (w *WrappedMetric) GetPercentChange() float64 {
+	if w == nil {
+		return 0
+	}
+	return w.PercentChange
+}
+
+func (w *WrappedMetric) GetPercentileThisPeriod() *float64 {
+	if w == nil {
+		return nil
+	}
+	return w.PercentileThisPeriod
+}
+
+func (w *WrappedMetric) GetByAttribute() map[string]map[string]*WrappedMetricByAttributeValueValue {
+	if w == nil {
+		return nil
+	}
+	return w.ByAttribute
+}
+
+func (w *WrappedMetric) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedMetric) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedMetric
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedMetric(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedMetric) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WrappedMetricByAttributeValueValue struct {
+	// The name of the metric.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The units of the metric.
+	Units *string `json:"units,omitempty" url:"units,omitempty"`
+	// The current total for this attribute value.
+	CurrentTotal *float64 `json:"currentTotal,omitempty" url:"currentTotal,omitempty"`
+	// The change during the period for this attribute value.
+	ChangeThisPeriod *float64 `json:"changeThisPeriod,omitempty" url:"changeThisPeriod,omitempty"`
+	// The percentage change for this attribute value.
+	PercentChange *float64 `json:"percentChange,omitempty" url:"percentChange,omitempty"`
+	// The user's percentile rank for this attribute value during the period.
+	PercentileThisPeriod *float64 `json:"percentileThisPeriod,omitempty" url:"percentileThisPeriod,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedMetricByAttributeValueValue) GetName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Name
+}
+
+func (w *WrappedMetricByAttributeValueValue) GetUnits() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Units
+}
+
+func (w *WrappedMetricByAttributeValueValue) GetCurrentTotal() *float64 {
+	if w == nil {
+		return nil
+	}
+	return w.CurrentTotal
+}
+
+func (w *WrappedMetricByAttributeValueValue) GetChangeThisPeriod() *float64 {
+	if w == nil {
+		return nil
+	}
+	return w.ChangeThisPeriod
+}
+
+func (w *WrappedMetricByAttributeValueValue) GetPercentChange() *float64 {
+	if w == nil {
+		return nil
+	}
+	return w.PercentChange
+}
+
+func (w *WrappedMetricByAttributeValueValue) GetPercentileThisPeriod() *float64 {
+	if w == nil {
+		return nil
+	}
+	return w.PercentileThisPeriod
+}
+
+func (w *WrappedMetricByAttributeValueValue) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedMetricByAttributeValueValue) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedMetricByAttributeValueValue
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedMetricByAttributeValueValue(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedMetricByAttributeValueValue) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// The user's most active day during the year.
+type WrappedMostActiveDay struct {
+	// The user's metrics during this period, keyed by metric key.
+	Metrics map[string]*WrappedMetric `json:"metrics,omitempty" url:"metrics,omitempty"`
+	// The user's points during this period, keyed by points system key.
+	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
+	// Achievements completed during this period.
+	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
+	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
+	// The date of the most active day in YYYY-MM-DD format.
+	Date string `json:"date" url:"date"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedMostActiveDay) GetMetrics() map[string]*WrappedMetric {
+	if w == nil {
+		return nil
+	}
+	return w.Metrics
+}
+
+func (w *WrappedMostActiveDay) GetPoints() map[string]*WrappedPoints {
+	if w == nil {
+		return nil
+	}
+	return w.Points
+}
+
+func (w *WrappedMostActiveDay) GetAchievements() []*CompletedAchievementResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Achievements
+}
+
+func (w *WrappedMostActiveDay) GetLeaderboards() map[string]*UserLeaderboardResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboards
+}
+
+func (w *WrappedMostActiveDay) GetDate() string {
+	if w == nil {
+		return ""
+	}
+	return w.Date
+}
+
+func (w *WrappedMostActiveDay) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedMostActiveDay) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedMostActiveDay
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedMostActiveDay(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedMostActiveDay) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// The user's most active month during the year.
+type WrappedMostActiveMonth struct {
+	// The user's metrics during this period, keyed by metric key.
+	Metrics map[string]*WrappedMetric `json:"metrics,omitempty" url:"metrics,omitempty"`
+	// The user's points during this period, keyed by points system key.
+	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
+	// Achievements completed during this period.
+	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
+	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
+	// The month number (0-11, where 0 is January).
+	Month int `json:"month" url:"month"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedMostActiveMonth) GetMetrics() map[string]*WrappedMetric {
+	if w == nil {
+		return nil
+	}
+	return w.Metrics
+}
+
+func (w *WrappedMostActiveMonth) GetPoints() map[string]*WrappedPoints {
+	if w == nil {
+		return nil
+	}
+	return w.Points
+}
+
+func (w *WrappedMostActiveMonth) GetAchievements() []*CompletedAchievementResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Achievements
+}
+
+func (w *WrappedMostActiveMonth) GetLeaderboards() map[string]*UserLeaderboardResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboards
+}
+
+func (w *WrappedMostActiveMonth) GetMonth() int {
+	if w == nil {
+		return 0
+	}
+	return w.Month
+}
+
+func (w *WrappedMostActiveMonth) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedMostActiveMonth) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedMostActiveMonth
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedMostActiveMonth(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedMostActiveMonth) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// The user's most active week during the year.
+type WrappedMostActiveWeek struct {
+	// The user's metrics during this period, keyed by metric key.
+	Metrics map[string]*WrappedMetric `json:"metrics,omitempty" url:"metrics,omitempty"`
+	// The user's points during this period, keyed by points system key.
+	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
+	// Achievements completed during this period.
+	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
+	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
+	// The start date of the most active week in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// The end date of the most active week in YYYY-MM-DD format.
+	End string `json:"end" url:"end"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedMostActiveWeek) GetMetrics() map[string]*WrappedMetric {
+	if w == nil {
+		return nil
+	}
+	return w.Metrics
+}
+
+func (w *WrappedMostActiveWeek) GetPoints() map[string]*WrappedPoints {
+	if w == nil {
+		return nil
+	}
+	return w.Points
+}
+
+func (w *WrappedMostActiveWeek) GetAchievements() []*CompletedAchievementResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Achievements
+}
+
+func (w *WrappedMostActiveWeek) GetLeaderboards() map[string]*UserLeaderboardResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Leaderboards
+}
+
+func (w *WrappedMostActiveWeek) GetStart() string {
+	if w == nil {
+		return ""
+	}
+	return w.Start
+}
+
+func (w *WrappedMostActiveWeek) GetEnd() string {
+	if w == nil {
+		return ""
+	}
+	return w.End
+}
+
+func (w *WrappedMostActiveWeek) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedMostActiveWeek) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedMostActiveWeek
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedMostActiveWeek(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedMostActiveWeek) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// A user's points data for a wrapped period.
+type WrappedPoints struct {
+	// The name of the points system.
+	Name string `json:"name" url:"name"`
+	// The description of the points system.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The user's current total points.
+	CurrentTotal float64 `json:"currentTotal" url:"currentTotal"`
+	// The change in points during the period.
+	ChangeThisPeriod float64 `json:"changeThisPeriod" url:"changeThisPeriod"`
+	// The percentage change in points during the period.
+	PercentChange float64 `json:"percentChange" url:"percentChange"`
+	// The user's percentile rank for this points system during the period. Only included for weekly, monthly, and yearly aggregation periods.
+	PercentileThisPeriod *float64 `json:"percentileThisPeriod,omitempty" url:"percentileThisPeriod,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedPoints) GetName() string {
+	if w == nil {
+		return ""
+	}
+	return w.Name
+}
+
+func (w *WrappedPoints) GetDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Description
+}
+
+func (w *WrappedPoints) GetCurrentTotal() float64 {
+	if w == nil {
+		return 0
+	}
+	return w.CurrentTotal
+}
+
+func (w *WrappedPoints) GetChangeThisPeriod() float64 {
+	if w == nil {
+		return 0
+	}
+	return w.ChangeThisPeriod
+}
+
+func (w *WrappedPoints) GetPercentChange() float64 {
+	if w == nil {
+		return 0
+	}
+	return w.PercentChange
+}
+
+func (w *WrappedPoints) GetPercentileThisPeriod() *float64 {
+	if w == nil {
+		return nil
+	}
+	return w.PercentileThisPeriod
+}
+
+func (w *WrappedPoints) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedPoints) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedPoints
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedPoints(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedPoints) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// A user's year-in-review wrapped data including activity summaries, metrics, points, achievements, streaks, and leaderboard rankings.
+type WrappedResponse struct {
+	// The user's profile information.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The user's activity data for the wrapped year.
+	Activity *WrappedActivity `json:"activity,omitempty" url:"activity,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedResponse) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WrappedResponse) GetActivity() *WrappedActivity {
+	if w == nil {
+		return nil
+	}
+	return w.Activity
+}
+
+func (w *WrappedResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedResponse) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// The user's longest streak during the wrapped period.
+type WrappedStreak struct {
+	// The length of the streak.
+	Length int `json:"length" url:"length"`
+	// The frequency of the streak.
+	Frequency StreakFrequency `json:"frequency" url:"frequency"`
+	// The start date of the streak period.
+	PeriodStart *string `json:"periodStart,omitempty" url:"periodStart,omitempty"`
+	// The end date of the streak period.
+	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
+	// The date the streak started.
+	Started *string `json:"started,omitempty" url:"started,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WrappedStreak) GetLength() int {
+	if w == nil {
+		return 0
+	}
+	return w.Length
+}
+
+func (w *WrappedStreak) GetFrequency() StreakFrequency {
+	if w == nil {
+		return ""
+	}
+	return w.Frequency
+}
+
+func (w *WrappedStreak) GetPeriodStart() *string {
+	if w == nil {
+		return nil
+	}
+	return w.PeriodStart
+}
+
+func (w *WrappedStreak) GetPeriodEnd() *string {
+	if w == nil {
+		return nil
+	}
+	return w.PeriodEnd
+}
+
+func (w *WrappedStreak) GetStarted() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Started
+}
+
+func (w *WrappedStreak) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WrappedStreak) UnmarshalJSON(data []byte) error {
+	type unmarshaler WrappedStreak
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WrappedStreak(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WrappedStreak) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
 type UsersMetricEventSummaryRequestAggregation string
 
 const (
@@ -1210,4 +2160,9 @@ func (u *UsersPointsEventSummaryResponseItem) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+type UsersWrappedRequest struct {
+	// The year to get wrapped data for. Defaults to the current year. Must be an integer between 1 and the current year.
+	Year *int `json:"-" url:"year,omitempty"`
 }

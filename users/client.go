@@ -810,3 +810,70 @@ func (c *Client) Leaderboard(
 	}
 	return response, nil
 }
+
+// Get a user's year-in-review wrapped data.
+func (c *Client) Wrapped(
+	ctx context.Context,
+	// The user's ID in your database.
+	id string,
+	request *trophygo.UsersWrappedRequest,
+	opts ...option.RequestOption,
+) (*trophygo.WrappedResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.trophy.so/v1",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/users/%v/wrapped",
+		id,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &trophygo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *trophygo.WrappedResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}

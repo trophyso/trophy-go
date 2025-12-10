@@ -163,6 +163,283 @@ func (a AchievementResponseTrigger) Ptr() *AchievementResponseTrigger {
 	return &a
 }
 
+type AchievementWithStatsResponse struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name string `json:"name" url:"name"`
+	// The trigger of the achievement.
+	Trigger AchievementResponseTrigger `json:"trigger" url:"trigger"`
+	// The description of this achievement.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API (only applicable if trigger = 'api')
+	Key string `json:"key" url:"key"`
+	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
+	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
+	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The number of users who have completed this achievement.
+	Completions int `json:"completions" url:"completions"`
+	// The percentage of all users who have completed this achievement.
+	Rarity float64 `json:"rarity" url:"rarity"`
+	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	UserAttributes []*AchievementWithStatsResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	EventAttribute *AchievementWithStatsResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementWithStatsResponse) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AchievementWithStatsResponse) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AchievementWithStatsResponse) GetTrigger() AchievementResponseTrigger {
+	if a == nil {
+		return ""
+	}
+	return a.Trigger
+}
+
+func (a *AchievementWithStatsResponse) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *AchievementWithStatsResponse) GetBadgeUrl() *string {
+	if a == nil {
+		return nil
+	}
+	return a.BadgeUrl
+}
+
+func (a *AchievementWithStatsResponse) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AchievementWithStatsResponse) GetStreakLength() *int {
+	if a == nil {
+		return nil
+	}
+	return a.StreakLength
+}
+
+func (a *AchievementWithStatsResponse) GetMetricId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricId
+}
+
+func (a *AchievementWithStatsResponse) GetMetricValue() *float64 {
+	if a == nil {
+		return nil
+	}
+	return a.MetricValue
+}
+
+func (a *AchievementWithStatsResponse) GetMetricName() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricName
+}
+
+func (a *AchievementWithStatsResponse) GetCompletions() int {
+	if a == nil {
+		return 0
+	}
+	return a.Completions
+}
+
+func (a *AchievementWithStatsResponse) GetRarity() float64 {
+	if a == nil {
+		return 0
+	}
+	return a.Rarity
+}
+
+func (a *AchievementWithStatsResponse) GetUserAttributes() []*AchievementWithStatsResponseUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
+}
+
+func (a *AchievementWithStatsResponse) GetEventAttribute() *AchievementWithStatsResponseEventAttribute {
+	if a == nil {
+		return nil
+	}
+	return a.EventAttribute
+}
+
+func (a *AchievementWithStatsResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementWithStatsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler AchievementWithStatsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AchievementWithStatsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementWithStatsResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+type AchievementWithStatsResponseEventAttribute struct {
+	// The key of the event attribute.
+	Key string `json:"key" url:"key"`
+	// The value of the event attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) GetValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.Value
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) UnmarshalJSON(data []byte) error {
+	type unmarshaler AchievementWithStatsResponseEventAttribute
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AchievementWithStatsResponseEventAttribute(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementWithStatsResponseEventAttribute) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AchievementWithStatsResponseUserAttributesItem struct {
+	// The key of the user attribute.
+	Key string `json:"key" url:"key"`
+	// The value of the user attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) GetValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.Value
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AchievementWithStatsResponseUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AchievementWithStatsResponseUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementWithStatsResponseUserAttributesItem) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 type BaseStreakResponse struct {
 	// The length of the user's current streak.
 	Length int `json:"length" url:"length"`
@@ -401,6 +678,14 @@ type CompletedAchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The number of users who have completed this achievement.
+	Completions int `json:"completions" url:"completions"`
+	// The percentage of all users who have completed this achievement.
+	Rarity float64 `json:"rarity" url:"rarity"`
+	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	UserAttributes []*AchievementWithStatsResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	EventAttribute *AchievementWithStatsResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
 	// The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
 	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
 
@@ -476,6 +761,34 @@ func (c *CompletedAchievementResponse) GetMetricName() *string {
 		return nil
 	}
 	return c.MetricName
+}
+
+func (c *CompletedAchievementResponse) GetCompletions() int {
+	if c == nil {
+		return 0
+	}
+	return c.Completions
+}
+
+func (c *CompletedAchievementResponse) GetRarity() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Rarity
+}
+
+func (c *CompletedAchievementResponse) GetUserAttributes() []*AchievementWithStatsResponseUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
+}
+
+func (c *CompletedAchievementResponse) GetEventAttribute() *AchievementWithStatsResponseEventAttribute {
+	if c == nil {
+		return nil
+	}
+	return c.EventAttribute
 }
 
 func (c *CompletedAchievementResponse) GetAchievedAt() *time.Time {
@@ -1476,6 +1789,63 @@ func NewPointsTriggerTypeFromString(s string) (PointsTriggerType, error) {
 
 func (p PointsTriggerType) Ptr() *PointsTriggerType {
 	return &p
+}
+
+// Response containing restored users and any issues encountered.
+type RestoreStreaksResponse struct {
+	// Array of user IDs whose streaks were successfully restored.
+	RestoredUsers []string `json:"restoredUsers,omitempty" url:"restoredUsers,omitempty"`
+	// Array of issues encountered during streak restoration.
+	Issues []*BulkInsertIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RestoreStreaksResponse) GetRestoredUsers() []string {
+	if r == nil {
+		return nil
+	}
+	return r.RestoredUsers
+}
+
+func (r *RestoreStreaksResponse) GetIssues() []*BulkInsertIssue {
+	if r == nil {
+		return nil
+	}
+	return r.Issues
+}
+
+func (r *RestoreStreaksResponse) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RestoreStreaksResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RestoreStreaksResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RestoreStreaksResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RestoreStreaksResponse) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
 }
 
 type StreakFrequency string

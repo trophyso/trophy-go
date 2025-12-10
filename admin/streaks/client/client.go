@@ -3,6 +3,9 @@
 package client
 
 import (
+	context "context"
+	trophygo "github.com/trophyso/trophy-go"
+	admin "github.com/trophyso/trophy-go/admin"
 	freezes "github.com/trophyso/trophy-go/admin/streaks/freezes"
 	core "github.com/trophyso/trophy-go/core"
 	internal "github.com/trophyso/trophy-go/internal"
@@ -31,4 +34,61 @@ func NewClient(opts ...option.RequestOption) *Client {
 		header:  options.ToHeader(),
 		Freezes: freezes.NewClient(opts...),
 	}
+}
+
+// Restore streaks for multiple users to the maximum length in the last 90 days (in the case of daily streaks), one year (in the case of weekly streaks), or two years (in the case of monthly streaks).
+func (c *Client) Restore(
+	ctx context.Context,
+	request *admin.RestoreStreaksRequest,
+	opts ...option.RequestOption,
+) (*trophygo.RestoreStreaksResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://admin.trophy.so/v1",
+	)
+	endpointURL := baseURL + "/streaks/restore"
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &trophygo.BadRequestError{
+				APIError: apiError,
+			}
+		},
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response *trophygo.RestoreStreaksResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
 }
