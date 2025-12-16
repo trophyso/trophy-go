@@ -27,8 +27,8 @@ type BulkStreakResponseItem struct {
 	UserId string `json:"userId" url:"userId"`
 	// The length of the user's streak.
 	StreakLength int `json:"streakLength" url:"streakLength"`
-	// The timestamp the streak was extended, as a string.
-	Extended string `json:"extended" url:"extended"`
+	// The timestamp the streak was extended, as a string. Null if the streak is not active.
+	Extended *string `json:"extended,omitempty" url:"extended,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -48,9 +48,9 @@ func (b *BulkStreakResponseItem) GetStreakLength() int {
 	return b.StreakLength
 }
 
-func (b *BulkStreakResponseItem) GetExtended() string {
+func (b *BulkStreakResponseItem) GetExtended() *string {
 	if b == nil {
-		return ""
+		return nil
 	}
 	return b.Extended
 }

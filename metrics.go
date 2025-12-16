@@ -27,7 +27,7 @@ type EventResponse struct {
 	// The user's new total progress against the metric.
 	Total float64 `json:"total" url:"total"`
 	// Achievements completed as a result of this event.
-	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*UserAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's current streak.
 	CurrentStreak *MetricEventStreakResponse `json:"currentStreak,omitempty" url:"currentStreak,omitempty"`
 	// A map of points systems by key. Only contains points systems that were affected by the event.
@@ -64,7 +64,7 @@ func (e *EventResponse) GetTotal() float64 {
 	return e.Total
 }
 
-func (e *EventResponse) GetAchievements() []*CompletedAchievementResponse {
+func (e *EventResponse) GetAchievements() []*UserAchievementResponse {
 	if e == nil {
 		return nil
 	}
@@ -336,6 +336,144 @@ func (m *MetricEventLeaderboardResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (m *MetricEventLeaderboardResponse) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+// An object representing the user's streak after sending a metric event.
+type MetricEventStreakResponse struct {
+	// The length of the user's current streak.
+	Length int `json:"length" url:"length"`
+	// The frequency of the streak.
+	Frequency StreakFrequency `json:"frequency" url:"frequency"`
+	// The date the streak started.
+	Started *string `json:"started,omitempty" url:"started,omitempty"`
+	// The start date of the current streak period.
+	PeriodStart *string `json:"periodStart,omitempty" url:"periodStart,omitempty"`
+	// The end date of the current streak period.
+	PeriodEnd *string `json:"periodEnd,omitempty" url:"periodEnd,omitempty"`
+	// The date the streak will expire if the user does not increment a metric.
+	Expires *string `json:"expires,omitempty" url:"expires,omitempty"`
+	// The number of available streak freezes. Only present if the organization has enabled streak freezes.
+	Freezes *int `json:"freezes,omitempty" url:"freezes,omitempty"`
+	// The maximum number of streak freezes a user can have. Only present if the organization has enabled streak freezes.
+	MaxFreezes *int `json:"maxFreezes,omitempty" url:"maxFreezes,omitempty"`
+	// The interval at which the user will earn streak freezes, in days. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnInterval *int `json:"freezeAutoEarnInterval,omitempty" url:"freezeAutoEarnInterval,omitempty"`
+	// The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.
+	FreezeAutoEarnAmount *int `json:"freezeAutoEarnAmount,omitempty" url:"freezeAutoEarnAmount,omitempty"`
+	// Whether this metric event increased the user's streak length.
+	Extended bool `json:"extended" url:"extended"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventStreakResponse) GetLength() int {
+	if m == nil {
+		return 0
+	}
+	return m.Length
+}
+
+func (m *MetricEventStreakResponse) GetFrequency() StreakFrequency {
+	if m == nil {
+		return ""
+	}
+	return m.Frequency
+}
+
+func (m *MetricEventStreakResponse) GetStarted() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Started
+}
+
+func (m *MetricEventStreakResponse) GetPeriodStart() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PeriodStart
+}
+
+func (m *MetricEventStreakResponse) GetPeriodEnd() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PeriodEnd
+}
+
+func (m *MetricEventStreakResponse) GetExpires() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Expires
+}
+
+func (m *MetricEventStreakResponse) GetFreezes() *int {
+	if m == nil {
+		return nil
+	}
+	return m.Freezes
+}
+
+func (m *MetricEventStreakResponse) GetMaxFreezes() *int {
+	if m == nil {
+		return nil
+	}
+	return m.MaxFreezes
+}
+
+func (m *MetricEventStreakResponse) GetFreezeAutoEarnInterval() *int {
+	if m == nil {
+		return nil
+	}
+	return m.FreezeAutoEarnInterval
+}
+
+func (m *MetricEventStreakResponse) GetFreezeAutoEarnAmount() *int {
+	if m == nil {
+		return nil
+	}
+	return m.FreezeAutoEarnAmount
+}
+
+func (m *MetricEventStreakResponse) GetExtended() bool {
+	if m == nil {
+		return false
+	}
+	return m.Extended
+}
+
+func (m *MetricEventStreakResponse) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *MetricEventStreakResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventStreakResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventStreakResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventStreakResponse) String() string {
 	if len(m.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
 			return value

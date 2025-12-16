@@ -2,7 +2,60 @@
 
 package admin
 
+import (
+	json "encoding/json"
+	fmt "fmt"
+	internal "github.com/trophyso/trophy-go/internal"
+)
+
 type RestoreStreaksRequest struct {
-	// Array of user IDs to restore streaks for. Maximum 100 users per request.
-	UserIds []string `json:"userIds,omitempty" url:"-"`
+	// Array of users to restore streaks for. Maximum 100 users per request.
+	Users []*RestoreStreaksRequestUsersItem `json:"users,omitempty" url:"-"`
+}
+
+type RestoreStreaksRequestUsersItem struct {
+	// The ID of the user to restore streaks for.
+	Id string `json:"id" url:"id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RestoreStreaksRequestUsersItem) GetId() string {
+	if r == nil {
+		return ""
+	}
+	return r.Id
+}
+
+func (r *RestoreStreaksRequestUsersItem) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RestoreStreaksRequestUsersItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler RestoreStreaksRequestUsersItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RestoreStreaksRequestUsersItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RestoreStreaksRequestUsersItem) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
 }

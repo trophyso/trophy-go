@@ -163,7 +163,7 @@ type MetricResponse struct {
 	// The user's current total for the metric.
 	Current float64 `json:"current" url:"current"`
 	// A list of the metric's achievements and the user's progress towards each.
-	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*UserAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -204,7 +204,7 @@ func (m *MetricResponse) GetCurrent() float64 {
 	return m.Current
 }
 
-func (m *MetricResponse) GetAchievements() []*CompletedAchievementResponse {
+func (m *MetricResponse) GetAchievements() []*UserAchievementResponse {
 	if m == nil {
 		return nil
 	}
@@ -628,6 +628,197 @@ func (u *User) MarshalJSON() ([]byte, error) {
 }
 
 func (u *User) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UserAchievementWithStatsResponse struct {
+	// The unique ID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The name of this achievement.
+	Name string `json:"name" url:"name"`
+	// The trigger of the achievement.
+	Trigger AchievementResponseTrigger `json:"trigger" url:"trigger"`
+	// The description of this achievement.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the achievement, if one has been uploaded.
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The key used to reference this achievement in the API (only applicable if trigger = 'api')
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
+	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
+	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	UserAttributes []*AchievementResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	EventAttribute *AchievementResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
+	// The number of users who have completed this achievement.
+	Completions int `json:"completions" url:"completions"`
+	// The percentage of all users who have completed this achievement.
+	Rarity float64 `json:"rarity" url:"rarity"`
+	// The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
+	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UserAchievementWithStatsResponse) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UserAchievementWithStatsResponse) GetName() string {
+	if u == nil {
+		return ""
+	}
+	return u.Name
+}
+
+func (u *UserAchievementWithStatsResponse) GetTrigger() AchievementResponseTrigger {
+	if u == nil {
+		return ""
+	}
+	return u.Trigger
+}
+
+func (u *UserAchievementWithStatsResponse) GetDescription() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Description
+}
+
+func (u *UserAchievementWithStatsResponse) GetBadgeUrl() *string {
+	if u == nil {
+		return nil
+	}
+	return u.BadgeUrl
+}
+
+func (u *UserAchievementWithStatsResponse) GetKey() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Key
+}
+
+func (u *UserAchievementWithStatsResponse) GetStreakLength() *int {
+	if u == nil {
+		return nil
+	}
+	return u.StreakLength
+}
+
+func (u *UserAchievementWithStatsResponse) GetMetricId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricId
+}
+
+func (u *UserAchievementWithStatsResponse) GetMetricValue() *float64 {
+	if u == nil {
+		return nil
+	}
+	return u.MetricValue
+}
+
+func (u *UserAchievementWithStatsResponse) GetMetricName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricName
+}
+
+func (u *UserAchievementWithStatsResponse) GetUserAttributes() []*AchievementResponseUserAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.UserAttributes
+}
+
+func (u *UserAchievementWithStatsResponse) GetEventAttribute() *AchievementResponseEventAttribute {
+	if u == nil {
+		return nil
+	}
+	return u.EventAttribute
+}
+
+func (u *UserAchievementWithStatsResponse) GetCompletions() int {
+	if u == nil {
+		return 0
+	}
+	return u.Completions
+}
+
+func (u *UserAchievementWithStatsResponse) GetRarity() float64 {
+	if u == nil {
+		return 0
+	}
+	return u.Rarity
+}
+
+func (u *UserAchievementWithStatsResponse) GetAchievedAt() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.AchievedAt
+}
+
+func (u *UserAchievementWithStatsResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UserAchievementWithStatsResponse) UnmarshalJSON(data []byte) error {
+	type embed UserAchievementWithStatsResponse
+	var unmarshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*u = UserAchievementWithStatsResponse(unmarshaler.embed)
+	u.AchievedAt = unmarshaler.AchievedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UserAchievementWithStatsResponse) MarshalJSON() ([]byte, error) {
+	type embed UserAchievementWithStatsResponse
+	var marshaler = struct {
+		embed
+		AchievedAt *internal.DateTime `json:"achievedAt,omitempty"`
+	}{
+		embed:      embed(*u),
+		AchievedAt: internal.NewOptionalDateTime(u.AchievedAt),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (u *UserAchievementWithStatsResponse) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -1141,7 +1332,7 @@ type WrappedActivityPeriod struct {
 	// The user's points during this period, keyed by points system key.
 	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
 	// Achievements completed during this period.
-	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*UserAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
 	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
 
@@ -1163,7 +1354,7 @@ func (w *WrappedActivityPeriod) GetPoints() map[string]*WrappedPoints {
 	return w.Points
 }
 
-func (w *WrappedActivityPeriod) GetAchievements() []*CompletedAchievementResponse {
+func (w *WrappedActivityPeriod) GetAchievements() []*UserAchievementResponse {
 	if w == nil {
 		return nil
 	}
@@ -1216,7 +1407,7 @@ type WrappedEntireYear struct {
 	// The user's points during this period, keyed by points system key.
 	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
 	// Achievements completed during this period.
-	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*UserAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
 	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
 	// The user's longest streak during the year.
@@ -1240,7 +1431,7 @@ func (w *WrappedEntireYear) GetPoints() map[string]*WrappedPoints {
 	return w.Points
 }
 
-func (w *WrappedEntireYear) GetAchievements() []*CompletedAchievementResponse {
+func (w *WrappedEntireYear) GetAchievements() []*UserAchievementResponse {
 	if w == nil {
 		return nil
 	}
@@ -1494,7 +1685,7 @@ type WrappedMostActiveDay struct {
 	// The user's points during this period, keyed by points system key.
 	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
 	// Achievements completed during this period.
-	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*UserAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
 	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
 	// The date of the most active day in YYYY-MM-DD format.
@@ -1518,7 +1709,7 @@ func (w *WrappedMostActiveDay) GetPoints() map[string]*WrappedPoints {
 	return w.Points
 }
 
-func (w *WrappedMostActiveDay) GetAchievements() []*CompletedAchievementResponse {
+func (w *WrappedMostActiveDay) GetAchievements() []*UserAchievementResponse {
 	if w == nil {
 		return nil
 	}
@@ -1578,7 +1769,7 @@ type WrappedMostActiveMonth struct {
 	// The user's points during this period, keyed by points system key.
 	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
 	// Achievements completed during this period.
-	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*UserAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
 	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
 	// The month number (0-11, where 0 is January).
@@ -1602,7 +1793,7 @@ func (w *WrappedMostActiveMonth) GetPoints() map[string]*WrappedPoints {
 	return w.Points
 }
 
-func (w *WrappedMostActiveMonth) GetAchievements() []*CompletedAchievementResponse {
+func (w *WrappedMostActiveMonth) GetAchievements() []*UserAchievementResponse {
 	if w == nil {
 		return nil
 	}
@@ -1662,7 +1853,7 @@ type WrappedMostActiveWeek struct {
 	// The user's points during this period, keyed by points system key.
 	Points map[string]*WrappedPoints `json:"points,omitempty" url:"points,omitempty"`
 	// Achievements completed during this period.
-	Achievements []*CompletedAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
+	Achievements []*UserAchievementResponse `json:"achievements,omitempty" url:"achievements,omitempty"`
 	// The user's best leaderboard rankings during this period, keyed by leaderboard key.
 	Leaderboards map[string]*UserLeaderboardResponse `json:"leaderboards,omitempty" url:"leaderboards,omitempty"`
 	// The start date of the most active week in YYYY-MM-DD format.
@@ -1688,7 +1879,7 @@ func (w *WrappedMostActiveWeek) GetPoints() map[string]*WrappedPoints {
 	return w.Points
 }
 
-func (w *WrappedMostActiveWeek) GetAchievements() []*CompletedAchievementResponse {
+func (w *WrappedMostActiveWeek) GetAchievements() []*UserAchievementResponse {
 	if w == nil {
 		return nil
 	}

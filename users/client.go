@@ -474,7 +474,7 @@ func (c *Client) Achievements(
 	id string,
 	request *trophygo.UsersAchievementsRequest,
 	opts ...option.RequestOption,
-) ([]*trophygo.CompletedAchievementResponse, error) {
+) ([]*trophygo.UserAchievementWithStatsResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -514,7 +514,7 @@ func (c *Client) Achievements(
 		},
 	}
 
-	var response []*trophygo.CompletedAchievementResponse
+	var response []*trophygo.UserAchievementWithStatsResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
