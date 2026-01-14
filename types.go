@@ -1224,6 +1224,35 @@ func (m *MetricEventPointsResponse) String() string {
 	return fmt.Sprintf("%#v", m)
 }
 
+// A type of notification that can be configured.
+type NotificationType string
+
+const (
+	NotificationTypeAchievementCompleted NotificationType = "achievement_completed"
+	NotificationTypeRecap                NotificationType = "recap"
+	NotificationTypeReactivation         NotificationType = "reactivation"
+	NotificationTypeStreakReminder       NotificationType = "streak_reminder"
+)
+
+func NewNotificationTypeFromString(s string) (NotificationType, error) {
+	switch s {
+	case "achievement_completed":
+		return NotificationTypeAchievementCompleted, nil
+	case "recap":
+		return NotificationTypeRecap, nil
+	case "reactivation":
+		return NotificationTypeReactivation, nil
+	case "streak_reminder":
+		return NotificationTypeStreakReminder, nil
+	}
+	var t NotificationType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (n NotificationType) Ptr() *NotificationType {
+	return &n
+}
+
 type PointsAward struct {
 	// The ID of the trigger award
 	Id *string `json:"id,omitempty" url:"id,omitempty"`

@@ -266,6 +266,104 @@ func (m MetricStatus) Ptr() *MetricStatus {
 	return &m
 }
 
+// A notification delivery channel.
+type NotificationChannel string
+
+const (
+	NotificationChannelEmail NotificationChannel = "email"
+	NotificationChannelPush  NotificationChannel = "push"
+)
+
+func NewNotificationChannelFromString(s string) (NotificationChannel, error) {
+	switch s {
+	case "email":
+		return NotificationChannelEmail, nil
+	case "push":
+		return NotificationChannelPush, nil
+	}
+	var t NotificationChannel
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (n NotificationChannel) Ptr() *NotificationChannel {
+	return &n
+}
+
+// Notification preferences for each notification type.
+type NotificationPreferences struct {
+	// Channels to receive achievement completion notifications on.
+	AchievementCompleted []NotificationChannel `json:"achievement_completed,omitempty" url:"achievement_completed,omitempty"`
+	// Channels to receive recap notifications on.
+	Recap []NotificationChannel `json:"recap,omitempty" url:"recap,omitempty"`
+	// Channels to receive reactivation notifications on.
+	Reactivation []NotificationChannel `json:"reactivation,omitempty" url:"reactivation,omitempty"`
+	// Channels to receive streak reminder notifications on.
+	StreakReminder []NotificationChannel `json:"streak_reminder,omitempty" url:"streak_reminder,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (n *NotificationPreferences) GetAchievementCompleted() []NotificationChannel {
+	if n == nil {
+		return nil
+	}
+	return n.AchievementCompleted
+}
+
+func (n *NotificationPreferences) GetRecap() []NotificationChannel {
+	if n == nil {
+		return nil
+	}
+	return n.Recap
+}
+
+func (n *NotificationPreferences) GetReactivation() []NotificationChannel {
+	if n == nil {
+		return nil
+	}
+	return n.Reactivation
+}
+
+func (n *NotificationPreferences) GetStreakReminder() []NotificationChannel {
+	if n == nil {
+		return nil
+	}
+	return n.StreakReminder
+}
+
+func (n *NotificationPreferences) GetExtraProperties() map[string]interface{} {
+	return n.extraProperties
+}
+
+func (n *NotificationPreferences) UnmarshalJSON(data []byte) error {
+	type unmarshaler NotificationPreferences
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*n = NotificationPreferences(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *n)
+	if err != nil {
+		return err
+	}
+	n.extraProperties = extraProperties
+	n.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (n *NotificationPreferences) String() string {
+	if len(n.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(n.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(n); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", n)
+}
+
 // An object representing the user's streak.
 type StreakResponse struct {
 	// The length of the user's current streak.
@@ -1212,6 +1310,53 @@ func (u *UserLeaderboardResponseWithHistory) UnmarshalJSON(data []byte) error {
 }
 
 func (u *UserLeaderboardResponseWithHistory) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// A user's preferences.
+type UserPreferencesResponse struct {
+	Notifications *NotificationPreferences `json:"notifications,omitempty" url:"notifications,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UserPreferencesResponse) GetNotifications() *NotificationPreferences {
+	if u == nil {
+		return nil
+	}
+	return u.Notifications
+}
+
+func (u *UserPreferencesResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UserPreferencesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UserPreferencesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UserPreferencesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UserPreferencesResponse) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
@@ -2351,6 +2496,10 @@ func (u *UsersPointsEventSummaryResponseItem) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+type UpdateUserPreferencesRequest struct {
+	Notifications *NotificationPreferences `json:"notifications,omitempty" url:"-"`
 }
 
 type UsersWrappedRequest struct {
