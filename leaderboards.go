@@ -8,6 +8,11 @@ import (
 	internal "github.com/trophyso/trophy-go/internal"
 )
 
+type LeaderboardsAllRequest struct {
+	// When set to 'true', leaderboards with status 'finished' will be included in the response. By default, finished leaderboards are excluded.
+	IncludeFinished *bool `json:"-" url:"includeFinished,omitempty"`
+}
+
 type LeaderboardsGetRequest struct {
 	// Number of rankings to skip for pagination.
 	Offset *int `json:"-" url:"offset,omitempty"`

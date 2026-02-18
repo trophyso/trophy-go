@@ -49,6 +49,116 @@ type UsersStreakRequest struct {
 	HistoryPeriods *int `json:"-" url:"historyPeriods,omitempty"`
 }
 
+type GetUserPointsResponse struct {
+	// The ID of the points system
+	Id string `json:"id" url:"id"`
+	// The key of the points system
+	Key string `json:"key" url:"key"`
+	// The name of the points system
+	Name string `json:"name" url:"name"`
+	// The description of the points system
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the points system
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The maximum number of points a user can be awarded in this points system
+	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
+	// The user's total points
+	Total int `json:"total" url:"total"`
+	// Array of trigger awards that added points.
+	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetUserPointsResponse) GetId() string {
+	if g == nil {
+		return ""
+	}
+	return g.Id
+}
+
+func (g *GetUserPointsResponse) GetKey() string {
+	if g == nil {
+		return ""
+	}
+	return g.Key
+}
+
+func (g *GetUserPointsResponse) GetName() string {
+	if g == nil {
+		return ""
+	}
+	return g.Name
+}
+
+func (g *GetUserPointsResponse) GetDescription() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Description
+}
+
+func (g *GetUserPointsResponse) GetBadgeUrl() *string {
+	if g == nil {
+		return nil
+	}
+	return g.BadgeUrl
+}
+
+func (g *GetUserPointsResponse) GetMaxPoints() *float64 {
+	if g == nil {
+		return nil
+	}
+	return g.MaxPoints
+}
+
+func (g *GetUserPointsResponse) GetTotal() int {
+	if g == nil {
+		return 0
+	}
+	return g.Total
+}
+
+func (g *GetUserPointsResponse) GetAwards() []*PointsAward {
+	if g == nil {
+		return nil
+	}
+	return g.Awards
+}
+
+func (g *GetUserPointsResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetUserPointsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetUserPointsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetUserPointsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetUserPointsResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 // A leaderboard event representing a change in a user's rank or value.
 type LeaderboardEvent struct {
 	// The timestamp when the event occurred.

@@ -792,6 +792,68 @@ func (c *Client) Points(
 	return response, nil
 }
 
+// Get active points boosts for a user in a specific points system. Returns both global boosts the user is eligible for and user-specific boosts.
+func (c *Client) PointsBoosts(
+	ctx context.Context,
+	// ID of the user.
+	id string,
+	// Key of the points system.
+	key string,
+	opts ...option.RequestOption,
+) ([]*trophygo.PointsBoost, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.trophy.so/v1",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/users/%v/points/%v/boosts",
+		id,
+		key,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	errorCodes := internal.ErrorCodes{
+		401: func(apiError *core.APIError) error {
+			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		404: func(apiError *core.APIError) error {
+			return &trophygo.NotFoundError{
+				APIError: apiError,
+			}
+		},
+		422: func(apiError *core.APIError) error {
+			return &trophygo.UnprocessableEntityError{
+				APIError: apiError,
+			}
+		},
+	}
+
+	var response []*trophygo.PointsBoost
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 // Get a summary of points awards over time for a user for a specific points system.
 func (c *Client) PointsEventSummary(
 	ctx context.Context,

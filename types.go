@@ -458,6 +458,54 @@ func (a *AchievementWithStatsResponse) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+// Response containing the count of archived points boosts.
+type ArchivePointsBoostsResponse struct {
+	// The number of boosts that were archived.
+	ArchivedCount int `json:"archivedCount" url:"archivedCount"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ArchivePointsBoostsResponse) GetArchivedCount() int {
+	if a == nil {
+		return 0
+	}
+	return a.ArchivedCount
+}
+
+func (a *ArchivePointsBoostsResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ArchivePointsBoostsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ArchivePointsBoostsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ArchivePointsBoostsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ArchivePointsBoostsResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 type BaseStreakResponse struct {
 	// The length of the user's current streak.
 	Length int `json:"length" url:"length"`
@@ -675,6 +723,63 @@ func (b BulkInsertIssueLevel) Ptr() *BulkInsertIssueLevel {
 	return &b
 }
 
+// Response containing created boosts and any issues encountered while creating points boosts.
+type CreatePointsBoostsResponse struct {
+	// Array of successfully created boosts.
+	Created []*CreatedPointsBoost `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during boost creation.
+	Issues []*BulkInsertIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsBoostsResponse) GetCreated() []*CreatedPointsBoost {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreatePointsBoostsResponse) GetIssues() []*BulkInsertIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreatePointsBoostsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsBoostsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsBoostsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsBoostsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsBoostsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // Response containing any issues encountered while creating streak freezes.
 type CreateStreakFreezesResponse struct {
 	// Array of issues encountered during freeze creation.
@@ -723,6 +828,169 @@ func (c *CreateStreakFreezesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// A successfully created points boost returned from the create endpoint.
+type CreatedPointsBoost struct {
+	// The UUID of the created boost.
+	Id string `json:"id" url:"id"`
+	// The name of the boost.
+	Name string `json:"name" url:"name"`
+	// The status of the boost.
+	Status CreatedPointsBoostStatus `json:"status" url:"status"`
+	// The start date (YYYY-MM-DD).
+	Start string `json:"start" url:"start"`
+	// The end date (YYYY-MM-DD) or null if no end date.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The points multiplier.
+	Multiplier float64 `json:"multiplier" url:"multiplier"`
+	// How boosted points are rounded.
+	Rounding CreatedPointsBoostRounding `json:"rounding" url:"rounding"`
+	// The customer ID of the user the boost was created for.
+	UserId string `json:"userId" url:"userId"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatedPointsBoost) GetId() string {
+	if c == nil {
+		return ""
+	}
+	return c.Id
+}
+
+func (c *CreatedPointsBoost) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreatedPointsBoost) GetStatus() CreatedPointsBoostStatus {
+	if c == nil {
+		return ""
+	}
+	return c.Status
+}
+
+func (c *CreatedPointsBoost) GetStart() string {
+	if c == nil {
+		return ""
+	}
+	return c.Start
+}
+
+func (c *CreatedPointsBoost) GetEnd() *string {
+	if c == nil {
+		return nil
+	}
+	return c.End
+}
+
+func (c *CreatedPointsBoost) GetMultiplier() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Multiplier
+}
+
+func (c *CreatedPointsBoost) GetRounding() CreatedPointsBoostRounding {
+	if c == nil {
+		return ""
+	}
+	return c.Rounding
+}
+
+func (c *CreatedPointsBoost) GetUserId() string {
+	if c == nil {
+		return ""
+	}
+	return c.UserId
+}
+
+func (c *CreatedPointsBoost) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatedPointsBoost) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatedPointsBoost
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatedPointsBoost(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatedPointsBoost) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// How boosted points are rounded.
+type CreatedPointsBoostRounding string
+
+const (
+	CreatedPointsBoostRoundingDown    CreatedPointsBoostRounding = "down"
+	CreatedPointsBoostRoundingUp      CreatedPointsBoostRounding = "up"
+	CreatedPointsBoostRoundingNearest CreatedPointsBoostRounding = "nearest"
+)
+
+func NewCreatedPointsBoostRoundingFromString(s string) (CreatedPointsBoostRounding, error) {
+	switch s {
+	case "down":
+		return CreatedPointsBoostRoundingDown, nil
+	case "up":
+		return CreatedPointsBoostRoundingUp, nil
+	case "nearest":
+		return CreatedPointsBoostRoundingNearest, nil
+	}
+	var t CreatedPointsBoostRounding
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatedPointsBoostRounding) Ptr() *CreatedPointsBoostRounding {
+	return &c
+}
+
+// The status of the boost.
+type CreatedPointsBoostStatus string
+
+const (
+	CreatedPointsBoostStatusActive    CreatedPointsBoostStatus = "active"
+	CreatedPointsBoostStatusScheduled CreatedPointsBoostStatus = "scheduled"
+	CreatedPointsBoostStatusFinished  CreatedPointsBoostStatus = "finished"
+)
+
+func NewCreatedPointsBoostStatusFromString(s string) (CreatedPointsBoostStatus, error) {
+	switch s {
+	case "active":
+		return CreatedPointsBoostStatusActive, nil
+	case "scheduled":
+		return CreatedPointsBoostStatusScheduled, nil
+	case "finished":
+		return CreatedPointsBoostStatusFinished, nil
+	}
+	var t CreatedPointsBoostStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatedPointsBoostStatus) Ptr() *CreatedPointsBoostStatus {
+	return &c
+}
+
 type ErrorBody struct {
 	Error string `json:"error" url:"error"`
 
@@ -767,116 +1035,6 @@ func (e *ErrorBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
-}
-
-type GetUserPointsResponse struct {
-	// The ID of the points system
-	Id string `json:"id" url:"id"`
-	// The key of the points system
-	Key string `json:"key" url:"key"`
-	// The name of the points system
-	Name string `json:"name" url:"name"`
-	// The description of the points system
-	Description *string `json:"description,omitempty" url:"description,omitempty"`
-	// The URL of the badge image for the points system
-	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
-	// The maximum number of points a user can be awarded in this points system
-	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
-	// The user's total points
-	Total int `json:"total" url:"total"`
-	// Array of trigger awards that added points.
-	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (g *GetUserPointsResponse) GetId() string {
-	if g == nil {
-		return ""
-	}
-	return g.Id
-}
-
-func (g *GetUserPointsResponse) GetKey() string {
-	if g == nil {
-		return ""
-	}
-	return g.Key
-}
-
-func (g *GetUserPointsResponse) GetName() string {
-	if g == nil {
-		return ""
-	}
-	return g.Name
-}
-
-func (g *GetUserPointsResponse) GetDescription() *string {
-	if g == nil {
-		return nil
-	}
-	return g.Description
-}
-
-func (g *GetUserPointsResponse) GetBadgeUrl() *string {
-	if g == nil {
-		return nil
-	}
-	return g.BadgeUrl
-}
-
-func (g *GetUserPointsResponse) GetMaxPoints() *float64 {
-	if g == nil {
-		return nil
-	}
-	return g.MaxPoints
-}
-
-func (g *GetUserPointsResponse) GetTotal() int {
-	if g == nil {
-		return 0
-	}
-	return g.Total
-}
-
-func (g *GetUserPointsResponse) GetAwards() []*PointsAward {
-	if g == nil {
-		return nil
-	}
-	return g.Awards
-}
-
-func (g *GetUserPointsResponse) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GetUserPointsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetUserPointsResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GetUserPointsResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GetUserPointsResponse) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
 }
 
 // A leaderboard with its configuration details.
@@ -1105,6 +1263,7 @@ func (l LeaderboardResponseRunUnit) Ptr() *LeaderboardResponseRunUnit {
 	return &l
 }
 
+// Points system response for metric events.
 type MetricEventPointsResponse struct {
 	// The ID of the points system
 	Id string `json:"id" url:"id"`
@@ -1120,10 +1279,10 @@ type MetricEventPointsResponse struct {
 	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
 	// The user's total points
 	Total int `json:"total" url:"total"`
-	// Array of trigger awards that added points.
-	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
 	// The points added by this event.
 	Added int `json:"added" url:"added"`
+	// Array of trigger awards that added points.
+	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1178,18 +1337,18 @@ func (m *MetricEventPointsResponse) GetTotal() int {
 	return m.Total
 }
 
-func (m *MetricEventPointsResponse) GetAwards() []*PointsAward {
-	if m == nil {
-		return nil
-	}
-	return m.Awards
-}
-
 func (m *MetricEventPointsResponse) GetAdded() int {
 	if m == nil {
 		return 0
 	}
 	return m.Added
+}
+
+func (m *MetricEventPointsResponse) GetAwards() []*PointsAward {
+	if m == nil {
+		return nil
+	}
+	return m.Awards
 }
 
 func (m *MetricEventPointsResponse) GetExtraProperties() map[string]interface{} {
@@ -1263,6 +1422,8 @@ type PointsAward struct {
 	// The user's total points after this award occurred.
 	Total   *int           `json:"total,omitempty" url:"total,omitempty"`
 	Trigger *PointsTrigger `json:"trigger,omitempty" url:"trigger,omitempty"`
+	// Array of points boosts that applied to this award.
+	Boosts []*PointsBoost `json:"boosts,omitempty" url:"boosts,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1303,6 +1464,13 @@ func (p *PointsAward) GetTrigger() *PointsTrigger {
 	return p.Trigger
 }
 
+func (p *PointsAward) GetBoosts() []*PointsBoost {
+	if p == nil {
+		return nil
+	}
+	return p.Boosts
+}
+
 func (p *PointsAward) GetExtraProperties() map[string]interface{} {
 	return p.extraProperties
 }
@@ -1333,6 +1501,346 @@ func (p *PointsAward) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+type PointsBoost struct {
+	// The ID of the points boost
+	Id string `json:"id" url:"id"`
+	// The name of the points boost
+	Name string `json:"name" url:"name"`
+	// The status of the points boost
+	Status PointsBoostStatus `json:"status" url:"status"`
+	// The start date of the points boost
+	Start string `json:"start" url:"start"`
+	// The end date of the points boost
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The multiplier of the points boost
+	Multiplier float64 `json:"multiplier" url:"multiplier"`
+	// The rounding method of the points boost
+	Rounding PointsBoostRounding `json:"rounding" url:"rounding"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsBoost) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PointsBoost) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PointsBoost) GetStatus() PointsBoostStatus {
+	if p == nil {
+		return ""
+	}
+	return p.Status
+}
+
+func (p *PointsBoost) GetStart() string {
+	if p == nil {
+		return ""
+	}
+	return p.Start
+}
+
+func (p *PointsBoost) GetEnd() *string {
+	if p == nil {
+		return nil
+	}
+	return p.End
+}
+
+func (p *PointsBoost) GetMultiplier() float64 {
+	if p == nil {
+		return 0
+	}
+	return p.Multiplier
+}
+
+func (p *PointsBoost) GetRounding() PointsBoostRounding {
+	if p == nil {
+		return ""
+	}
+	return p.Rounding
+}
+
+func (p *PointsBoost) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsBoost) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsBoost
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsBoost(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsBoost) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// The rounding method of the points boost
+type PointsBoostRounding string
+
+const (
+	PointsBoostRoundingDown    PointsBoostRounding = "down"
+	PointsBoostRoundingUp      PointsBoostRounding = "up"
+	PointsBoostRoundingNearest PointsBoostRounding = "nearest"
+)
+
+func NewPointsBoostRoundingFromString(s string) (PointsBoostRounding, error) {
+	switch s {
+	case "down":
+		return PointsBoostRoundingDown, nil
+	case "up":
+		return PointsBoostRoundingUp, nil
+	case "nearest":
+		return PointsBoostRoundingNearest, nil
+	}
+	var t PointsBoostRounding
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsBoostRounding) Ptr() *PointsBoostRounding {
+	return &p
+}
+
+// The status of the points boost
+type PointsBoostStatus string
+
+const (
+	PointsBoostStatusActive    PointsBoostStatus = "active"
+	PointsBoostStatusScheduled PointsBoostStatus = "scheduled"
+	PointsBoostStatusFinished  PointsBoostStatus = "finished"
+)
+
+func NewPointsBoostStatusFromString(s string) (PointsBoostStatus, error) {
+	switch s {
+	case "active":
+		return PointsBoostStatusActive, nil
+	case "scheduled":
+		return PointsBoostStatusScheduled, nil
+	case "finished":
+		return PointsBoostStatusFinished, nil
+	}
+	var t PointsBoostStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsBoostStatus) Ptr() *PointsBoostStatus {
+	return &p
+}
+
+// Points boost payload sent in points.boost_started and points.boost_finished webhook events.
+type PointsBoostWebhookPayload struct {
+	// The ID of the points boost.
+	Id string `json:"id" url:"id"`
+	// The name of the points boost.
+	Name string `json:"name" url:"name"`
+	// The status of the points boost.
+	Status PointsBoostWebhookPayloadStatus `json:"status" url:"status"`
+	// The customer-facing user ID that the boost is scoped to, or null for global boosts.
+	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
+	// The ID of the points system this boost applies to.
+	PointsSystemId string `json:"pointsSystemId" url:"pointsSystemId"`
+	// The key of the points system this boost applies to.
+	PointsSystemKey string `json:"pointsSystemKey" url:"pointsSystemKey"`
+	// The name of the points system this boost applies to.
+	PointsSystemName string `json:"pointsSystemName" url:"pointsSystemName"`
+	// The start date of the points boost (YYYY-MM-DD).
+	Start string `json:"start" url:"start"`
+	// The end date of the points boost (YYYY-MM-DD), or null if open-ended.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The multiplier applied to points during the boost.
+	Multiplier float64 `json:"multiplier" url:"multiplier"`
+	// The rounding method applied to boosted points.
+	Rounding PointsBoostWebhookPayloadRounding `json:"rounding" url:"rounding"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsBoostWebhookPayload) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PointsBoostWebhookPayload) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PointsBoostWebhookPayload) GetStatus() PointsBoostWebhookPayloadStatus {
+	if p == nil {
+		return ""
+	}
+	return p.Status
+}
+
+func (p *PointsBoostWebhookPayload) GetUserId() *string {
+	if p == nil {
+		return nil
+	}
+	return p.UserId
+}
+
+func (p *PointsBoostWebhookPayload) GetPointsSystemId() string {
+	if p == nil {
+		return ""
+	}
+	return p.PointsSystemId
+}
+
+func (p *PointsBoostWebhookPayload) GetPointsSystemKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.PointsSystemKey
+}
+
+func (p *PointsBoostWebhookPayload) GetPointsSystemName() string {
+	if p == nil {
+		return ""
+	}
+	return p.PointsSystemName
+}
+
+func (p *PointsBoostWebhookPayload) GetStart() string {
+	if p == nil {
+		return ""
+	}
+	return p.Start
+}
+
+func (p *PointsBoostWebhookPayload) GetEnd() *string {
+	if p == nil {
+		return nil
+	}
+	return p.End
+}
+
+func (p *PointsBoostWebhookPayload) GetMultiplier() float64 {
+	if p == nil {
+		return 0
+	}
+	return p.Multiplier
+}
+
+func (p *PointsBoostWebhookPayload) GetRounding() PointsBoostWebhookPayloadRounding {
+	if p == nil {
+		return ""
+	}
+	return p.Rounding
+}
+
+func (p *PointsBoostWebhookPayload) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsBoostWebhookPayload) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsBoostWebhookPayload
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsBoostWebhookPayload(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsBoostWebhookPayload) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// The rounding method applied to boosted points.
+type PointsBoostWebhookPayloadRounding string
+
+const (
+	PointsBoostWebhookPayloadRoundingDown    PointsBoostWebhookPayloadRounding = "down"
+	PointsBoostWebhookPayloadRoundingUp      PointsBoostWebhookPayloadRounding = "up"
+	PointsBoostWebhookPayloadRoundingNearest PointsBoostWebhookPayloadRounding = "nearest"
+)
+
+func NewPointsBoostWebhookPayloadRoundingFromString(s string) (PointsBoostWebhookPayloadRounding, error) {
+	switch s {
+	case "down":
+		return PointsBoostWebhookPayloadRoundingDown, nil
+	case "up":
+		return PointsBoostWebhookPayloadRoundingUp, nil
+	case "nearest":
+		return PointsBoostWebhookPayloadRoundingNearest, nil
+	}
+	var t PointsBoostWebhookPayloadRounding
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsBoostWebhookPayloadRounding) Ptr() *PointsBoostWebhookPayloadRounding {
+	return &p
+}
+
+// The status of the points boost.
+type PointsBoostWebhookPayloadStatus string
+
+const (
+	PointsBoostWebhookPayloadStatusActive   PointsBoostWebhookPayloadStatus = "active"
+	PointsBoostWebhookPayloadStatusFinished PointsBoostWebhookPayloadStatus = "finished"
+)
+
+func NewPointsBoostWebhookPayloadStatusFromString(s string) (PointsBoostWebhookPayloadStatus, error) {
+	switch s {
+	case "active":
+		return PointsBoostWebhookPayloadStatusActive, nil
+	case "finished":
+		return PointsBoostWebhookPayloadStatusFinished, nil
+	}
+	var t PointsBoostWebhookPayloadStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsBoostWebhookPayloadStatus) Ptr() *PointsBoostWebhookPayloadStatus {
+	return &p
 }
 
 type PointsTrigger struct {
@@ -2557,12 +3065,186 @@ func (w *WebhooksLeaderboardStartedPayload) String() string {
 	return fmt.Sprintf("%#v", w)
 }
 
+type WebhooksPointsBoostFinishedPayload struct {
+	// The webhook event type.
+	// When the event occurred (ISO 8601).
+	Timestamp time.Time `json:"timestamp" url:"timestamp"`
+	// The points boost that finished.
+	Boost *PointsBoostWebhookPayload `json:"boost,omitempty" url:"boost,omitempty"`
+	type_ string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksPointsBoostFinishedPayload) GetTimestamp() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.Timestamp
+}
+
+func (w *WebhooksPointsBoostFinishedPayload) GetBoost() *PointsBoostWebhookPayload {
+	if w == nil {
+		return nil
+	}
+	return w.Boost
+}
+
+func (w *WebhooksPointsBoostFinishedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksPointsBoostFinishedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksPointsBoostFinishedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksPointsBoostFinishedPayload
+	var unmarshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksPointsBoostFinishedPayload(unmarshaler.embed)
+	w.Timestamp = unmarshaler.Timestamp.Time()
+	if unmarshaler.Type != "points.boost_finished" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "points.boost_finished", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksPointsBoostFinishedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksPointsBoostFinishedPayload
+	var marshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed:     embed(*w),
+		Timestamp: internal.NewDateTime(w.Timestamp),
+		Type:      "points.boost_finished",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksPointsBoostFinishedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksPointsBoostStartedPayload struct {
+	// The webhook event type.
+	// When the event occurred (ISO 8601).
+	Timestamp time.Time `json:"timestamp" url:"timestamp"`
+	// The points boost that started.
+	Boost *PointsBoostWebhookPayload `json:"boost,omitempty" url:"boost,omitempty"`
+	type_ string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksPointsBoostStartedPayload) GetTimestamp() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.Timestamp
+}
+
+func (w *WebhooksPointsBoostStartedPayload) GetBoost() *PointsBoostWebhookPayload {
+	if w == nil {
+		return nil
+	}
+	return w.Boost
+}
+
+func (w *WebhooksPointsBoostStartedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksPointsBoostStartedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksPointsBoostStartedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksPointsBoostStartedPayload
+	var unmarshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksPointsBoostStartedPayload(unmarshaler.embed)
+	w.Timestamp = unmarshaler.Timestamp.Time()
+	if unmarshaler.Type != "points.boost_started" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "points.boost_started", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksPointsBoostStartedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksPointsBoostStartedPayload
+	var marshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed:     embed(*w),
+		Timestamp: internal.NewDateTime(w.Timestamp),
+		Type:      "points.boost_started",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksPointsBoostStartedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
 type WebhooksPointsChangedPayload struct {
 	// The webhook event type.
 	// The user whose points increased or decreased.
 	User *User `json:"user,omitempty" url:"user,omitempty"`
-	// The user's points after the event.
-	Points *GetUserPointsResponse `json:"points,omitempty" url:"points,omitempty"`
+	// The user's points after the event (includes added amount for this event).
+	Points *MetricEventPointsResponse `json:"points,omitempty" url:"points,omitempty"`
 	type_  string
 
 	extraProperties map[string]interface{}
@@ -2576,7 +3258,7 @@ func (w *WebhooksPointsChangedPayload) GetUser() *User {
 	return w.User
 }
 
-func (w *WebhooksPointsChangedPayload) GetPoints() *GetUserPointsResponse {
+func (w *WebhooksPointsChangedPayload) GetPoints() *MetricEventPointsResponse {
 	if w == nil {
 		return nil
 	}

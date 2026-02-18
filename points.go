@@ -9,6 +9,11 @@ import (
 	time "time"
 )
 
+type PointsBoostsRequest struct {
+	// When set to 'true', boosts that have finished (past their end date) will be included in the response. By default, finished boosts are excluded.
+	IncludeFinished *bool `json:"-" url:"includeFinished,omitempty"`
+}
+
 type PointsSummaryRequest struct {
 	// Optional colon-delimited user attribute filters in the format attribute:value,attribute:value. Only users matching ALL specified attributes will be included in the points breakdown.
 	UserAttributes *string `json:"-" url:"userAttributes,omitempty"`
