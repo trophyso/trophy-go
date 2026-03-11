@@ -24,6 +24,8 @@ type AchievementResponse struct {
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
+	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
 	// The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
@@ -86,6 +88,13 @@ func (a *AchievementResponse) GetStreakLength() *int {
 		return nil
 	}
 	return a.StreakLength
+}
+
+func (a *AchievementResponse) GetAchievementIds() []string {
+	if a == nil {
+		return nil
+	}
+	return a.AchievementIds
 }
 
 func (a *AchievementResponse) GetMetricId() *string {
@@ -216,9 +225,10 @@ func (a *AchievementResponseEventAttribute) String() string {
 type AchievementResponseTrigger string
 
 const (
-	AchievementResponseTriggerMetric AchievementResponseTrigger = "metric"
-	AchievementResponseTriggerStreak AchievementResponseTrigger = "streak"
-	AchievementResponseTriggerApi    AchievementResponseTrigger = "api"
+	AchievementResponseTriggerMetric      AchievementResponseTrigger = "metric"
+	AchievementResponseTriggerStreak      AchievementResponseTrigger = "streak"
+	AchievementResponseTriggerApi         AchievementResponseTrigger = "api"
+	AchievementResponseTriggerAchievement AchievementResponseTrigger = "achievement"
 )
 
 func NewAchievementResponseTriggerFromString(s string) (AchievementResponseTrigger, error) {
@@ -229,6 +239,8 @@ func NewAchievementResponseTriggerFromString(s string) (AchievementResponseTrigg
 		return AchievementResponseTriggerStreak, nil
 	case "api":
 		return AchievementResponseTriggerApi, nil
+	case "achievement":
+		return AchievementResponseTriggerAchievement, nil
 	}
 	var t AchievementResponseTrigger
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -309,6 +321,8 @@ type AchievementWithStatsResponse struct {
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
+	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
 	// The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
@@ -375,6 +389,13 @@ func (a *AchievementWithStatsResponse) GetStreakLength() *int {
 		return nil
 	}
 	return a.StreakLength
+}
+
+func (a *AchievementWithStatsResponse) GetAchievementIds() []string {
+	if a == nil {
+		return nil
+	}
+	return a.AchievementIds
 }
 
 func (a *AchievementWithStatsResponse) GetMetricId() *string {
@@ -2309,6 +2330,8 @@ type UserAchievementResponse struct {
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
+	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
 	// The value of the metric required to complete the achievement (only applicable if trigger = 'metric')
@@ -2373,6 +2396,13 @@ func (u *UserAchievementResponse) GetStreakLength() *int {
 		return nil
 	}
 	return u.StreakLength
+}
+
+func (u *UserAchievementResponse) GetAchievementIds() []string {
+	if u == nil {
+		return nil
+	}
+	return u.AchievementIds
 }
 
 func (u *UserAchievementResponse) GetMetricId() *string {
