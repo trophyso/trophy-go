@@ -19,6 +19,64 @@ type PointsSummaryRequest struct {
 	UserAttributes *string `json:"-" url:"userAttributes,omitempty"`
 }
 
+// A breakdown of users by level in a points system.
+type PointsLevelSummaryResponse = []*PointsLevelSummaryResponseItem
+
+type PointsLevelSummaryResponseItem struct {
+	Level *PointsLevel `json:"level,omitempty" url:"level,omitempty"`
+	// The number of users currently at this level
+	Users int `json:"users" url:"users"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsLevelSummaryResponseItem) GetLevel() *PointsLevel {
+	if p == nil {
+		return nil
+	}
+	return p.Level
+}
+
+func (p *PointsLevelSummaryResponseItem) GetUsers() int {
+	if p == nil {
+		return 0
+	}
+	return p.Users
+}
+
+func (p *PointsLevelSummaryResponseItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsLevelSummaryResponseItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsLevelSummaryResponseItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsLevelSummaryResponseItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsLevelSummaryResponseItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 type PointsRange struct {
 	// The start of the points range. Inclusive.
 	From int `json:"from" url:"from"`

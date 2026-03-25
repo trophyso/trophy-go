@@ -64,6 +64,8 @@ type GetUserPointsResponse struct {
 	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
 	// The user's total points
 	Total int `json:"total" url:"total"`
+	// The user's current level in this points system, or null if no levels are configured or the user hasn't reached any level yet.
+	Level *PointsLevel `json:"level,omitempty" url:"level,omitempty"`
 	// Array of trigger awards that added points.
 	Awards []*PointsAward `json:"awards,omitempty" url:"awards,omitempty"`
 
@@ -118,6 +120,13 @@ func (g *GetUserPointsResponse) GetTotal() int {
 		return 0
 	}
 	return g.Total
+}
+
+func (g *GetUserPointsResponse) GetLevel() *PointsLevel {
+	if g == nil {
+		return nil
+	}
+	return g.Level
 }
 
 func (g *GetUserPointsResponse) GetAwards() []*PointsAward {

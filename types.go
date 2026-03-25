@@ -1284,7 +1284,7 @@ func (l LeaderboardResponseRunUnit) Ptr() *LeaderboardResponseRunUnit {
 	return &l
 }
 
-// Points system response for metric events.
+// Points system response for metric events and achievement completions.
 type MetricEventPointsResponse struct {
 	// The ID of the points system
 	Id string `json:"id" url:"id"`
@@ -1300,6 +1300,8 @@ type MetricEventPointsResponse struct {
 	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
 	// The user's total points
 	Total int `json:"total" url:"total"`
+	// The user's new level, included only when the level changed as a result of this event.
+	Level *PointsLevel `json:"level,omitempty" url:"level,omitempty"`
 	// The points added by this event.
 	Added int `json:"added" url:"added"`
 	// Array of trigger awards that added points.
@@ -1356,6 +1358,13 @@ func (m *MetricEventPointsResponse) GetTotal() int {
 		return 0
 	}
 	return m.Total
+}
+
+func (m *MetricEventPointsResponse) GetLevel() *PointsLevel {
+	if m == nil {
+		return nil
+	}
+	return m.Level
 }
 
 func (m *MetricEventPointsResponse) GetAdded() int {
@@ -1862,6 +1871,192 @@ func NewPointsBoostWebhookPayloadStatusFromString(s string) (PointsBoostWebhookP
 
 func (p PointsBoostWebhookPayloadStatus) Ptr() *PointsBoostWebhookPayloadStatus {
 	return &p
+}
+
+// A level within a points system.
+type PointsLevel struct {
+	// The ID of the level
+	Id string `json:"id" url:"id"`
+	// The unique key of the level
+	Key string `json:"key" url:"key"`
+	// The name of the level
+	Name string `json:"name" url:"name"`
+	// The description of the level
+	Description string `json:"description" url:"description"`
+	// The URL of the badge image for the level
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The points threshold required to reach this level
+	Points int `json:"points" url:"points"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsLevel) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PointsLevel) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PointsLevel) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PointsLevel) GetDescription() string {
+	if p == nil {
+		return ""
+	}
+	return p.Description
+}
+
+func (p *PointsLevel) GetBadgeUrl() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BadgeUrl
+}
+
+func (p *PointsLevel) GetPoints() int {
+	if p == nil {
+		return 0
+	}
+	return p.Points
+}
+
+func (p *PointsLevel) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsLevel) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsLevel
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsLevel(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsLevel) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Base points system fields shared across responses.
+type PointsResponse struct {
+	// The ID of the points system
+	Id string `json:"id" url:"id"`
+	// The key of the points system
+	Key string `json:"key" url:"key"`
+	// The name of the points system
+	Name string `json:"name" url:"name"`
+	// The description of the points system
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the points system
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The maximum number of points a user can be awarded in this points system
+	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsResponse) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PointsResponse) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PointsResponse) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PointsResponse) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PointsResponse) GetBadgeUrl() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BadgeUrl
+}
+
+func (p *PointsResponse) GetMaxPoints() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.MaxPoints
+}
+
+func (p *PointsResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 type PointsTrigger struct {
@@ -3341,6 +3536,209 @@ func (w *WebhooksPointsChangedPayload) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WebhooksPointsChangedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WebhooksPointsLevelChangedPayload struct {
+	// The webhook event type.
+	// The user whose level changed.
+	User *User `json:"user,omitempty" url:"user,omitempty"`
+	// The points system in which the level changed.
+	Points *WebhooksPointsLevelChangedPayloadPoints `json:"points,omitempty" url:"points,omitempty"`
+	// The user's previous level, or null if the user had no level.
+	PreviousLevel *PointsLevel `json:"previousLevel,omitempty" url:"previousLevel,omitempty"`
+	// The user's new level, or null if the user no longer has a level.
+	NewLevel *PointsLevel `json:"newLevel,omitempty" url:"newLevel,omitempty"`
+	type_    string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksPointsLevelChangedPayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksPointsLevelChangedPayload) GetPoints() *WebhooksPointsLevelChangedPayloadPoints {
+	if w == nil {
+		return nil
+	}
+	return w.Points
+}
+
+func (w *WebhooksPointsLevelChangedPayload) GetPreviousLevel() *PointsLevel {
+	if w == nil {
+		return nil
+	}
+	return w.PreviousLevel
+}
+
+func (w *WebhooksPointsLevelChangedPayload) GetNewLevel() *PointsLevel {
+	if w == nil {
+		return nil
+	}
+	return w.NewLevel
+}
+
+func (w *WebhooksPointsLevelChangedPayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksPointsLevelChangedPayload) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksPointsLevelChangedPayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksPointsLevelChangedPayload
+	var unmarshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksPointsLevelChangedPayload(unmarshaler.embed)
+	if unmarshaler.Type != "points.level_changed" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "points.level_changed", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksPointsLevelChangedPayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksPointsLevelChangedPayload
+	var marshaler = struct {
+		embed
+		Type string `json:"type"`
+	}{
+		embed: embed(*w),
+		Type:  "points.level_changed",
+	}
+	return json.Marshal(marshaler)
+}
+
+func (w *WebhooksPointsLevelChangedPayload) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// The points system in which the level changed.
+type WebhooksPointsLevelChangedPayloadPoints struct {
+	// The ID of the points system
+	Id string `json:"id" url:"id"`
+	// The key of the points system
+	Key string `json:"key" url:"key"`
+	// The name of the points system
+	Name string `json:"name" url:"name"`
+	// The description of the points system
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The URL of the badge image for the points system
+	BadgeUrl *string `json:"badgeUrl,omitempty" url:"badgeUrl,omitempty"`
+	// The maximum number of points a user can be awarded in this points system
+	MaxPoints *float64 `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
+	// The user's total points in this system.
+	Total int `json:"total" url:"total"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetId() string {
+	if w == nil {
+		return ""
+	}
+	return w.Id
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetKey() string {
+	if w == nil {
+		return ""
+	}
+	return w.Key
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetName() string {
+	if w == nil {
+		return ""
+	}
+	return w.Name
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Description
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetBadgeUrl() *string {
+	if w == nil {
+		return nil
+	}
+	return w.BadgeUrl
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetMaxPoints() *float64 {
+	if w == nil {
+		return nil
+	}
+	return w.MaxPoints
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetTotal() int {
+	if w == nil {
+		return 0
+	}
+	return w.Total
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) UnmarshalJSON(data []byte) error {
+	type unmarshaler WebhooksPointsLevelChangedPayloadPoints
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WebhooksPointsLevelChangedPayloadPoints(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksPointsLevelChangedPayloadPoints) String() string {
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value
