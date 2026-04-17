@@ -147,8 +147,10 @@ type MetricEventLeaderboardResponse struct {
 	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
 	// The minimum value required to enter the leaderboard according to its current rankings.
 	Threshold int `json:"threshold" url:"threshold"`
-	// For leaderboards with a breakdown attribute, the value of the attribute for the user.
+	// Deprecated. For leaderboards with a single breakdown attribute, the value of that attribute for the user.
 	BreakdownAttributeValue *string `json:"breakdownAttributeValue,omitempty" url:"breakdownAttributeValue,omitempty"`
+	// For leaderboards with breakdown attributes, the user's values for each breakdown attribute.
+	BreakdownAttributeValues []*MetricEventLeaderboardResponseBreakdownAttributeValuesItem `json:"breakdownAttributeValues,omitempty" url:"breakdownAttributeValues,omitempty"`
 	// The unique ID of the leaderboard.
 	Id string `json:"id" url:"id"`
 	// The user-facing name of the leaderboard.
@@ -157,8 +159,10 @@ type MetricEventLeaderboardResponse struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
-	// The key of the attribute to break down this leaderboard by.
+	// Deprecated. The key of the attribute to break down this leaderboard by.
 	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -217,6 +221,13 @@ func (m *MetricEventLeaderboardResponse) GetBreakdownAttributeValue() *string {
 	return m.BreakdownAttributeValue
 }
 
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttributeValues() []*MetricEventLeaderboardResponseBreakdownAttributeValuesItem {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttributeValues
+}
+
 func (m *MetricEventLeaderboardResponse) GetId() string {
 	if m == nil {
 		return ""
@@ -250,6 +261,13 @@ func (m *MetricEventLeaderboardResponse) GetBreakdownAttribute() *string {
 		return nil
 	}
 	return m.BreakdownAttribute
+}
+
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttributes() []string {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttributes
 }
 
 func (m *MetricEventLeaderboardResponse) GetMetricKey() *string {
@@ -336,6 +354,62 @@ func (m *MetricEventLeaderboardResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (m *MetricEventLeaderboardResponse) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+type MetricEventLeaderboardResponseBreakdownAttributeValuesItem struct {
+	// The key of the breakdown attribute.
+	Key string `json:"key" url:"key"`
+	// The user's value for the breakdown attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) GetKey() string {
+	if m == nil {
+		return ""
+	}
+	return m.Key
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) GetValue() string {
+	if m == nil {
+		return ""
+	}
+	return m.Value
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventLeaderboardResponseBreakdownAttributeValuesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventLeaderboardResponseBreakdownAttributeValuesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) String() string {
 	if len(m.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
 			return value

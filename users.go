@@ -507,7 +507,7 @@ type StreakResponse struct {
 	FreezeAutoEarnAmount *int `json:"freezeAutoEarnAmount,omitempty" url:"freezeAutoEarnAmount,omitempty"`
 	// A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
 	StreakHistory []*StreakResponseStreakHistoryItem `json:"streakHistory,omitempty" url:"streakHistory,omitempty"`
-	// The user's rank across all users. Null if the user has no active streak.
+	// Deprecated. The user's rank across all users. Null if the user has no active streak.
 	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -879,10 +879,12 @@ type UserAchievementWithStatsResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	// User attribute filters that must be met for this achievement to be completed.
 	UserAttributes []*AchievementResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
-	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	// Deprecated. Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
 	EventAttribute *AchievementResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
+	// Event attribute filters that must be met for this achievement to be completed. Omitted for non-metric achievements.
+	EventAttributes []*AchievementResponseEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
 	// The number of users who have completed this achievement.
 	Completions int `json:"completions" url:"completions"`
 	// The percentage of all users who have completed this achievement.
@@ -985,6 +987,13 @@ func (u *UserAchievementWithStatsResponse) GetEventAttribute() *AchievementRespo
 	return u.EventAttribute
 }
 
+func (u *UserAchievementWithStatsResponse) GetEventAttributes() []*AchievementResponseEventAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.EventAttributes
+}
+
 func (u *UserAchievementWithStatsResponse) GetCompletions() int {
 	if u == nil {
 		return 0
@@ -1066,8 +1075,10 @@ type UserLeaderboardResponse struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
-	// The key of the attribute to break down this leaderboard by.
+	// Deprecated. The key of the attribute to break down this leaderboard by.
 	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -1130,6 +1141,13 @@ func (u *UserLeaderboardResponse) GetBreakdownAttribute() *string {
 		return nil
 	}
 	return u.BreakdownAttribute
+}
+
+func (u *UserLeaderboardResponse) GetBreakdownAttributes() []string {
+	if u == nil {
+		return nil
+	}
+	return u.BreakdownAttributes
 }
 
 func (u *UserLeaderboardResponse) GetMetricKey() *string {
@@ -1258,8 +1276,10 @@ type UserLeaderboardResponseWithHistory struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
-	// The key of the attribute to break down this leaderboard by.
+	// Deprecated. The key of the attribute to break down this leaderboard by.
 	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -1324,6 +1344,13 @@ func (u *UserLeaderboardResponseWithHistory) GetBreakdownAttribute() *string {
 		return nil
 	}
 	return u.BreakdownAttribute
+}
+
+func (u *UserLeaderboardResponseWithHistory) GetBreakdownAttributes() []string {
+	if u == nil {
+		return nil
+	}
+	return u.BreakdownAttributes
 }
 
 func (u *UserLeaderboardResponseWithHistory) GetMetricKey() *string {

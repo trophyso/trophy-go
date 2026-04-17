@@ -110,8 +110,10 @@ type LeaderboardResponseWithRankings struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
-	// The key of the attribute to break down this leaderboard by.
+	// Deprecated. The key of the attribute to break down this leaderboard by.
 	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -174,6 +176,13 @@ func (l *LeaderboardResponseWithRankings) GetBreakdownAttribute() *string {
 		return nil
 	}
 	return l.BreakdownAttribute
+}
+
+func (l *LeaderboardResponseWithRankings) GetBreakdownAttributes() []string {
+	if l == nil {
+		return nil
+	}
+	return l.BreakdownAttributes
 }
 
 func (l *LeaderboardResponseWithRankings) GetMetricKey() *string {
@@ -327,8 +336,10 @@ type LeaderboardsAllResponseItem struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
-	// The key of the attribute to break down this leaderboard by.
+	// Deprecated. The key of the attribute to break down this leaderboard by.
 	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -389,6 +400,13 @@ func (l *LeaderboardsAllResponseItem) GetBreakdownAttribute() *string {
 		return nil
 	}
 	return l.BreakdownAttribute
+}
+
+func (l *LeaderboardsAllResponseItem) GetBreakdownAttributes() []string {
+	if l == nil {
+		return nil
+	}
+	return l.BreakdownAttributes
 }
 
 func (l *LeaderboardsAllResponseItem) GetMetricKey() *string {

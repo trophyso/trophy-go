@@ -32,10 +32,12 @@ type AchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	// User attribute filters that must be met for this achievement to be completed.
 	UserAttributes []*AchievementResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
-	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	// Deprecated. Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
 	EventAttribute *AchievementResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
+	// Event attribute filters that must be met for this achievement to be completed. Omitted for non-metric achievements.
+	EventAttributes []*AchievementResponseEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -132,6 +134,13 @@ func (a *AchievementResponse) GetEventAttribute() *AchievementResponseEventAttri
 	return a.EventAttribute
 }
 
+func (a *AchievementResponse) GetEventAttributes() []*AchievementResponseEventAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.EventAttributes
+}
+
 func (a *AchievementResponse) GetExtraProperties() map[string]interface{} {
 	return a.extraProperties
 }
@@ -164,7 +173,7 @@ func (a *AchievementResponse) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
-// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+// Deprecated. Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
 type AchievementResponseEventAttribute struct {
 	// The key of the event attribute.
 	Key string `json:"key" url:"key"`
@@ -210,6 +219,62 @@ func (a *AchievementResponseEventAttribute) UnmarshalJSON(data []byte) error {
 }
 
 func (a *AchievementResponseEventAttribute) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AchievementResponseEventAttributesItem struct {
+	// The key of the event attribute.
+	Key string `json:"key" url:"key"`
+	// The value of the event attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AchievementResponseEventAttributesItem) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AchievementResponseEventAttributesItem) GetValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.Value
+}
+
+func (a *AchievementResponseEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AchievementResponseEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AchievementResponseEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AchievementResponseEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AchievementResponseEventAttributesItem) String() string {
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -329,10 +394,12 @@ type AchievementWithStatsResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	// User attribute filters that must be met for this achievement to be completed.
 	UserAttributes []*AchievementResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
-	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	// Deprecated. Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
 	EventAttribute *AchievementResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
+	// Event attribute filters that must be met for this achievement to be completed. Omitted for non-metric achievements.
+	EventAttributes []*AchievementResponseEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
 	// The number of users who have completed this achievement.
 	Completions int `json:"completions" url:"completions"`
 	// The percentage of all users who have completed this achievement.
@@ -431,6 +498,13 @@ func (a *AchievementWithStatsResponse) GetEventAttribute() *AchievementResponseE
 		return nil
 	}
 	return a.EventAttribute
+}
+
+func (a *AchievementWithStatsResponse) GetEventAttributes() []*AchievementResponseEventAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.EventAttributes
 }
 
 func (a *AchievementWithStatsResponse) GetCompletions() int {
@@ -1068,8 +1142,10 @@ type LeaderboardResponse struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
-	// The key of the attribute to break down this leaderboard by.
+	// Deprecated. The key of the attribute to break down this leaderboard by.
 	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -1128,6 +1204,13 @@ func (l *LeaderboardResponse) GetBreakdownAttribute() *string {
 		return nil
 	}
 	return l.BreakdownAttribute
+}
+
+func (l *LeaderboardResponse) GetBreakdownAttributes() []string {
+	if l == nil {
+		return nil
+	}
+	return l.BreakdownAttributes
 }
 
 func (l *LeaderboardResponse) GetMetricKey() *string {
@@ -2061,11 +2144,17 @@ func (p *PointsResponse) String() string {
 
 type PointsTrigger struct {
 	// The ID of the trigger
-	Id *string `json:"id,omitempty" url:"id,omitempty"`
+	Id string `json:"id" url:"id"`
 	// The type of trigger
-	Type *PointsTriggerType `json:"type,omitempty" url:"type,omitempty"`
+	Type PointsTriggerType `json:"type" url:"type"`
 	// The points awarded by this trigger.
-	Points *int `json:"points,omitempty" url:"points,omitempty"`
+	Points int `json:"points" url:"points"`
+	// The status of the trigger.
+	Status PointsTriggerStatus `json:"status" url:"status"`
+	// The unique ID of the achievement associated with this trigger, if the trigger is an achievement.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// The unique ID of the metric associated with this trigger, if the trigger is a metric.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
 	// If the trigger has type 'metric', the name of the metric
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
 	// If the trigger has type 'metric', the threshold of the metric that triggers the points
@@ -2078,30 +2167,61 @@ type PointsTrigger struct {
 	TimeUnit *PointsTriggerTimeUnit `json:"timeUnit,omitempty" url:"timeUnit,omitempty"`
 	// If the trigger has type 'time', the numer of units of timeUnit after which to award points
 	TimeInterval *int `json:"timeInterval,omitempty" url:"timeInterval,omitempty"`
+	// User attribute filters that must be met for this trigger to award points. Empty when the trigger has no user attribute filters configured.
+	UserAttributes []*PointsTriggerUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Deprecated. Event attribute filter that must be met for this trigger to award points. Only present if the trigger has an event filter configured.
+	EventAttribute *PointsTriggerEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
+	// If the trigger has type 'metric', the event attributes that must match for the trigger to award points. Empty when the trigger is metric-based and has no event attribute filters. Omitted for non-metric triggers.
+	EventAttributes []*PointsTriggerEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// The date and time the trigger was created, in ISO 8601 format.
+	Created time.Time `json:"created" url:"created"`
+	// The date and time the trigger was last updated, in ISO 8601 format.
+	Updated time.Time `json:"updated" url:"updated"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (p *PointsTrigger) GetId() *string {
+func (p *PointsTrigger) GetId() string {
 	if p == nil {
-		return nil
+		return ""
 	}
 	return p.Id
 }
 
-func (p *PointsTrigger) GetType() *PointsTriggerType {
+func (p *PointsTrigger) GetType() PointsTriggerType {
 	if p == nil {
-		return nil
+		return ""
 	}
 	return p.Type
 }
 
-func (p *PointsTrigger) GetPoints() *int {
+func (p *PointsTrigger) GetPoints() int {
+	if p == nil {
+		return 0
+	}
+	return p.Points
+}
+
+func (p *PointsTrigger) GetStatus() PointsTriggerStatus {
+	if p == nil {
+		return ""
+	}
+	return p.Status
+}
+
+func (p *PointsTrigger) GetAchievementId() *string {
 	if p == nil {
 		return nil
 	}
-	return p.Points
+	return p.AchievementId
+}
+
+func (p *PointsTrigger) GetMetricId() *string {
+	if p == nil {
+		return nil
+	}
+	return p.MetricId
 }
 
 func (p *PointsTrigger) GetMetricName() *string {
@@ -2146,17 +2266,60 @@ func (p *PointsTrigger) GetTimeInterval() *int {
 	return p.TimeInterval
 }
 
+func (p *PointsTrigger) GetUserAttributes() []*PointsTriggerUserAttributesItem {
+	if p == nil {
+		return nil
+	}
+	return p.UserAttributes
+}
+
+func (p *PointsTrigger) GetEventAttribute() *PointsTriggerEventAttribute {
+	if p == nil {
+		return nil
+	}
+	return p.EventAttribute
+}
+
+func (p *PointsTrigger) GetEventAttributes() []*PointsTriggerEventAttributesItem {
+	if p == nil {
+		return nil
+	}
+	return p.EventAttributes
+}
+
+func (p *PointsTrigger) GetCreated() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.Created
+}
+
+func (p *PointsTrigger) GetUpdated() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.Updated
+}
+
 func (p *PointsTrigger) GetExtraProperties() map[string]interface{} {
 	return p.extraProperties
 }
 
 func (p *PointsTrigger) UnmarshalJSON(data []byte) error {
-	type unmarshaler PointsTrigger
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed PointsTrigger
+	var unmarshaler = struct {
+		embed
+		Created *internal.DateTime `json:"created"`
+		Updated *internal.DateTime `json:"updated"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*p = PointsTrigger(value)
+	*p = PointsTrigger(unmarshaler.embed)
+	p.Created = unmarshaler.Created.Time()
+	p.Updated = unmarshaler.Updated.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
 		return err
@@ -2164,6 +2327,20 @@ func (p *PointsTrigger) UnmarshalJSON(data []byte) error {
 	p.extraProperties = extraProperties
 	p.rawJSON = json.RawMessage(data)
 	return nil
+}
+
+func (p *PointsTrigger) MarshalJSON() ([]byte, error) {
+	type embed PointsTrigger
+	var marshaler = struct {
+		embed
+		Created *internal.DateTime `json:"created"`
+		Updated *internal.DateTime `json:"updated"`
+	}{
+		embed:   embed(*p),
+		Created: internal.NewDateTime(p.Created),
+		Updated: internal.NewDateTime(p.Updated),
+	}
+	return json.Marshal(marshaler)
 }
 
 func (p *PointsTrigger) String() string {
@@ -2176,6 +2353,145 @@ func (p *PointsTrigger) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+// Deprecated. Event attribute filter that must be met for this trigger to award points. Only present if the trigger has an event filter configured.
+type PointsTriggerEventAttribute struct {
+	// The key of the event attribute.
+	Key string `json:"key" url:"key"`
+	// The required value of the event attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsTriggerEventAttribute) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PointsTriggerEventAttribute) GetValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.Value
+}
+
+func (p *PointsTriggerEventAttribute) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsTriggerEventAttribute) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsTriggerEventAttribute
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsTriggerEventAttribute(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsTriggerEventAttribute) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PointsTriggerEventAttributesItem struct {
+	// The key of the event attribute.
+	Key string `json:"key" url:"key"`
+	// The required value of the event attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsTriggerEventAttributesItem) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PointsTriggerEventAttributesItem) GetValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.Value
+}
+
+func (p *PointsTriggerEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsTriggerEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsTriggerEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsTriggerEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsTriggerEventAttributesItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// The status of the trigger.
+type PointsTriggerStatus string
+
+const (
+	PointsTriggerStatusActive   PointsTriggerStatus = "active"
+	PointsTriggerStatusInactive PointsTriggerStatus = "inactive"
+	PointsTriggerStatusArchived PointsTriggerStatus = "archived"
+)
+
+func NewPointsTriggerStatusFromString(s string) (PointsTriggerStatus, error) {
+	switch s {
+	case "active":
+		return PointsTriggerStatusActive, nil
+	case "inactive":
+		return PointsTriggerStatusInactive, nil
+	case "archived":
+		return PointsTriggerStatusArchived, nil
+	}
+	var t PointsTriggerStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PointsTriggerStatus) Ptr() *PointsTriggerStatus {
+	return &p
 }
 
 // If the trigger has type 'time', the unit of time after which to award points
@@ -2231,6 +2547,62 @@ func NewPointsTriggerTypeFromString(s string) (PointsTriggerType, error) {
 
 func (p PointsTriggerType) Ptr() *PointsTriggerType {
 	return &p
+}
+
+type PointsTriggerUserAttributesItem struct {
+	// The key of the user attribute.
+	Key string `json:"key" url:"key"`
+	// The required value of the user attribute.
+	Value string `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PointsTriggerUserAttributesItem) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PointsTriggerUserAttributesItem) GetValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.Value
+}
+
+func (p *PointsTriggerUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PointsTriggerUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PointsTriggerUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PointsTriggerUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PointsTriggerUserAttributesItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 // Response containing restored users and any issues encountered.
@@ -2533,10 +2905,12 @@ type UserAchievementResponse struct {
 	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
 	// The name of the metric associated with this achievement (only applicable if trigger = 'metric')
 	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
-	// User attribute filters that must be met for this achievement to be completed. Only present if the achievement has user attribute filters configured.
+	// User attribute filters that must be met for this achievement to be completed.
 	UserAttributes []*AchievementResponseUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
-	// Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
+	// Deprecated. Event attribute filter that must be met for this achievement to be completed. Only present if the achievement has an event filter configured.
 	EventAttribute *AchievementResponseEventAttribute `json:"eventAttribute,omitempty" url:"eventAttribute,omitempty"`
+	// Event attribute filters that must be met for this achievement to be completed. Omitted for non-metric achievements.
+	EventAttributes []*AchievementResponseEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
 	// The date and time the achievement was completed, in ISO 8601 format. Null if the achievement has not been completed.
 	AchievedAt *time.Time `json:"achievedAt,omitempty" url:"achievedAt,omitempty"`
 
@@ -2635,6 +3009,13 @@ func (u *UserAchievementResponse) GetEventAttribute() *AchievementResponseEventA
 	return u.EventAttribute
 }
 
+func (u *UserAchievementResponse) GetEventAttributes() []*AchievementResponseEventAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.EventAttributes
+}
+
 func (u *UserAchievementResponse) GetAchievedAt() *time.Time {
 	if u == nil {
 		return nil
@@ -2702,8 +3083,10 @@ type WebhookUserLeaderboardResponse struct {
 	Key string `json:"key" url:"key"`
 	// What the leaderboard ranks by.
 	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
-	// The key of the attribute to break down this leaderboard by.
+	// Deprecated. The key of the attribute to break down this leaderboard by.
 	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The key of the metric to rank by, if rankBy is 'metric'.
 	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
 	// The name of the metric to rank by, if rankBy is 'metric'.
@@ -2770,6 +3153,13 @@ func (w *WebhookUserLeaderboardResponse) GetBreakdownAttribute() *string {
 		return nil
 	}
 	return w.BreakdownAttribute
+}
+
+func (w *WebhookUserLeaderboardResponse) GetBreakdownAttributes() []string {
+	if w == nil {
+		return nil
+	}
+	return w.BreakdownAttributes
 }
 
 func (w *WebhookUserLeaderboardResponse) GetMetricKey() *string {
