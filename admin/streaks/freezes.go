@@ -9,7 +9,7 @@ import (
 )
 
 type CreateStreakFreezesRequest struct {
-	// Array of freezes to create. Maximum 1,000 freezes per request.
+	// Array of freezes to create. Maximum 100 freezes per request.
 	Freezes []*CreateStreakFreezesRequestFreezesItem `json:"freezes,omitempty" url:"-"`
 }
 

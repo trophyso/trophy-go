@@ -553,33 +553,69 @@ func (a *AchievementWithStatsResponse) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
-// Response containing the count of archived points boosts.
-type ArchivePointsBoostsResponse struct {
-	// The number of boosts that were archived.
-	ArchivedCount int `json:"archivedCount" url:"archivedCount"`
+// An issue encountered while processing an item in an admin API request.
+type AdminIssue struct {
+	// The ID of the user the issue relates to, when applicable.
+	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
+	// The ID of the points boost the issue relates to, when applicable.
+	BoostId *string `json:"boostId,omitempty" url:"boostId,omitempty"`
+	// The zero-based index of the item the issue relates to, when no resource ID exists yet.
+	Index *int `json:"index,omitempty" url:"index,omitempty"`
+	// The severity level of the issue.
+	Severity AdminIssueSeverity `json:"severity" url:"severity"`
+	// A human-readable description of the issue.
+	Message string `json:"message" url:"message"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (a *ArchivePointsBoostsResponse) GetArchivedCount() int {
+func (a *AdminIssue) GetUserId() *string {
 	if a == nil {
-		return 0
+		return nil
 	}
-	return a.ArchivedCount
+	return a.UserId
 }
 
-func (a *ArchivePointsBoostsResponse) GetExtraProperties() map[string]interface{} {
+func (a *AdminIssue) GetBoostId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.BoostId
+}
+
+func (a *AdminIssue) GetIndex() *int {
+	if a == nil {
+		return nil
+	}
+	return a.Index
+}
+
+func (a *AdminIssue) GetSeverity() AdminIssueSeverity {
+	if a == nil {
+		return ""
+	}
+	return a.Severity
+}
+
+func (a *AdminIssue) GetMessage() string {
+	if a == nil {
+		return ""
+	}
+	return a.Message
+}
+
+func (a *AdminIssue) GetExtraProperties() map[string]interface{} {
 	return a.extraProperties
 }
 
-func (a *ArchivePointsBoostsResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler ArchivePointsBoostsResponse
+func (a *AdminIssue) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminIssue
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*a = ArchivePointsBoostsResponse(value)
+	*a = AdminIssue(value)
 	extraProperties, err := internal.ExtractExtraProperties(data, *a)
 	if err != nil {
 		return err
@@ -589,7 +625,7 @@ func (a *ArchivePointsBoostsResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (a *ArchivePointsBoostsResponse) String() string {
+func (a *AdminIssue) String() string {
 	if len(a.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
 			return value
@@ -599,6 +635,29 @@ func (a *ArchivePointsBoostsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", a)
+}
+
+// The severity level of the issue.
+type AdminIssueSeverity string
+
+const (
+	AdminIssueSeverityError   AdminIssueSeverity = "error"
+	AdminIssueSeverityWarning AdminIssueSeverity = "warning"
+)
+
+func NewAdminIssueSeverityFromString(s string) (AdminIssueSeverity, error) {
+	switch s {
+	case "error":
+		return AdminIssueSeverityError, nil
+	case "warning":
+		return AdminIssueSeverityWarning, nil
+	}
+	var t AdminIssueSeverity
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminIssueSeverity) Ptr() *AdminIssueSeverity {
+	return &a
 }
 
 type BaseStreakResponse struct {
@@ -729,101 +788,12 @@ func (b *BaseStreakResponse) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-// An issue encountered while bulk inserting data.
-type BulkInsertIssue struct {
-	// The ID of the user the issue relates to.
-	UserId string `json:"userId" url:"userId"`
-	// The severity level of the issue.
-	Level BulkInsertIssueLevel `json:"level" url:"level"`
-	// A human-readable description of the issue.
-	Reason string `json:"reason" url:"reason"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (b *BulkInsertIssue) GetUserId() string {
-	if b == nil {
-		return ""
-	}
-	return b.UserId
-}
-
-func (b *BulkInsertIssue) GetLevel() BulkInsertIssueLevel {
-	if b == nil {
-		return ""
-	}
-	return b.Level
-}
-
-func (b *BulkInsertIssue) GetReason() string {
-	if b == nil {
-		return ""
-	}
-	return b.Reason
-}
-
-func (b *BulkInsertIssue) GetExtraProperties() map[string]interface{} {
-	return b.extraProperties
-}
-
-func (b *BulkInsertIssue) UnmarshalJSON(data []byte) error {
-	type unmarshaler BulkInsertIssue
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*b = BulkInsertIssue(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *b)
-	if err != nil {
-		return err
-	}
-	b.extraProperties = extraProperties
-	b.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (b *BulkInsertIssue) String() string {
-	if len(b.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(b); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", b)
-}
-
-// The severity level of the issue.
-type BulkInsertIssueLevel string
-
-const (
-	BulkInsertIssueLevelError   BulkInsertIssueLevel = "error"
-	BulkInsertIssueLevelWarning BulkInsertIssueLevel = "warning"
-)
-
-func NewBulkInsertIssueLevelFromString(s string) (BulkInsertIssueLevel, error) {
-	switch s {
-	case "error":
-		return BulkInsertIssueLevelError, nil
-	case "warning":
-		return BulkInsertIssueLevelWarning, nil
-	}
-	var t BulkInsertIssueLevel
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (b BulkInsertIssueLevel) Ptr() *BulkInsertIssueLevel {
-	return &b
-}
-
 // Response containing created boosts and any issues encountered while creating points boosts.
 type CreatePointsBoostsResponse struct {
 	// Array of successfully created boosts.
 	Created []*CreatedPointsBoost `json:"created,omitempty" url:"created,omitempty"`
 	// Array of issues encountered during boost creation.
-	Issues []*BulkInsertIssue `json:"issues,omitempty" url:"issues,omitempty"`
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -836,7 +806,7 @@ func (c *CreatePointsBoostsResponse) GetCreated() []*CreatedPointsBoost {
 	return c.Created
 }
 
-func (c *CreatePointsBoostsResponse) GetIssues() []*BulkInsertIssue {
+func (c *CreatePointsBoostsResponse) GetIssues() []*AdminIssue {
 	if c == nil {
 		return nil
 	}
@@ -878,13 +848,13 @@ func (c *CreatePointsBoostsResponse) String() string {
 // Response containing any issues encountered while creating streak freezes.
 type CreateStreakFreezesResponse struct {
 	// Array of issues encountered during freeze creation.
-	Issues []*BulkInsertIssue `json:"issues,omitempty" url:"issues,omitempty"`
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (c *CreateStreakFreezesResponse) GetIssues() []*BulkInsertIssue {
+func (c *CreateStreakFreezesResponse) GetIssues() []*AdminIssue {
 	if c == nil {
 		return nil
 	}
@@ -1084,6 +1054,111 @@ func NewCreatedPointsBoostStatusFromString(s string) (CreatedPointsBoostStatus, 
 
 func (c CreatedPointsBoostStatus) Ptr() *CreatedPointsBoostStatus {
 	return &c
+}
+
+// Response containing the points boosts that were archived and any per-item issues.
+type DeletePointsBoostsResponse struct {
+	// Array of archived points boosts represented by ID.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during boost archival.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePointsBoostsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeletePointsBoostsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeletePointsBoostsResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeletePointsBoostsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePointsBoostsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePointsBoostsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePointsBoostsResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// A soft-deleted resource represented by ID.
+type DeletedResource struct {
+	// The ID of the archived resource.
+	Id string `json:"id" url:"id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletedResource) GetId() string {
+	if d == nil {
+		return ""
+	}
+	return d.Id
+}
+
+func (d *DeletedResource) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeletedResource) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletedResource
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletedResource(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletedResource) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
 }
 
 type ErrorBody struct {
@@ -2610,7 +2685,7 @@ type RestoreStreaksResponse struct {
 	// Array of user IDs whose streaks were successfully restored.
 	RestoredUsers []string `json:"restoredUsers,omitempty" url:"restoredUsers,omitempty"`
 	// Array of issues encountered during streak restoration.
-	Issues []*BulkInsertIssue `json:"issues,omitempty" url:"issues,omitempty"`
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -2623,7 +2698,7 @@ func (r *RestoreStreaksResponse) GetRestoredUsers() []string {
 	return r.RestoredUsers
 }
 
-func (r *RestoreStreaksResponse) GetIssues() []*BulkInsertIssue {
+func (r *RestoreStreaksResponse) GetIssues() []*AdminIssue {
 	if r == nil {
 		return nil
 	}

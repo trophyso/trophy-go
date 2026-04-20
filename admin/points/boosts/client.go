@@ -99,7 +99,7 @@ func (c *Client) BatchArchive(
 	ctx context.Context,
 	request *points.BoostsBatchArchiveRequest,
 	opts ...option.RequestOption,
-) (*trophygo.ArchivePointsBoostsResponse, error) {
+) (*trophygo.DeletePointsBoostsResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -131,7 +131,7 @@ func (c *Client) BatchArchive(
 		},
 	}
 
-	var response *trophygo.ArchivePointsBoostsResponse
+	var response *trophygo.DeletePointsBoostsResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -157,7 +157,7 @@ func (c *Client) Archive(
 	// The UUID of the points boost to archive
 	id string,
 	opts ...option.RequestOption,
-) error {
+) (*trophygo.DeletePointsBoostsResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -173,6 +173,11 @@ func (c *Client) Archive(
 		options.ToHeader(),
 	)
 	errorCodes := internal.ErrorCodes{
+		400: func(apiError *core.APIError) error {
+			return &trophygo.BadRequestError{
+				APIError: apiError,
+			}
+		},
 		401: func(apiError *core.APIError) error {
 			return &trophygo.UnauthorizedError{
 				APIError: apiError,
@@ -185,6 +190,7 @@ func (c *Client) Archive(
 		},
 	}
 
+	var response *trophygo.DeletePointsBoostsResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -195,10 +201,11 @@ func (c *Client) Archive(
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
+			Response:        &response,
 			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }

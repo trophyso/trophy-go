@@ -16,7 +16,7 @@ type BoostsBatchArchiveRequest struct {
 type CreatePointsBoostsRequest struct {
 	// The key of the points system to create boosts for.
 	SystemKey string `json:"systemKey" url:"-"`
-	// Array of boosts to create. Maximum 1,000 boosts per request.
+	// Array of boosts to create. Maximum 100 boosts per request.
 	Boosts []*CreatePointsBoostsRequestBoostsItem `json:"boosts,omitempty" url:"-"`
 }
 
