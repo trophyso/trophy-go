@@ -8,16 +8,16 @@ import (
 	internal "github.com/trophyso/trophy-go/internal"
 )
 
-type BoostsBatchArchiveRequest struct {
-	// A list of up to 100 boost IDs.
-	Ids []*string `json:"-" url:"ids,omitempty"`
-}
-
 type CreatePointsBoostsRequest struct {
 	// The key of the points system to create boosts for.
 	SystemKey string `json:"systemKey" url:"-"`
 	// Array of boosts to create. Maximum 100 boosts per request.
 	Boosts []*CreatePointsBoostsRequestBoostsItem `json:"boosts,omitempty" url:"-"`
+}
+
+type BoostsDeleteRequest struct {
+	// A list of up to 100 boost IDs.
+	Ids []*string `json:"-" url:"ids,omitempty"`
 }
 
 type CreatePointsBoostsRequestBoostsItem struct {

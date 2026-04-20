@@ -1056,9 +1056,9 @@ func (c CreatedPointsBoostStatus) Ptr() *CreatedPointsBoostStatus {
 	return &c
 }
 
-// Response containing the points boosts that were archived and any per-item issues.
+// Response containing the points boosts that were deleted and any per-item issues.
 type DeletePointsBoostsResponse struct {
-	// Array of archived points boosts represented by ID.
+	// Array of deleted points boosts represented by ID.
 	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
 	// Array of issues encountered during boost archival.
 	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
@@ -1113,9 +1113,9 @@ func (d *DeletePointsBoostsResponse) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
-// A soft-deleted resource represented by ID.
+// A deleted resource represented by ID.
 type DeletedResource struct {
-	// The ID of the archived resource.
+	// The ID of the deleted resource.
 	Id string `json:"id" url:"id"`
 
 	extraProperties map[string]interface{}

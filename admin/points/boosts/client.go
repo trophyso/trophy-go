@@ -94,10 +94,10 @@ func (c *Client) Create(
 	return response, nil
 }
 
-// Archive multiple points boosts by ID.
-func (c *Client) BatchArchive(
+// Delete multiple points boosts by ID.
+func (c *Client) Delete(
 	ctx context.Context,
-	request *points.BoostsBatchArchiveRequest,
+	request *points.BoostsDeleteRequest,
 	opts ...option.RequestOption,
 ) (*trophygo.DeletePointsBoostsResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -126,65 +126,6 @@ func (c *Client) BatchArchive(
 		},
 		401: func(apiError *core.APIError) error {
 			return &trophygo.UnauthorizedError{
-				APIError: apiError,
-			}
-		},
-	}
-
-	var response *trophygo.DeletePointsBoostsResponse
-	if err := c.caller.Call(
-		ctx,
-		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodDelete,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-			Response:        &response,
-			ErrorDecoder:    internal.NewErrorDecoder(errorCodes),
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// Archive a points boost by ID.
-func (c *Client) Archive(
-	ctx context.Context,
-	// The UUID of the points boost to archive
-	id string,
-	opts ...option.RequestOption,
-) (*trophygo.DeletePointsBoostsResponse, error) {
-	options := core.NewRequestOptions(opts...)
-	baseURL := internal.ResolveBaseURL(
-		options.BaseURL,
-		c.baseURL,
-		"https://admin.trophy.so/v1",
-	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/points/boosts/%v",
-		id,
-	)
-	headers := internal.MergeHeaders(
-		c.header.Clone(),
-		options.ToHeader(),
-	)
-	errorCodes := internal.ErrorCodes{
-		400: func(apiError *core.APIError) error {
-			return &trophygo.BadRequestError{
-				APIError: apiError,
-			}
-		},
-		401: func(apiError *core.APIError) error {
-			return &trophygo.UnauthorizedError{
-				APIError: apiError,
-			}
-		},
-		404: func(apiError *core.APIError) error {
-			return &trophygo.NotFoundError{
 				APIError: apiError,
 			}
 		},
