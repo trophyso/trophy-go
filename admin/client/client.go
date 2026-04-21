@@ -3,6 +3,8 @@
 package client
 
 import (
+	attributes "github.com/trophyso/trophy-go/admin/attributes"
+	metrics "github.com/trophyso/trophy-go/admin/metrics"
 	pointsclient "github.com/trophyso/trophy-go/admin/points/client"
 	streaksclient "github.com/trophyso/trophy-go/admin/streaks/client"
 	core "github.com/trophyso/trophy-go/core"
@@ -16,8 +18,10 @@ type Client struct {
 	caller  *internal.Caller
 	header  http.Header
 
-	Streaks *streaksclient.Client
-	Points  *pointsclient.Client
+	Streaks    *streaksclient.Client
+	Attributes *attributes.Client
+	Metrics    *metrics.Client
+	Points     *pointsclient.Client
 }
 
 func NewClient(opts ...option.RequestOption) *Client {
@@ -30,8 +34,10 @@ func NewClient(opts ...option.RequestOption) *Client {
 				MaxAttempts: options.MaxAttempts,
 			},
 		),
-		header:  options.ToHeader(),
-		Streaks: streaksclient.NewClient(opts...),
-		Points:  pointsclient.NewClient(opts...),
+		header:     options.ToHeader(),
+		Streaks:    streaksclient.NewClient(opts...),
+		Attributes: attributes.NewClient(opts...),
+		Metrics:    metrics.NewClient(opts...),
+		Points:     pointsclient.NewClient(opts...),
 	}
 }

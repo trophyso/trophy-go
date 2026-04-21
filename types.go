@@ -553,6 +553,104 @@ func (a *AchievementWithStatsResponse) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+// An attribute returned from the admin attributes endpoints.
+type AdminAttribute struct {
+	// The UUID of the attribute.
+	Id string `json:"id" url:"id"`
+	// The attribute name.
+	Name string `json:"name" url:"name"`
+	// The attribute key.
+	Key string `json:"key" url:"key"`
+	// The attribute type.
+	Type AdminAttributeType `json:"type" url:"type"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminAttribute) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminAttribute) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminAttribute) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AdminAttribute) GetType() AdminAttributeType {
+	if a == nil {
+		return ""
+	}
+	return a.Type
+}
+
+func (a *AdminAttribute) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminAttribute) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminAttribute
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminAttribute(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminAttribute) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The attribute type.
+type AdminAttributeType string
+
+const (
+	AdminAttributeTypeUser  AdminAttributeType = "user"
+	AdminAttributeTypeEvent AdminAttributeType = "event"
+)
+
+func NewAdminAttributeTypeFromString(s string) (AdminAttributeType, error) {
+	switch s {
+	case "user":
+		return AdminAttributeTypeUser, nil
+	case "event":
+		return AdminAttributeTypeEvent, nil
+	}
+	var t AdminAttributeType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminAttributeType) Ptr() *AdminAttributeType {
+	return &a
+}
+
 // An issue encountered while processing an item in an admin API request.
 type AdminIssue struct {
 	// The ID of the user the issue relates to, when applicable.
@@ -788,6 +886,313 @@ func (b *BaseStreakResponse) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
+// An attribute to create.
+type CreateAttributeRequestItem struct {
+	// The attribute name.
+	Name string `json:"name" url:"name"`
+	// The attribute key. Only alphanumeric characters, hyphens, and underscores are permitted.
+	Key string `json:"key" url:"key"`
+	// The attribute type.
+	Type CreateAttributeRequestItemType `json:"type" url:"type"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAttributeRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreateAttributeRequestItem) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreateAttributeRequestItem) GetType() CreateAttributeRequestItemType {
+	if c == nil {
+		return ""
+	}
+	return c.Type
+}
+
+func (c *CreateAttributeRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateAttributeRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAttributeRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateAttributeRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateAttributeRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The attribute type.
+type CreateAttributeRequestItemType string
+
+const (
+	CreateAttributeRequestItemTypeUser  CreateAttributeRequestItemType = "user"
+	CreateAttributeRequestItemTypeEvent CreateAttributeRequestItemType = "event"
+)
+
+func NewCreateAttributeRequestItemTypeFromString(s string) (CreateAttributeRequestItemType, error) {
+	switch s {
+	case "user":
+		return CreateAttributeRequestItemTypeUser, nil
+	case "event":
+		return CreateAttributeRequestItemTypeEvent, nil
+	}
+	var t CreateAttributeRequestItemType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateAttributeRequestItemType) Ptr() *CreateAttributeRequestItemType {
+	return &c
+}
+
+// Request body for creating attributes.
+type CreateAttributesRequest = []*CreateAttributeRequestItem
+
+// Response containing created attributes and any per-item issues.
+type CreateAttributesResponse struct {
+	// Array of successfully created attributes.
+	Created []*AdminAttribute `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during attribute creation.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAttributesResponse) GetCreated() []*AdminAttribute {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateAttributesResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateAttributesResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateAttributesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAttributesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateAttributesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateAttributesResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A metric to create.
+type CreateMetricRequestItem struct {
+	// The metric name.
+	Name string `json:"name" url:"name"`
+	// The metric key. Only alphanumeric characters, hyphens, and underscores are permitted.
+	Key string `json:"key" url:"key"`
+	// The metric unit type. Defaults to `number`.
+	UnitType *CreateMetricRequestItemUnitType `json:"unitType,omitempty" url:"unitType,omitempty"`
+	// For `unitType: currency`, this must be a supported `MetricCurrency` code such as `USD`. For `number`, this is an optional freeform unit label.
+	Units *string `json:"units,omitempty" url:"units,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateMetricRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreateMetricRequestItem) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreateMetricRequestItem) GetUnitType() *CreateMetricRequestItemUnitType {
+	if c == nil {
+		return nil
+	}
+	return c.UnitType
+}
+
+func (c *CreateMetricRequestItem) GetUnits() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Units
+}
+
+func (c *CreateMetricRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateMetricRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateMetricRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateMetricRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateMetricRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The metric unit type. Defaults to `number`.
+type CreateMetricRequestItemUnitType string
+
+const (
+	CreateMetricRequestItemUnitTypeNumber   CreateMetricRequestItemUnitType = "number"
+	CreateMetricRequestItemUnitTypeCurrency CreateMetricRequestItemUnitType = "currency"
+)
+
+func NewCreateMetricRequestItemUnitTypeFromString(s string) (CreateMetricRequestItemUnitType, error) {
+	switch s {
+	case "number":
+		return CreateMetricRequestItemUnitTypeNumber, nil
+	case "currency":
+		return CreateMetricRequestItemUnitTypeCurrency, nil
+	}
+	var t CreateMetricRequestItemUnitType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateMetricRequestItemUnitType) Ptr() *CreateMetricRequestItemUnitType {
+	return &c
+}
+
+// Request body for creating metrics.
+type CreateMetricsRequest = []*CreateMetricRequestItem
+
+// Response containing created metrics and any per-item issues.
+type CreateMetricsResponse struct {
+	// Array of successfully created metrics.
+	Created []*CreatedMetric `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during metric creation.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateMetricsResponse) GetCreated() []*CreatedMetric {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateMetricsResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateMetricsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateMetricsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateMetricsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateMetricsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateMetricsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // Response containing created boosts and any issues encountered while creating points boosts.
 type CreatePointsBoostsResponse struct {
 	// Array of successfully created boosts.
@@ -891,6 +1296,113 @@ func (c *CreateStreakFreezesResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+// A successfully created metric returned from the create endpoint.
+type CreatedMetric struct {
+	// The UUID of the created metric.
+	Id string `json:"id" url:"id"`
+	// The metric name.
+	Name string `json:"name" url:"name"`
+	// The metric key.
+	Key string `json:"key" url:"key"`
+	// The metric unit type.
+	UnitType CreatedMetricUnitType `json:"unitType" url:"unitType"`
+	// The stored units value for the metric.
+	Units string `json:"units" url:"units"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatedMetric) GetId() string {
+	if c == nil {
+		return ""
+	}
+	return c.Id
+}
+
+func (c *CreatedMetric) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreatedMetric) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreatedMetric) GetUnitType() CreatedMetricUnitType {
+	if c == nil {
+		return ""
+	}
+	return c.UnitType
+}
+
+func (c *CreatedMetric) GetUnits() string {
+	if c == nil {
+		return ""
+	}
+	return c.Units
+}
+
+func (c *CreatedMetric) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatedMetric) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatedMetric
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatedMetric(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatedMetric) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The metric unit type.
+type CreatedMetricUnitType string
+
+const (
+	CreatedMetricUnitTypeNumber   CreatedMetricUnitType = "number"
+	CreatedMetricUnitTypeCurrency CreatedMetricUnitType = "currency"
+)
+
+func NewCreatedMetricUnitTypeFromString(s string) (CreatedMetricUnitType, error) {
+	switch s {
+	case "number":
+		return CreatedMetricUnitTypeNumber, nil
+	case "currency":
+		return CreatedMetricUnitTypeCurrency, nil
+	}
+	var t CreatedMetricUnitType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatedMetricUnitType) Ptr() *CreatedMetricUnitType {
+	return &c
 }
 
 // A successfully created points boost returned from the create endpoint.
@@ -1056,11 +1568,125 @@ func (c CreatedPointsBoostStatus) Ptr() *CreatedPointsBoostStatus {
 	return &c
 }
 
+// Response containing deleted attributes represented by ID and any per-item issues, including invalid or missing attribute IDs.
+type DeleteAttributesResponse struct {
+	// Array of deleted attributes represented by ID.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during attribute deletion.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteAttributesResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteAttributesResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteAttributesResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeleteAttributesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteAttributesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteAttributesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteAttributesResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Response containing deleted metrics represented by ID and any per-item issues, including invalid or missing metric IDs.
+type DeleteMetricsResponse struct {
+	// Array of deleted metrics represented by ID.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during metric deletion.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteMetricsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteMetricsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteMetricsResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeleteMetricsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteMetricsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteMetricsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteMetricsResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
 // Response containing the points boosts that were deleted and any per-item issues.
 type DeletePointsBoostsResponse struct {
 	// Array of deleted points boosts represented by ID.
 	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
-	// Array of issues encountered during boost archival.
+	// Array of issues encountered during boost deletion.
 	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -1441,6 +2067,12 @@ func NewLeaderboardResponseRunUnitFromString(s string) (LeaderboardResponseRunUn
 func (l LeaderboardResponseRunUnit) Ptr() *LeaderboardResponseRunUnit {
 	return &l
 }
+
+// A paginated list of attributes.
+type ListAttributesResponse = []*AdminAttribute
+
+// A paginated list of metrics.
+type ListMetricsResponse = []*CreatedMetric
 
 // Points system response for metric events and achievement completions.
 type MetricEventPointsResponse struct {
@@ -2760,6 +3392,281 @@ func NewStreakFrequencyFromString(s string) (StreakFrequency, error) {
 
 func (s StreakFrequency) Ptr() *StreakFrequency {
 	return &s
+}
+
+// An attribute update object. `id` is required and `name` is optional. `key` and `type` cannot be changed through this endpoint.
+type UpdateAttributeRequestItem struct {
+	// The UUID of the attribute to update.
+	Id string `json:"id" url:"id"`
+	// The updated attribute name.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAttributeRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdateAttributeRequestItem) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdateAttributeRequestItem) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateAttributeRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAttributeRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAttributeRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAttributeRequestItem) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Request body for updating attributes.
+type UpdateAttributesRequest = []*UpdateAttributeRequestItem
+
+// Response containing updated attributes and any per-item issues identified by attribute ID.
+type UpdateAttributesResponse struct {
+	// Array of successfully updated attributes.
+	Updated []*AdminAttribute `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during attribute update.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAttributesResponse) GetUpdated() []*AdminAttribute {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdateAttributesResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdateAttributesResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateAttributesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAttributesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAttributesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAttributesResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// A metric update object. `id` is required; `name`, `unitType`, and `units` are optional. `key` cannot be changed through this endpoint.
+type UpdateMetricRequestItem struct {
+	// The UUID of the metric to update.
+	Id string `json:"id" url:"id"`
+	// The updated metric name.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The updated metric unit type.
+	UnitType *UpdateMetricRequestItemUnitType `json:"unitType,omitempty" url:"unitType,omitempty"`
+	// The updated units value. For `unitType: currency`, this must be a supported `MetricCurrency` code such as `USD`.
+	Units *string `json:"units,omitempty" url:"units,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateMetricRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdateMetricRequestItem) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdateMetricRequestItem) GetUnitType() *UpdateMetricRequestItemUnitType {
+	if u == nil {
+		return nil
+	}
+	return u.UnitType
+}
+
+func (u *UpdateMetricRequestItem) GetUnits() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Units
+}
+
+func (u *UpdateMetricRequestItem) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateMetricRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateMetricRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateMetricRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateMetricRequestItem) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// The updated metric unit type.
+type UpdateMetricRequestItemUnitType string
+
+const (
+	UpdateMetricRequestItemUnitTypeNumber   UpdateMetricRequestItemUnitType = "number"
+	UpdateMetricRequestItemUnitTypeCurrency UpdateMetricRequestItemUnitType = "currency"
+)
+
+func NewUpdateMetricRequestItemUnitTypeFromString(s string) (UpdateMetricRequestItemUnitType, error) {
+	switch s {
+	case "number":
+		return UpdateMetricRequestItemUnitTypeNumber, nil
+	case "currency":
+		return UpdateMetricRequestItemUnitTypeCurrency, nil
+	}
+	var t UpdateMetricRequestItemUnitType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateMetricRequestItemUnitType) Ptr() *UpdateMetricRequestItemUnitType {
+	return &u
+}
+
+// Request body for updating metrics.
+type UpdateMetricsRequest = []*UpdateMetricRequestItem
+
+// Response containing updated metrics and any per-item issues identified by metric ID.
+type UpdateMetricsResponse struct {
+	// Array of successfully updated metrics.
+	Updated []*CreatedMetric `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during metric update.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateMetricsResponse) GetUpdated() []*CreatedMetric {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdateMetricsResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdateMetricsResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateMetricsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateMetricsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateMetricsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateMetricsResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 // An object with editable user fields.

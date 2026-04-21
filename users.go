@@ -277,8 +277,6 @@ type MetricResponse struct {
 	Key string `json:"key" url:"key"`
 	// The name of the metric.
 	Name string `json:"name" url:"name"`
-	// The status of the metric.
-	Status MetricStatus `json:"status" url:"status"`
 	// The user's current total for the metric.
 	Current float64 `json:"current" url:"current"`
 	// A list of the metric's achievements and the user's progress towards each.
@@ -307,13 +305,6 @@ func (m *MetricResponse) GetName() string {
 		return ""
 	}
 	return m.Name
-}
-
-func (m *MetricResponse) GetStatus() MetricStatus {
-	if m == nil {
-		return ""
-	}
-	return m.Status
 }
 
 func (m *MetricResponse) GetCurrent() float64 {
@@ -360,29 +351,6 @@ func (m *MetricResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", m)
-}
-
-// The status of the achievement.
-type MetricStatus string
-
-const (
-	MetricStatusArchived MetricStatus = "archived"
-	MetricStatusActive   MetricStatus = "active"
-)
-
-func NewMetricStatusFromString(s string) (MetricStatus, error) {
-	switch s {
-	case "archived":
-		return MetricStatusArchived, nil
-	case "active":
-		return MetricStatusActive, nil
-	}
-	var t MetricStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (m MetricStatus) Ptr() *MetricStatus {
-	return &m
 }
 
 // A notification delivery channel.
