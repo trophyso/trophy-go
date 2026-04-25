@@ -89,7 +89,7 @@ func (c *Client) List(
 	return response, nil
 }
 
-// Create metrics in bulk.
+// Create metrics.
 func (c *Client) Create(
 	ctx context.Context,
 	request trophygo.CreateMetricsRequest,
@@ -141,7 +141,7 @@ func (c *Client) Create(
 	return response, nil
 }
 
-// Delete metrics in bulk by ID.
+// Delete metrics by ID.
 func (c *Client) Delete(
 	ctx context.Context,
 	request *admin.MetricsDeleteRequest,
@@ -198,7 +198,7 @@ func (c *Client) Delete(
 	return response, nil
 }
 
-// Update metrics in bulk by ID.
+// Update metrics by ID.
 func (c *Client) Update(
 	ctx context.Context,
 	request trophygo.UpdateMetricsRequest,

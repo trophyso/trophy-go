@@ -758,6 +758,252 @@ func (a AdminIssueSeverity) Ptr() *AdminIssueSeverity {
 	return &a
 }
 
+// A leaderboard returned from the admin leaderboards endpoints.
+type AdminLeaderboard struct {
+	// The UUID of the leaderboard.
+	Id string `json:"id" url:"id"`
+	// The leaderboard name.
+	Name string `json:"name" url:"name"`
+	// The leaderboard key.
+	Key string `json:"key" url:"key"`
+	// The leaderboard description.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The current user-facing status of the leaderboard.
+	Status AdminLeaderboardStatus `json:"status" url:"status"`
+	// What the leaderboard ranks by.
+	RankBy AdminLeaderboardRankBy `json:"rankBy" url:"rankBy"`
+	// The metric ID used when `rankBy` is `metric`.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The points system ID used when `rankBy` is `points`.
+	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	// The maximum number of participants.
+	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	// The leaderboard start date in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// The optional leaderboard end date in YYYY-MM-DD format.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The UUIDs of the user attributes used for ranking breakdowns.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
+	// The recurrence unit when the leaderboard repeats.
+	RunUnit *AdminLeaderboardRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The number of recurrence units between leaderboard runs.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminLeaderboard) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminLeaderboard) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminLeaderboard) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AdminLeaderboard) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *AdminLeaderboard) GetStatus() AdminLeaderboardStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminLeaderboard) GetRankBy() AdminLeaderboardRankBy {
+	if a == nil {
+		return ""
+	}
+	return a.RankBy
+}
+
+func (a *AdminLeaderboard) GetMetricId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricId
+}
+
+func (a *AdminLeaderboard) GetPointsSystemId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.PointsSystemId
+}
+
+func (a *AdminLeaderboard) GetMaxParticipants() int {
+	if a == nil {
+		return 0
+	}
+	return a.MaxParticipants
+}
+
+func (a *AdminLeaderboard) GetStart() string {
+	if a == nil {
+		return ""
+	}
+	return a.Start
+}
+
+func (a *AdminLeaderboard) GetEnd() *string {
+	if a == nil {
+		return nil
+	}
+	return a.End
+}
+
+func (a *AdminLeaderboard) GetBreakdownAttributes() []string {
+	if a == nil {
+		return nil
+	}
+	return a.BreakdownAttributes
+}
+
+func (a *AdminLeaderboard) GetRunUnit() *AdminLeaderboardRunUnit {
+	if a == nil {
+		return nil
+	}
+	return a.RunUnit
+}
+
+func (a *AdminLeaderboard) GetRunInterval() *int {
+	if a == nil {
+		return nil
+	}
+	return a.RunInterval
+}
+
+func (a *AdminLeaderboard) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminLeaderboard) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminLeaderboard
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminLeaderboard(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminLeaderboard) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// What the leaderboard ranks by.
+type AdminLeaderboardRankBy string
+
+const (
+	AdminLeaderboardRankByMetric AdminLeaderboardRankBy = "metric"
+	AdminLeaderboardRankByStreak AdminLeaderboardRankBy = "streak"
+	AdminLeaderboardRankByPoints AdminLeaderboardRankBy = "points"
+)
+
+func NewAdminLeaderboardRankByFromString(s string) (AdminLeaderboardRankBy, error) {
+	switch s {
+	case "metric":
+		return AdminLeaderboardRankByMetric, nil
+	case "streak":
+		return AdminLeaderboardRankByStreak, nil
+	case "points":
+		return AdminLeaderboardRankByPoints, nil
+	}
+	var t AdminLeaderboardRankBy
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminLeaderboardRankBy) Ptr() *AdminLeaderboardRankBy {
+	return &a
+}
+
+// The recurrence unit when the leaderboard repeats.
+type AdminLeaderboardRunUnit string
+
+const (
+	AdminLeaderboardRunUnitDay   AdminLeaderboardRunUnit = "day"
+	AdminLeaderboardRunUnitMonth AdminLeaderboardRunUnit = "month"
+	AdminLeaderboardRunUnitYear  AdminLeaderboardRunUnit = "year"
+)
+
+func NewAdminLeaderboardRunUnitFromString(s string) (AdminLeaderboardRunUnit, error) {
+	switch s {
+	case "day":
+		return AdminLeaderboardRunUnitDay, nil
+	case "month":
+		return AdminLeaderboardRunUnitMonth, nil
+	case "year":
+		return AdminLeaderboardRunUnitYear, nil
+	}
+	var t AdminLeaderboardRunUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminLeaderboardRunUnit) Ptr() *AdminLeaderboardRunUnit {
+	return &a
+}
+
+// The current user-facing status of the leaderboard.
+type AdminLeaderboardStatus string
+
+const (
+	AdminLeaderboardStatusInactive  AdminLeaderboardStatus = "inactive"
+	AdminLeaderboardStatusActive    AdminLeaderboardStatus = "active"
+	AdminLeaderboardStatusScheduled AdminLeaderboardStatus = "scheduled"
+	AdminLeaderboardStatusFinished  AdminLeaderboardStatus = "finished"
+)
+
+func NewAdminLeaderboardStatusFromString(s string) (AdminLeaderboardStatus, error) {
+	switch s {
+	case "inactive":
+		return AdminLeaderboardStatusInactive, nil
+	case "active":
+		return AdminLeaderboardStatusActive, nil
+	case "scheduled":
+		return AdminLeaderboardStatusScheduled, nil
+	case "finished":
+		return AdminLeaderboardStatusFinished, nil
+	}
+	var t AdminLeaderboardStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminLeaderboardStatus) Ptr() *AdminLeaderboardStatus {
+	return &a
+}
+
 type BaseStreakResponse struct {
 	// The length of the user's current streak.
 	Length int `json:"length" url:"length"`
@@ -1024,6 +1270,303 @@ func (c *CreateAttributesResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (c *CreateAttributesResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A leaderboard to create.
+type CreateLeaderboardRequestItem struct {
+	// The leaderboard name.
+	Name string `json:"name" url:"name"`
+	// The leaderboard key. Only alphanumeric characters, hyphens, and underscores are permitted.
+	Key string `json:"key" url:"key"`
+	// The leaderboard description.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The initial user-facing status. Defaults to `inactive`. Use `scheduled` for leaderboards that should be active in the future and `finished` only when creating a leaderboard with an end date in the past.
+	Status *CreateLeaderboardRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// What the leaderboard ranks by.
+	RankBy CreateLeaderboardRequestItemRankBy `json:"rankBy" url:"rankBy"`
+	// The metric ID to rank by when `rankBy` is `metric`.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The points system ID to rank by when `rankBy` is `points`.
+	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	// The maximum number of participants. Defaults to `1000`.
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
+	// The leaderboard start date in YYYY-MM-DD format. Defaults to today when omitted.
+	Start *string `json:"start,omitempty" url:"start,omitempty"`
+	// The optional leaderboard end date in YYYY-MM-DD format.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The UUIDs of the active user attributes to break rankings down by.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
+	// How often the leaderboard repeats. Omit for a non-recurring leaderboard. Streak leaderboards cannot repeat.
+	RunUnit *CreateLeaderboardRequestItemRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The number of `runUnit`s between repeats. Required when `runUnit` is set.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateLeaderboardRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreateLeaderboardRequestItem) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreateLeaderboardRequestItem) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
+}
+
+func (c *CreateLeaderboardRequestItem) GetStatus() *CreateLeaderboardRequestItemStatus {
+	if c == nil {
+		return nil
+	}
+	return c.Status
+}
+
+func (c *CreateLeaderboardRequestItem) GetRankBy() CreateLeaderboardRequestItemRankBy {
+	if c == nil {
+		return ""
+	}
+	return c.RankBy
+}
+
+func (c *CreateLeaderboardRequestItem) GetMetricId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricId
+}
+
+func (c *CreateLeaderboardRequestItem) GetPointsSystemId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PointsSystemId
+}
+
+func (c *CreateLeaderboardRequestItem) GetMaxParticipants() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MaxParticipants
+}
+
+func (c *CreateLeaderboardRequestItem) GetStart() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Start
+}
+
+func (c *CreateLeaderboardRequestItem) GetEnd() *string {
+	if c == nil {
+		return nil
+	}
+	return c.End
+}
+
+func (c *CreateLeaderboardRequestItem) GetBreakdownAttributes() []string {
+	if c == nil {
+		return nil
+	}
+	return c.BreakdownAttributes
+}
+
+func (c *CreateLeaderboardRequestItem) GetRunUnit() *CreateLeaderboardRequestItemRunUnit {
+	if c == nil {
+		return nil
+	}
+	return c.RunUnit
+}
+
+func (c *CreateLeaderboardRequestItem) GetRunInterval() *int {
+	if c == nil {
+		return nil
+	}
+	return c.RunInterval
+}
+
+func (c *CreateLeaderboardRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateLeaderboardRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateLeaderboardRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateLeaderboardRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateLeaderboardRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// What the leaderboard ranks by.
+type CreateLeaderboardRequestItemRankBy string
+
+const (
+	CreateLeaderboardRequestItemRankByMetric CreateLeaderboardRequestItemRankBy = "metric"
+	CreateLeaderboardRequestItemRankByStreak CreateLeaderboardRequestItemRankBy = "streak"
+	CreateLeaderboardRequestItemRankByPoints CreateLeaderboardRequestItemRankBy = "points"
+)
+
+func NewCreateLeaderboardRequestItemRankByFromString(s string) (CreateLeaderboardRequestItemRankBy, error) {
+	switch s {
+	case "metric":
+		return CreateLeaderboardRequestItemRankByMetric, nil
+	case "streak":
+		return CreateLeaderboardRequestItemRankByStreak, nil
+	case "points":
+		return CreateLeaderboardRequestItemRankByPoints, nil
+	}
+	var t CreateLeaderboardRequestItemRankBy
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateLeaderboardRequestItemRankBy) Ptr() *CreateLeaderboardRequestItemRankBy {
+	return &c
+}
+
+// How often the leaderboard repeats. Omit for a non-recurring leaderboard. Streak leaderboards cannot repeat.
+type CreateLeaderboardRequestItemRunUnit string
+
+const (
+	CreateLeaderboardRequestItemRunUnitDay   CreateLeaderboardRequestItemRunUnit = "day"
+	CreateLeaderboardRequestItemRunUnitMonth CreateLeaderboardRequestItemRunUnit = "month"
+	CreateLeaderboardRequestItemRunUnitYear  CreateLeaderboardRequestItemRunUnit = "year"
+)
+
+func NewCreateLeaderboardRequestItemRunUnitFromString(s string) (CreateLeaderboardRequestItemRunUnit, error) {
+	switch s {
+	case "day":
+		return CreateLeaderboardRequestItemRunUnitDay, nil
+	case "month":
+		return CreateLeaderboardRequestItemRunUnitMonth, nil
+	case "year":
+		return CreateLeaderboardRequestItemRunUnitYear, nil
+	}
+	var t CreateLeaderboardRequestItemRunUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateLeaderboardRequestItemRunUnit) Ptr() *CreateLeaderboardRequestItemRunUnit {
+	return &c
+}
+
+// The initial user-facing status. Defaults to `inactive`. Use `scheduled` for leaderboards that should be active in the future and `finished` only when creating a leaderboard with an end date in the past.
+type CreateLeaderboardRequestItemStatus string
+
+const (
+	CreateLeaderboardRequestItemStatusInactive  CreateLeaderboardRequestItemStatus = "inactive"
+	CreateLeaderboardRequestItemStatusActive    CreateLeaderboardRequestItemStatus = "active"
+	CreateLeaderboardRequestItemStatusScheduled CreateLeaderboardRequestItemStatus = "scheduled"
+	CreateLeaderboardRequestItemStatusFinished  CreateLeaderboardRequestItemStatus = "finished"
+)
+
+func NewCreateLeaderboardRequestItemStatusFromString(s string) (CreateLeaderboardRequestItemStatus, error) {
+	switch s {
+	case "inactive":
+		return CreateLeaderboardRequestItemStatusInactive, nil
+	case "active":
+		return CreateLeaderboardRequestItemStatusActive, nil
+	case "scheduled":
+		return CreateLeaderboardRequestItemStatusScheduled, nil
+	case "finished":
+		return CreateLeaderboardRequestItemStatusFinished, nil
+	}
+	var t CreateLeaderboardRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateLeaderboardRequestItemStatus) Ptr() *CreateLeaderboardRequestItemStatus {
+	return &c
+}
+
+// Request body for creating leaderboards.
+type CreateLeaderboardsRequest = []*CreateLeaderboardRequestItem
+
+// Response containing created leaderboards and any per-item issues.
+type CreateLeaderboardsResponse struct {
+	// Array of successfully created leaderboards.
+	Created []*AdminLeaderboard `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during leaderboard creation.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateLeaderboardsResponse) GetCreated() []*AdminLeaderboard {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateLeaderboardsResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateLeaderboardsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateLeaderboardsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateLeaderboardsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateLeaderboardsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateLeaderboardsResponse) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1625,6 +2168,63 @@ func (d *DeleteAttributesResponse) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
+// Response containing deleted leaderboards represented by ID and any per-item issues.
+type DeleteLeaderboardsResponse struct {
+	// Array of deleted leaderboards represented by ID.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during leaderboard deletion.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteLeaderboardsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteLeaderboardsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteLeaderboardsResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeleteLeaderboardsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteLeaderboardsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteLeaderboardsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteLeaderboardsResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
 // Response containing deleted metrics represented by ID and any per-item issues, including invalid or missing metric IDs.
 type DeleteMetricsResponse struct {
 	// Array of deleted metrics represented by ID.
@@ -2071,6 +2671,9 @@ func (l LeaderboardResponseRunUnit) Ptr() *LeaderboardResponseRunUnit {
 // A paginated list of attributes.
 type ListAttributesResponse = []*AdminAttribute
 
+// A paginated list of leaderboards.
+type ListLeaderboardsResponse = []*AdminLeaderboard
+
 // A paginated list of metrics.
 type ListMetricsResponse = []*CreatedMetric
 
@@ -2201,35 +2804,6 @@ func (m *MetricEventPointsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", m)
-}
-
-// A type of notification that can be configured.
-type NotificationType string
-
-const (
-	NotificationTypeAchievementCompleted NotificationType = "achievement_completed"
-	NotificationTypeRecap                NotificationType = "recap"
-	NotificationTypeReactivation         NotificationType = "reactivation"
-	NotificationTypeStreakReminder       NotificationType = "streak_reminder"
-)
-
-func NewNotificationTypeFromString(s string) (NotificationType, error) {
-	switch s {
-	case "achievement_completed":
-		return NotificationTypeAchievementCompleted, nil
-	case "recap":
-		return NotificationTypeRecap, nil
-	case "reactivation":
-		return NotificationTypeReactivation, nil
-	case "streak_reminder":
-		return NotificationTypeStreakReminder, nil
-	}
-	var t NotificationType
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (n NotificationType) Ptr() *NotificationType {
-	return &n
 }
 
 type PointsAward struct {
@@ -3500,6 +4074,311 @@ func (u *UpdateAttributesResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (u *UpdateAttributesResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// A leaderboard update object. `id` is required. Once a leaderboard has been activated, the dashboard-imposed restrictions on ranking configuration and scheduling changes still apply.
+type UpdateLeaderboardRequestItem struct {
+	// The UUID of the leaderboard to update.
+	Id string `json:"id" url:"id"`
+	// The updated leaderboard name.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The updated leaderboard key. This can only be changed while the leaderboard is inactive.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The updated leaderboard description.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The target user-facing status. `scheduled` activates a leaderboard whose start date is in the future. `finished` behaves like the dashboard finish action.
+	Status *UpdateLeaderboardRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// The updated ranking criterion. This can only be changed while the leaderboard is inactive.
+	RankBy *UpdateLeaderboardRequestItemRankBy `json:"rankBy,omitempty" url:"rankBy,omitempty"`
+	// The metric ID to use when `rankBy` is `metric`.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The points system ID to use when `rankBy` is `points`.
+	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	// The updated maximum number of participants.
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
+	// The updated start date in YYYY-MM-DD format.
+	Start *string `json:"start,omitempty" url:"start,omitempty"`
+	// The updated end date in YYYY-MM-DD format, or `null` to clear it.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The updated breakdown attribute UUIDs.
+	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
+	// The updated recurrence unit.
+	RunUnit *UpdateLeaderboardRequestItemRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The updated recurrence interval.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateLeaderboardRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdateLeaderboardRequestItem) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdateLeaderboardRequestItem) GetKey() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Key
+}
+
+func (u *UpdateLeaderboardRequestItem) GetDescription() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Description
+}
+
+func (u *UpdateLeaderboardRequestItem) GetStatus() *UpdateLeaderboardRequestItemStatus {
+	if u == nil {
+		return nil
+	}
+	return u.Status
+}
+
+func (u *UpdateLeaderboardRequestItem) GetRankBy() *UpdateLeaderboardRequestItemRankBy {
+	if u == nil {
+		return nil
+	}
+	return u.RankBy
+}
+
+func (u *UpdateLeaderboardRequestItem) GetMetricId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricId
+}
+
+func (u *UpdateLeaderboardRequestItem) GetPointsSystemId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.PointsSystemId
+}
+
+func (u *UpdateLeaderboardRequestItem) GetMaxParticipants() *int {
+	if u == nil {
+		return nil
+	}
+	return u.MaxParticipants
+}
+
+func (u *UpdateLeaderboardRequestItem) GetStart() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Start
+}
+
+func (u *UpdateLeaderboardRequestItem) GetEnd() *string {
+	if u == nil {
+		return nil
+	}
+	return u.End
+}
+
+func (u *UpdateLeaderboardRequestItem) GetBreakdownAttributes() []string {
+	if u == nil {
+		return nil
+	}
+	return u.BreakdownAttributes
+}
+
+func (u *UpdateLeaderboardRequestItem) GetRunUnit() *UpdateLeaderboardRequestItemRunUnit {
+	if u == nil {
+		return nil
+	}
+	return u.RunUnit
+}
+
+func (u *UpdateLeaderboardRequestItem) GetRunInterval() *int {
+	if u == nil {
+		return nil
+	}
+	return u.RunInterval
+}
+
+func (u *UpdateLeaderboardRequestItem) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateLeaderboardRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateLeaderboardRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateLeaderboardRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateLeaderboardRequestItem) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// The updated ranking criterion. This can only be changed while the leaderboard is inactive.
+type UpdateLeaderboardRequestItemRankBy string
+
+const (
+	UpdateLeaderboardRequestItemRankByMetric UpdateLeaderboardRequestItemRankBy = "metric"
+	UpdateLeaderboardRequestItemRankByStreak UpdateLeaderboardRequestItemRankBy = "streak"
+	UpdateLeaderboardRequestItemRankByPoints UpdateLeaderboardRequestItemRankBy = "points"
+)
+
+func NewUpdateLeaderboardRequestItemRankByFromString(s string) (UpdateLeaderboardRequestItemRankBy, error) {
+	switch s {
+	case "metric":
+		return UpdateLeaderboardRequestItemRankByMetric, nil
+	case "streak":
+		return UpdateLeaderboardRequestItemRankByStreak, nil
+	case "points":
+		return UpdateLeaderboardRequestItemRankByPoints, nil
+	}
+	var t UpdateLeaderboardRequestItemRankBy
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateLeaderboardRequestItemRankBy) Ptr() *UpdateLeaderboardRequestItemRankBy {
+	return &u
+}
+
+type UpdateLeaderboardRequestItemRunUnit string
+
+const (
+	UpdateLeaderboardRequestItemRunUnitDay   UpdateLeaderboardRequestItemRunUnit = "day"
+	UpdateLeaderboardRequestItemRunUnitMonth UpdateLeaderboardRequestItemRunUnit = "month"
+	UpdateLeaderboardRequestItemRunUnitYear  UpdateLeaderboardRequestItemRunUnit = "year"
+)
+
+func NewUpdateLeaderboardRequestItemRunUnitFromString(s string) (UpdateLeaderboardRequestItemRunUnit, error) {
+	switch s {
+	case "day":
+		return UpdateLeaderboardRequestItemRunUnitDay, nil
+	case "month":
+		return UpdateLeaderboardRequestItemRunUnitMonth, nil
+	case "year":
+		return UpdateLeaderboardRequestItemRunUnitYear, nil
+	}
+	var t UpdateLeaderboardRequestItemRunUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateLeaderboardRequestItemRunUnit) Ptr() *UpdateLeaderboardRequestItemRunUnit {
+	return &u
+}
+
+// The target user-facing status. `scheduled` activates a leaderboard whose start date is in the future. `finished` behaves like the dashboard finish action.
+type UpdateLeaderboardRequestItemStatus string
+
+const (
+	UpdateLeaderboardRequestItemStatusInactive  UpdateLeaderboardRequestItemStatus = "inactive"
+	UpdateLeaderboardRequestItemStatusActive    UpdateLeaderboardRequestItemStatus = "active"
+	UpdateLeaderboardRequestItemStatusScheduled UpdateLeaderboardRequestItemStatus = "scheduled"
+	UpdateLeaderboardRequestItemStatusFinished  UpdateLeaderboardRequestItemStatus = "finished"
+)
+
+func NewUpdateLeaderboardRequestItemStatusFromString(s string) (UpdateLeaderboardRequestItemStatus, error) {
+	switch s {
+	case "inactive":
+		return UpdateLeaderboardRequestItemStatusInactive, nil
+	case "active":
+		return UpdateLeaderboardRequestItemStatusActive, nil
+	case "scheduled":
+		return UpdateLeaderboardRequestItemStatusScheduled, nil
+	case "finished":
+		return UpdateLeaderboardRequestItemStatusFinished, nil
+	}
+	var t UpdateLeaderboardRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateLeaderboardRequestItemStatus) Ptr() *UpdateLeaderboardRequestItemStatus {
+	return &u
+}
+
+// Request body for updating leaderboards.
+type UpdateLeaderboardsRequest = []*UpdateLeaderboardRequestItem
+
+// Response containing updated leaderboards and any per-item issues identified by leaderboard ID.
+type UpdateLeaderboardsResponse struct {
+	// Array of successfully updated leaderboards.
+	Updated []*AdminLeaderboard `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during leaderboard update.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateLeaderboardsResponse) GetUpdated() []*AdminLeaderboard {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdateLeaderboardsResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdateLeaderboardsResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateLeaderboardsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateLeaderboardsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateLeaderboardsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateLeaderboardsResponse) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
