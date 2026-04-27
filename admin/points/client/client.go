@@ -4,6 +4,9 @@ package client
 
 import (
 	boosts "github.com/trophyso/trophy-go/admin/points/boosts"
+	levels "github.com/trophyso/trophy-go/admin/points/levels"
+	systems "github.com/trophyso/trophy-go/admin/points/systems"
+	triggers "github.com/trophyso/trophy-go/admin/points/triggers"
 	core "github.com/trophyso/trophy-go/core"
 	internal "github.com/trophyso/trophy-go/internal"
 	option "github.com/trophyso/trophy-go/option"
@@ -15,7 +18,10 @@ type Client struct {
 	caller  *internal.Caller
 	header  http.Header
 
-	Boosts *boosts.Client
+	Systems  *systems.Client
+	Boosts   *boosts.Client
+	Levels   *levels.Client
+	Triggers *triggers.Client
 }
 
 func NewClient(opts ...option.RequestOption) *Client {
@@ -28,7 +34,10 @@ func NewClient(opts ...option.RequestOption) *Client {
 				MaxAttempts: options.MaxAttempts,
 			},
 		),
-		header: options.ToHeader(),
-		Boosts: boosts.NewClient(opts...),
+		header:   options.ToHeader(),
+		Systems:  systems.NewClient(opts...),
+		Boosts:   boosts.NewClient(opts...),
+		Levels:   levels.NewClient(opts...),
+		Triggers: triggers.NewClient(opts...),
 	}
 }

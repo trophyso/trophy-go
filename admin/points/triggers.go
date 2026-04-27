@@ -2,12 +2,12 @@
 
 package points
 
-type BoostsDeleteRequest struct {
-	// A list of up to 100 boost IDs.
+type TriggersDeleteRequest struct {
+	// Trigger IDs to delete. Can be repeated or comma-separated.
 	Ids []*string `json:"-" url:"ids,omitempty"`
 }
 
-type BoostsListRequest struct {
+type TriggersListRequest struct {
 	// Maximum number of results to return (1-100, default 10).
 	Limit *int `json:"-" url:"limit,omitempty"`
 	// Number of results to skip for pagination (default 0).

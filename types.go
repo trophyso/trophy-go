@@ -1004,6 +1004,887 @@ func (a AdminLeaderboardStatus) Ptr() *AdminLeaderboardStatus {
 	return &a
 }
 
+// A points boost as returned from admin endpoints.
+type AdminPointsBoost struct {
+	// The UUID of the boost.
+	Id string `json:"id" url:"id"`
+	// The name of the boost.
+	Name string `json:"name" url:"name"`
+	// The status of the boost.
+	Status AdminPointsBoostStatus `json:"status" url:"status"`
+	// The start date (YYYY-MM-DD).
+	Start string `json:"start" url:"start"`
+	// The end date (YYYY-MM-DD) or null if no end date.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The points multiplier.
+	Multiplier float64 `json:"multiplier" url:"multiplier"`
+	// How boosted points are rounded.
+	Rounding AdminPointsBoostRounding `json:"rounding" url:"rounding"`
+	// The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.
+	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
+	// User attribute filters applied to the boost. Only present for non-user-specific boosts (i.e. when `userId` is null). Empty array if no filters are set.
+	UserAttributes []*AdminPointsBoostUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsBoost) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminPointsBoost) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminPointsBoost) GetStatus() AdminPointsBoostStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminPointsBoost) GetStart() string {
+	if a == nil {
+		return ""
+	}
+	return a.Start
+}
+
+func (a *AdminPointsBoost) GetEnd() *string {
+	if a == nil {
+		return nil
+	}
+	return a.End
+}
+
+func (a *AdminPointsBoost) GetMultiplier() float64 {
+	if a == nil {
+		return 0
+	}
+	return a.Multiplier
+}
+
+func (a *AdminPointsBoost) GetRounding() AdminPointsBoostRounding {
+	if a == nil {
+		return ""
+	}
+	return a.Rounding
+}
+
+func (a *AdminPointsBoost) GetUserId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.UserId
+}
+
+func (a *AdminPointsBoost) GetUserAttributes() []*AdminPointsBoostUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
+}
+
+func (a *AdminPointsBoost) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsBoost) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsBoost
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsBoost(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsBoost) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// How boosted points are rounded.
+type AdminPointsBoostRounding string
+
+const (
+	AdminPointsBoostRoundingDown    AdminPointsBoostRounding = "down"
+	AdminPointsBoostRoundingUp      AdminPointsBoostRounding = "up"
+	AdminPointsBoostRoundingNearest AdminPointsBoostRounding = "nearest"
+)
+
+func NewAdminPointsBoostRoundingFromString(s string) (AdminPointsBoostRounding, error) {
+	switch s {
+	case "down":
+		return AdminPointsBoostRoundingDown, nil
+	case "up":
+		return AdminPointsBoostRoundingUp, nil
+	case "nearest":
+		return AdminPointsBoostRoundingNearest, nil
+	}
+	var t AdminPointsBoostRounding
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminPointsBoostRounding) Ptr() *AdminPointsBoostRounding {
+	return &a
+}
+
+// The status of the boost.
+type AdminPointsBoostStatus string
+
+const (
+	AdminPointsBoostStatusActive    AdminPointsBoostStatus = "active"
+	AdminPointsBoostStatusScheduled AdminPointsBoostStatus = "scheduled"
+	AdminPointsBoostStatusFinished  AdminPointsBoostStatus = "finished"
+)
+
+func NewAdminPointsBoostStatusFromString(s string) (AdminPointsBoostStatus, error) {
+	switch s {
+	case "active":
+		return AdminPointsBoostStatusActive, nil
+	case "scheduled":
+		return AdminPointsBoostStatusScheduled, nil
+	case "finished":
+		return AdminPointsBoostStatusFinished, nil
+	}
+	var t AdminPointsBoostStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminPointsBoostStatus) Ptr() *AdminPointsBoostStatus {
+	return &a
+}
+
+type AdminPointsBoostUserAttributesItem struct {
+	// The UUID of the user attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The matched attribute value.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsBoostUserAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminPointsBoostUserAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminPointsBoostUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsBoostUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsBoostUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsBoostUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsBoostUserAttributesItem) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// A points level as returned from admin endpoints.
+type AdminPointsLevel struct {
+	// The UUID of the level.
+	Id string `json:"id" url:"id"`
+	// The name of the level.
+	Name string `json:"name" url:"name"`
+	// The level key.
+	Key string `json:"key" url:"key"`
+	// The threshold points value for the level.
+	Points int `json:"points" url:"points"`
+	// The level description.
+	Description string `json:"description" url:"description"`
+	// The badge for the level, or null if no badge is set.
+	Badge *AdminPointsLevelBadge `json:"badge,omitempty" url:"badge,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsLevel) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminPointsLevel) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminPointsLevel) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AdminPointsLevel) GetPoints() int {
+	if a == nil {
+		return 0
+	}
+	return a.Points
+}
+
+func (a *AdminPointsLevel) GetDescription() string {
+	if a == nil {
+		return ""
+	}
+	return a.Description
+}
+
+func (a *AdminPointsLevel) GetBadge() *AdminPointsLevelBadge {
+	if a == nil {
+		return nil
+	}
+	return a.Badge
+}
+
+func (a *AdminPointsLevel) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsLevel) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsLevel
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsLevel(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsLevel) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AdminPointsLevelBadge struct {
+	// The URL of the badge image.
+	Url string `json:"url" url:"url"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsLevelBadge) GetUrl() string {
+	if a == nil {
+		return ""
+	}
+	return a.Url
+}
+
+func (a *AdminPointsLevelBadge) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsLevelBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsLevelBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsLevelBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsLevelBadge) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// A points system returned from the admin points systems endpoints.
+type AdminPointsSystem struct {
+	// The UUID of the points system.
+	Id string `json:"id" url:"id"`
+	// The points system name.
+	Name string `json:"name" url:"name"`
+	// The points system key.
+	Key string `json:"key" url:"key"`
+	// The points system description.
+	Description string `json:"description" url:"description"`
+	// The points system status.
+	Status AdminPointsSystemStatus `json:"status" url:"status"`
+	// The badge for the points system.
+	Badge *AdminPointsSystemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+	// The maximum points a user can earn.
+	MaxPoints *int `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsSystem) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminPointsSystem) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminPointsSystem) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AdminPointsSystem) GetDescription() string {
+	if a == nil {
+		return ""
+	}
+	return a.Description
+}
+
+func (a *AdminPointsSystem) GetStatus() AdminPointsSystemStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminPointsSystem) GetBadge() *AdminPointsSystemBadge {
+	if a == nil {
+		return nil
+	}
+	return a.Badge
+}
+
+func (a *AdminPointsSystem) GetMaxPoints() *int {
+	if a == nil {
+		return nil
+	}
+	return a.MaxPoints
+}
+
+func (a *AdminPointsSystem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsSystem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsSystem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsSystem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsSystem) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AdminPointsSystemBadge struct {
+	Url string `json:"url" url:"url"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsSystemBadge) GetUrl() string {
+	if a == nil {
+		return ""
+	}
+	return a.Url
+}
+
+func (a *AdminPointsSystemBadge) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsSystemBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsSystemBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsSystemBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsSystemBadge) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The points system status.
+type AdminPointsSystemStatus string
+
+const (
+	AdminPointsSystemStatusActive   AdminPointsSystemStatus = "active"
+	AdminPointsSystemStatusArchived AdminPointsSystemStatus = "archived"
+)
+
+func NewAdminPointsSystemStatusFromString(s string) (AdminPointsSystemStatus, error) {
+	switch s {
+	case "active":
+		return AdminPointsSystemStatusActive, nil
+	case "archived":
+		return AdminPointsSystemStatusArchived, nil
+	}
+	var t AdminPointsSystemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminPointsSystemStatus) Ptr() *AdminPointsSystemStatus {
+	return &a
+}
+
+// A points trigger as returned from admin endpoints.
+type AdminPointsTrigger struct {
+	// The UUID of the trigger.
+	Id string `json:"id" url:"id"`
+	// The type of trigger.
+	Type AdminPointsTriggerType `json:"type" url:"type"`
+	// The number of points awarded or deducted when the trigger fires.
+	Points int `json:"points" url:"points"`
+	// The status of the trigger.
+	Status AdminPointsTriggerStatus `json:"status" url:"status"`
+	// User attribute filters applied to the trigger.
+	UserAttributes []*AdminPointsTriggerUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// The UUID of the metric. Only present for metric triggers.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The metric threshold. Only present for metric triggers.
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// Event attribute filters applied to the trigger. Only present for metric triggers.
+	EventAttributes []*AdminPointsTriggerEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// The UUID of the achievement. Only present for achievement triggers.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// The streak length. Only present for streak triggers.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The time unit. Only present for time triggers.
+	TimeUnit *AdminPointsTriggerTimeUnit `json:"timeUnit,omitempty" url:"timeUnit,omitempty"`
+	// The time interval. Only present for time triggers.
+	TimeInterval *int `json:"timeInterval,omitempty" url:"timeInterval,omitempty"`
+	// Whether metric events that would reduce the user's points below zero are blocked.
+	BlockIfOutOfPoints bool `json:"blockIfOutOfPoints" url:"blockIfOutOfPoints"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsTrigger) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminPointsTrigger) GetType() AdminPointsTriggerType {
+	if a == nil {
+		return ""
+	}
+	return a.Type
+}
+
+func (a *AdminPointsTrigger) GetPoints() int {
+	if a == nil {
+		return 0
+	}
+	return a.Points
+}
+
+func (a *AdminPointsTrigger) GetStatus() AdminPointsTriggerStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminPointsTrigger) GetUserAttributes() []*AdminPointsTriggerUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
+}
+
+func (a *AdminPointsTrigger) GetMetricId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricId
+}
+
+func (a *AdminPointsTrigger) GetMetricThreshold() *int {
+	if a == nil {
+		return nil
+	}
+	return a.MetricThreshold
+}
+
+func (a *AdminPointsTrigger) GetEventAttributes() []*AdminPointsTriggerEventAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.EventAttributes
+}
+
+func (a *AdminPointsTrigger) GetAchievementId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.AchievementId
+}
+
+func (a *AdminPointsTrigger) GetStreakLength() *int {
+	if a == nil {
+		return nil
+	}
+	return a.StreakLength
+}
+
+func (a *AdminPointsTrigger) GetTimeUnit() *AdminPointsTriggerTimeUnit {
+	if a == nil {
+		return nil
+	}
+	return a.TimeUnit
+}
+
+func (a *AdminPointsTrigger) GetTimeInterval() *int {
+	if a == nil {
+		return nil
+	}
+	return a.TimeInterval
+}
+
+func (a *AdminPointsTrigger) GetBlockIfOutOfPoints() bool {
+	if a == nil {
+		return false
+	}
+	return a.BlockIfOutOfPoints
+}
+
+func (a *AdminPointsTrigger) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsTrigger) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsTrigger
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsTrigger(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsTrigger) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AdminPointsTriggerEventAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsTriggerEventAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminPointsTriggerEventAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminPointsTriggerEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsTriggerEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsTriggerEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsTriggerEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsTriggerEventAttributesItem) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The status of the trigger.
+type AdminPointsTriggerStatus string
+
+const (
+	AdminPointsTriggerStatusActive   AdminPointsTriggerStatus = "active"
+	AdminPointsTriggerStatusInactive AdminPointsTriggerStatus = "inactive"
+)
+
+func NewAdminPointsTriggerStatusFromString(s string) (AdminPointsTriggerStatus, error) {
+	switch s {
+	case "active":
+		return AdminPointsTriggerStatusActive, nil
+	case "inactive":
+		return AdminPointsTriggerStatusInactive, nil
+	}
+	var t AdminPointsTriggerStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminPointsTriggerStatus) Ptr() *AdminPointsTriggerStatus {
+	return &a
+}
+
+// The time unit. Only present for time triggers.
+type AdminPointsTriggerTimeUnit string
+
+const (
+	AdminPointsTriggerTimeUnitHours AdminPointsTriggerTimeUnit = "hours"
+	AdminPointsTriggerTimeUnitDays  AdminPointsTriggerTimeUnit = "days"
+)
+
+func NewAdminPointsTriggerTimeUnitFromString(s string) (AdminPointsTriggerTimeUnit, error) {
+	switch s {
+	case "hours":
+		return AdminPointsTriggerTimeUnitHours, nil
+	case "days":
+		return AdminPointsTriggerTimeUnitDays, nil
+	}
+	var t AdminPointsTriggerTimeUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminPointsTriggerTimeUnit) Ptr() *AdminPointsTriggerTimeUnit {
+	return &a
+}
+
+// The type of trigger.
+type AdminPointsTriggerType string
+
+const (
+	AdminPointsTriggerTypeMetric       AdminPointsTriggerType = "metric"
+	AdminPointsTriggerTypeAchievement  AdminPointsTriggerType = "achievement"
+	AdminPointsTriggerTypeStreak       AdminPointsTriggerType = "streak"
+	AdminPointsTriggerTypeTime         AdminPointsTriggerType = "time"
+	AdminPointsTriggerTypeUserCreation AdminPointsTriggerType = "user_creation"
+)
+
+func NewAdminPointsTriggerTypeFromString(s string) (AdminPointsTriggerType, error) {
+	switch s {
+	case "metric":
+		return AdminPointsTriggerTypeMetric, nil
+	case "achievement":
+		return AdminPointsTriggerTypeAchievement, nil
+	case "streak":
+		return AdminPointsTriggerTypeStreak, nil
+	case "time":
+		return AdminPointsTriggerTypeTime, nil
+	case "user_creation":
+		return AdminPointsTriggerTypeUserCreation, nil
+	}
+	var t AdminPointsTriggerType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminPointsTriggerType) Ptr() *AdminPointsTriggerType {
+	return &a
+}
+
+type AdminPointsTriggerUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminPointsTriggerUserAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminPointsTriggerUserAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminPointsTriggerUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminPointsTriggerUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminPointsTriggerUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminPointsTriggerUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminPointsTriggerUserAttributesItem) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 type BaseStreakResponse struct {
 	// The length of the user's current streak.
 	Length int `json:"length" url:"length"`
@@ -1736,10 +2617,197 @@ func (c *CreateMetricsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// A points boost to create. May optionally target a specific user via `userId` or filter by user attributes via `userAttributes`. These two fields are mutually exclusive.
+type CreatePointsBoostRequestItem struct {
+	// The ID of the user to create a boost for. Mutually exclusive with `userAttributes` — providing `userAttributes` when `userId` is set will result in an error. Omit for a global boost.
+	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
+	// The name of the boost.
+	Name string `json:"name" url:"name"`
+	// The start date of the boost (YYYY-MM-DD).
+	Start string `json:"start" url:"start"`
+	// The end date of the boost (YYYY-MM-DD). If null, the boost has no end date.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The points multiplier. Must be greater than 0, not equal to 1, and less than 100.
+	Multiplier float64 `json:"multiplier" url:"multiplier"`
+	// How to round the boosted points. Defaults to 'down'.
+	Rounding *CreatePointsBoostRequestItemRounding `json:"rounding,omitempty" url:"rounding,omitempty"`
+	// User attribute filters for the boost. Cannot be provided when `userId` is set.
+	UserAttributes []*CreatePointsBoostRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsBoostRequestItem) GetUserId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UserId
+}
+
+func (c *CreatePointsBoostRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreatePointsBoostRequestItem) GetStart() string {
+	if c == nil {
+		return ""
+	}
+	return c.Start
+}
+
+func (c *CreatePointsBoostRequestItem) GetEnd() *string {
+	if c == nil {
+		return nil
+	}
+	return c.End
+}
+
+func (c *CreatePointsBoostRequestItem) GetMultiplier() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Multiplier
+}
+
+func (c *CreatePointsBoostRequestItem) GetRounding() *CreatePointsBoostRequestItemRounding {
+	if c == nil {
+		return nil
+	}
+	return c.Rounding
+}
+
+func (c *CreatePointsBoostRequestItem) GetUserAttributes() []*CreatePointsBoostRequestItemUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
+}
+
+func (c *CreatePointsBoostRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsBoostRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsBoostRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsBoostRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsBoostRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// How to round the boosted points. Defaults to 'down'.
+type CreatePointsBoostRequestItemRounding string
+
+const (
+	CreatePointsBoostRequestItemRoundingDown    CreatePointsBoostRequestItemRounding = "down"
+	CreatePointsBoostRequestItemRoundingUp      CreatePointsBoostRequestItemRounding = "up"
+	CreatePointsBoostRequestItemRoundingNearest CreatePointsBoostRequestItemRounding = "nearest"
+)
+
+func NewCreatePointsBoostRequestItemRoundingFromString(s string) (CreatePointsBoostRequestItemRounding, error) {
+	switch s {
+	case "down":
+		return CreatePointsBoostRequestItemRoundingDown, nil
+	case "up":
+		return CreatePointsBoostRequestItemRoundingUp, nil
+	case "nearest":
+		return CreatePointsBoostRequestItemRoundingNearest, nil
+	}
+	var t CreatePointsBoostRequestItemRounding
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatePointsBoostRequestItemRounding) Ptr() *CreatePointsBoostRequestItemRounding {
+	return &c
+}
+
+type CreatePointsBoostRequestItemUserAttributesItem struct {
+	// The UUID of the user attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The value to match.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsBoostRequestItemUserAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreatePointsBoostRequestItemUserAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreatePointsBoostRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsBoostRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsBoostRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsBoostRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsBoostRequestItemUserAttributesItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Array of points boosts to create. Maximum 100 boosts per request. Each boost may optionally target a specific user via `userId` or filter by user attributes via `userAttributes`. These two fields are mutually exclusive — providing `userAttributes` when `userId` is set will result in an error. Omitting both creates a global boost.
+type CreatePointsBoostsRequest = []*CreatePointsBoostRequestItem
+
 // Response containing created boosts and any issues encountered while creating points boosts.
 type CreatePointsBoostsResponse struct {
 	// Array of successfully created boosts.
-	Created []*CreatedPointsBoost `json:"created,omitempty" url:"created,omitempty"`
+	Created []*AdminPointsBoost `json:"created,omitempty" url:"created,omitempty"`
 	// Array of issues encountered during boost creation.
 	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
 
@@ -1747,7 +2815,7 @@ type CreatePointsBoostsResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreatePointsBoostsResponse) GetCreated() []*CreatedPointsBoost {
+func (c *CreatePointsBoostsResponse) GetCreated() []*AdminPointsBoost {
 	if c == nil {
 		return nil
 	}
@@ -1782,6 +2850,813 @@ func (c *CreatePointsBoostsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (c *CreatePointsBoostsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A points level to create.
+type CreatePointsLevelRequestItem struct {
+	// The name of the level.
+	Name string `json:"name" url:"name"`
+	// A unique key for the level. Only alphanumeric characters, hyphens, and underscores are permitted.
+	Key string `json:"key" url:"key"`
+	// The threshold points value for the level.
+	Points int `json:"points" url:"points"`
+	// An optional description of the level.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// An optional badge for the level.
+	Badge *CreatePointsLevelRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsLevelRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreatePointsLevelRequestItem) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreatePointsLevelRequestItem) GetPoints() int {
+	if c == nil {
+		return 0
+	}
+	return c.Points
+}
+
+func (c *CreatePointsLevelRequestItem) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
+}
+
+func (c *CreatePointsLevelRequestItem) GetBadge() *CreatePointsLevelRequestItemBadge {
+	if c == nil {
+		return nil
+	}
+	return c.Badge
+}
+
+func (c *CreatePointsLevelRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsLevelRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsLevelRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsLevelRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsLevelRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// An optional badge for the level.
+type CreatePointsLevelRequestItemBadge struct {
+	// The URL of the badge image.
+	Url string `json:"url" url:"url"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsLevelRequestItemBadge) GetUrl() string {
+	if c == nil {
+		return ""
+	}
+	return c.Url
+}
+
+func (c *CreatePointsLevelRequestItemBadge) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsLevelRequestItemBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsLevelRequestItemBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsLevelRequestItemBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsLevelRequestItemBadge) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Array of points levels to create. Maximum 100 levels per request.
+type CreatePointsLevelsRequest = []*CreatePointsLevelRequestItem
+
+// Response containing created levels and any per-item issues.
+type CreatePointsLevelsResponse struct {
+	// Array of successfully created levels.
+	Created []*AdminPointsLevel `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during level creation.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsLevelsResponse) GetCreated() []*AdminPointsLevel {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreatePointsLevelsResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreatePointsLevelsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsLevelsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsLevelsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsLevelsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsLevelsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A points system to create. Optionally include sub-entities.
+type CreatePointsSystemRequestItem struct {
+	// The points system name.
+	Name string `json:"name" url:"name"`
+	// The points system key. Only alphanumeric characters, hyphens, and underscores are permitted.
+	Key string `json:"key" url:"key"`
+	// A short description of the points system.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// An optional badge for the points system.
+	Badge *CreatePointsSystemRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+	// Optional maximum points a user can earn.
+	MaxPoints *int `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
+	// Optional array of levels to create alongside the system.
+	Levels []*CreatePointsLevelRequestItem `json:"levels,omitempty" url:"levels,omitempty"`
+	// Optional array of boosts to create alongside the system.
+	Boosts []*CreatePointsBoostRequestItem `json:"boosts,omitempty" url:"boosts,omitempty"`
+	// Optional array of triggers to create alongside the system.
+	Triggers []*CreatePointsTriggerRequestItem `json:"triggers,omitempty" url:"triggers,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsSystemRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreatePointsSystemRequestItem) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreatePointsSystemRequestItem) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
+}
+
+func (c *CreatePointsSystemRequestItem) GetBadge() *CreatePointsSystemRequestItemBadge {
+	if c == nil {
+		return nil
+	}
+	return c.Badge
+}
+
+func (c *CreatePointsSystemRequestItem) GetMaxPoints() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MaxPoints
+}
+
+func (c *CreatePointsSystemRequestItem) GetLevels() []*CreatePointsLevelRequestItem {
+	if c == nil {
+		return nil
+	}
+	return c.Levels
+}
+
+func (c *CreatePointsSystemRequestItem) GetBoosts() []*CreatePointsBoostRequestItem {
+	if c == nil {
+		return nil
+	}
+	return c.Boosts
+}
+
+func (c *CreatePointsSystemRequestItem) GetTriggers() []*CreatePointsTriggerRequestItem {
+	if c == nil {
+		return nil
+	}
+	return c.Triggers
+}
+
+func (c *CreatePointsSystemRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsSystemRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsSystemRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsSystemRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsSystemRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreatePointsSystemRequestItemBadge struct {
+	// Badge image URL.
+	Url string `json:"url" url:"url"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsSystemRequestItemBadge) GetUrl() string {
+	if c == nil {
+		return ""
+	}
+	return c.Url
+}
+
+func (c *CreatePointsSystemRequestItemBadge) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsSystemRequestItemBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsSystemRequestItemBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsSystemRequestItemBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsSystemRequestItemBadge) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Request body for creating points systems.
+type CreatePointsSystemsRequest = []*CreatePointsSystemRequestItem
+
+// Response containing created points systems and any per-item issues.
+type CreatePointsSystemsResponse struct {
+	// Array of successfully created points systems.
+	Created []*CreatedAdminPointsSystem `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during creation.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsSystemsResponse) GetCreated() []*CreatedAdminPointsSystem {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreatePointsSystemsResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreatePointsSystemsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsSystemsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsSystemsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsSystemsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsSystemsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A points trigger to create.
+type CreatePointsTriggerRequestItem struct {
+	// The type of trigger.
+	Type CreatePointsTriggerRequestItemType `json:"type" url:"type"`
+	// The number of points to award or deduct when the trigger fires. Cannot be zero.
+	Points int `json:"points" url:"points"`
+	// The status of the trigger. Defaults to 'inactive'.
+	Status *CreatePointsTriggerRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// Optional user attribute filters for the trigger.
+	UserAttributes []*CreatePointsTriggerRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Required if type is `metric`. The UUID of the metric.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// Required if type is `metric`. The metric increment that triggers the points.
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// Optional event attribute filters. Only permitted if type is `metric`.
+	EventAttributes []*CreatePointsTriggerRequestItemEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// Required if type is `achievement`. The UUID of the achievement.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// Required if type is `streak`. The number of streak periods that triggers the points.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// Required if type is `time`. The unit for the time interval.
+	TimeUnit *CreatePointsTriggerRequestItemTimeUnit `json:"timeUnit,omitempty" url:"timeUnit,omitempty"`
+	// Required if type is `time`. The number of time units between recurring awards.
+	TimeInterval *int `json:"timeInterval,omitempty" url:"timeInterval,omitempty"`
+	// Whether to block metric events that would reduce the user's points below zero. Defaults to false.
+	BlockIfOutOfPoints *bool `json:"blockIfOutOfPoints,omitempty" url:"blockIfOutOfPoints,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsTriggerRequestItem) GetType() CreatePointsTriggerRequestItemType {
+	if c == nil {
+		return ""
+	}
+	return c.Type
+}
+
+func (c *CreatePointsTriggerRequestItem) GetPoints() int {
+	if c == nil {
+		return 0
+	}
+	return c.Points
+}
+
+func (c *CreatePointsTriggerRequestItem) GetStatus() *CreatePointsTriggerRequestItemStatus {
+	if c == nil {
+		return nil
+	}
+	return c.Status
+}
+
+func (c *CreatePointsTriggerRequestItem) GetUserAttributes() []*CreatePointsTriggerRequestItemUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
+}
+
+func (c *CreatePointsTriggerRequestItem) GetMetricId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricId
+}
+
+func (c *CreatePointsTriggerRequestItem) GetMetricThreshold() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MetricThreshold
+}
+
+func (c *CreatePointsTriggerRequestItem) GetEventAttributes() []*CreatePointsTriggerRequestItemEventAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.EventAttributes
+}
+
+func (c *CreatePointsTriggerRequestItem) GetAchievementId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.AchievementId
+}
+
+func (c *CreatePointsTriggerRequestItem) GetStreakLength() *int {
+	if c == nil {
+		return nil
+	}
+	return c.StreakLength
+}
+
+func (c *CreatePointsTriggerRequestItem) GetTimeUnit() *CreatePointsTriggerRequestItemTimeUnit {
+	if c == nil {
+		return nil
+	}
+	return c.TimeUnit
+}
+
+func (c *CreatePointsTriggerRequestItem) GetTimeInterval() *int {
+	if c == nil {
+		return nil
+	}
+	return c.TimeInterval
+}
+
+func (c *CreatePointsTriggerRequestItem) GetBlockIfOutOfPoints() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.BlockIfOutOfPoints
+}
+
+func (c *CreatePointsTriggerRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsTriggerRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsTriggerRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsTriggerRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsTriggerRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreatePointsTriggerRequestItemEventAttributesItem struct {
+	// The UUID of the event attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The value to match.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsTriggerRequestItemEventAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreatePointsTriggerRequestItemEventAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreatePointsTriggerRequestItemEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsTriggerRequestItemEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsTriggerRequestItemEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsTriggerRequestItemEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsTriggerRequestItemEventAttributesItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The status of the trigger. Defaults to 'inactive'.
+type CreatePointsTriggerRequestItemStatus string
+
+const (
+	CreatePointsTriggerRequestItemStatusActive   CreatePointsTriggerRequestItemStatus = "active"
+	CreatePointsTriggerRequestItemStatusInactive CreatePointsTriggerRequestItemStatus = "inactive"
+)
+
+func NewCreatePointsTriggerRequestItemStatusFromString(s string) (CreatePointsTriggerRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return CreatePointsTriggerRequestItemStatusActive, nil
+	case "inactive":
+		return CreatePointsTriggerRequestItemStatusInactive, nil
+	}
+	var t CreatePointsTriggerRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatePointsTriggerRequestItemStatus) Ptr() *CreatePointsTriggerRequestItemStatus {
+	return &c
+}
+
+// Required if type is `time`. The unit for the time interval.
+type CreatePointsTriggerRequestItemTimeUnit string
+
+const (
+	CreatePointsTriggerRequestItemTimeUnitHours CreatePointsTriggerRequestItemTimeUnit = "hours"
+	CreatePointsTriggerRequestItemTimeUnitDays  CreatePointsTriggerRequestItemTimeUnit = "days"
+)
+
+func NewCreatePointsTriggerRequestItemTimeUnitFromString(s string) (CreatePointsTriggerRequestItemTimeUnit, error) {
+	switch s {
+	case "hours":
+		return CreatePointsTriggerRequestItemTimeUnitHours, nil
+	case "days":
+		return CreatePointsTriggerRequestItemTimeUnitDays, nil
+	}
+	var t CreatePointsTriggerRequestItemTimeUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatePointsTriggerRequestItemTimeUnit) Ptr() *CreatePointsTriggerRequestItemTimeUnit {
+	return &c
+}
+
+// The type of trigger.
+type CreatePointsTriggerRequestItemType string
+
+const (
+	CreatePointsTriggerRequestItemTypeMetric       CreatePointsTriggerRequestItemType = "metric"
+	CreatePointsTriggerRequestItemTypeAchievement  CreatePointsTriggerRequestItemType = "achievement"
+	CreatePointsTriggerRequestItemTypeStreak       CreatePointsTriggerRequestItemType = "streak"
+	CreatePointsTriggerRequestItemTypeTime         CreatePointsTriggerRequestItemType = "time"
+	CreatePointsTriggerRequestItemTypeUserCreation CreatePointsTriggerRequestItemType = "user_creation"
+)
+
+func NewCreatePointsTriggerRequestItemTypeFromString(s string) (CreatePointsTriggerRequestItemType, error) {
+	switch s {
+	case "metric":
+		return CreatePointsTriggerRequestItemTypeMetric, nil
+	case "achievement":
+		return CreatePointsTriggerRequestItemTypeAchievement, nil
+	case "streak":
+		return CreatePointsTriggerRequestItemTypeStreak, nil
+	case "time":
+		return CreatePointsTriggerRequestItemTypeTime, nil
+	case "user_creation":
+		return CreatePointsTriggerRequestItemTypeUserCreation, nil
+	}
+	var t CreatePointsTriggerRequestItemType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreatePointsTriggerRequestItemType) Ptr() *CreatePointsTriggerRequestItemType {
+	return &c
+}
+
+type CreatePointsTriggerRequestItemUserAttributesItem struct {
+	// The UUID of the user attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The value to match.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsTriggerRequestItemUserAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreatePointsTriggerRequestItemUserAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreatePointsTriggerRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsTriggerRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsTriggerRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsTriggerRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsTriggerRequestItemUserAttributesItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Array of points triggers to create. Maximum 100 triggers per request.
+type CreatePointsTriggersRequest = []*CreatePointsTriggerRequestItem
+
+// Response containing created triggers and any per-item issues.
+type CreatePointsTriggersResponse struct {
+	// Array of successfully created triggers.
+	Created []*AdminPointsTrigger `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during trigger creation.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatePointsTriggersResponse) GetCreated() []*AdminPointsTrigger {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreatePointsTriggersResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreatePointsTriggersResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatePointsTriggersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatePointsTriggersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatePointsTriggersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatePointsTriggersResponse) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1830,6 +3705,135 @@ func (c *CreateStreakFreezesResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (c *CreateStreakFreezesResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A points system returned from the creation endpoint. Extends AdminPointsSystem with optional sub-entity arrays that are present when those sub-entities were included in the creation request.
+type CreatedAdminPointsSystem struct {
+	// The UUID of the points system.
+	Id string `json:"id" url:"id"`
+	// The points system name.
+	Name string `json:"name" url:"name"`
+	// The points system key.
+	Key string `json:"key" url:"key"`
+	// The points system description.
+	Description string `json:"description" url:"description"`
+	// The points system status.
+	Status AdminPointsSystemStatus `json:"status" url:"status"`
+	// The badge for the points system.
+	Badge *AdminPointsSystemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+	// The maximum points a user can earn.
+	MaxPoints *int `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
+	// Levels created alongside the system. Present when levels were provided in the request.
+	Levels []*AdminPointsLevel `json:"levels,omitempty" url:"levels,omitempty"`
+	// Boosts created alongside the system. Present when boosts were provided in the request.
+	Boosts []*AdminPointsBoost `json:"boosts,omitempty" url:"boosts,omitempty"`
+	// Triggers created alongside the system. Present when triggers were provided in the request.
+	Triggers []*AdminPointsTrigger `json:"triggers,omitempty" url:"triggers,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatedAdminPointsSystem) GetId() string {
+	if c == nil {
+		return ""
+	}
+	return c.Id
+}
+
+func (c *CreatedAdminPointsSystem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreatedAdminPointsSystem) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreatedAdminPointsSystem) GetDescription() string {
+	if c == nil {
+		return ""
+	}
+	return c.Description
+}
+
+func (c *CreatedAdminPointsSystem) GetStatus() AdminPointsSystemStatus {
+	if c == nil {
+		return ""
+	}
+	return c.Status
+}
+
+func (c *CreatedAdminPointsSystem) GetBadge() *AdminPointsSystemBadge {
+	if c == nil {
+		return nil
+	}
+	return c.Badge
+}
+
+func (c *CreatedAdminPointsSystem) GetMaxPoints() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MaxPoints
+}
+
+func (c *CreatedAdminPointsSystem) GetLevels() []*AdminPointsLevel {
+	if c == nil {
+		return nil
+	}
+	return c.Levels
+}
+
+func (c *CreatedAdminPointsSystem) GetBoosts() []*AdminPointsBoost {
+	if c == nil {
+		return nil
+	}
+	return c.Boosts
+}
+
+func (c *CreatedAdminPointsSystem) GetTriggers() []*AdminPointsTrigger {
+	if c == nil {
+		return nil
+	}
+	return c.Triggers
+}
+
+func (c *CreatedAdminPointsSystem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreatedAdminPointsSystem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatedAdminPointsSystem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatedAdminPointsSystem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatedAdminPointsSystem) String() string {
 	if len(c.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
 			return value
@@ -1945,169 +3949,6 @@ func NewCreatedMetricUnitTypeFromString(s string) (CreatedMetricUnitType, error)
 }
 
 func (c CreatedMetricUnitType) Ptr() *CreatedMetricUnitType {
-	return &c
-}
-
-// A successfully created points boost returned from the create endpoint.
-type CreatedPointsBoost struct {
-	// The UUID of the created boost.
-	Id string `json:"id" url:"id"`
-	// The name of the boost.
-	Name string `json:"name" url:"name"`
-	// The status of the boost.
-	Status CreatedPointsBoostStatus `json:"status" url:"status"`
-	// The start date (YYYY-MM-DD).
-	Start string `json:"start" url:"start"`
-	// The end date (YYYY-MM-DD) or null if no end date.
-	End *string `json:"end,omitempty" url:"end,omitempty"`
-	// The points multiplier.
-	Multiplier float64 `json:"multiplier" url:"multiplier"`
-	// How boosted points are rounded.
-	Rounding CreatedPointsBoostRounding `json:"rounding" url:"rounding"`
-	// The customer ID of the user the boost was created for.
-	UserId string `json:"userId" url:"userId"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CreatedPointsBoost) GetId() string {
-	if c == nil {
-		return ""
-	}
-	return c.Id
-}
-
-func (c *CreatedPointsBoost) GetName() string {
-	if c == nil {
-		return ""
-	}
-	return c.Name
-}
-
-func (c *CreatedPointsBoost) GetStatus() CreatedPointsBoostStatus {
-	if c == nil {
-		return ""
-	}
-	return c.Status
-}
-
-func (c *CreatedPointsBoost) GetStart() string {
-	if c == nil {
-		return ""
-	}
-	return c.Start
-}
-
-func (c *CreatedPointsBoost) GetEnd() *string {
-	if c == nil {
-		return nil
-	}
-	return c.End
-}
-
-func (c *CreatedPointsBoost) GetMultiplier() float64 {
-	if c == nil {
-		return 0
-	}
-	return c.Multiplier
-}
-
-func (c *CreatedPointsBoost) GetRounding() CreatedPointsBoostRounding {
-	if c == nil {
-		return ""
-	}
-	return c.Rounding
-}
-
-func (c *CreatedPointsBoost) GetUserId() string {
-	if c == nil {
-		return ""
-	}
-	return c.UserId
-}
-
-func (c *CreatedPointsBoost) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CreatedPointsBoost) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreatedPointsBoost
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CreatedPointsBoost(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CreatedPointsBoost) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-// How boosted points are rounded.
-type CreatedPointsBoostRounding string
-
-const (
-	CreatedPointsBoostRoundingDown    CreatedPointsBoostRounding = "down"
-	CreatedPointsBoostRoundingUp      CreatedPointsBoostRounding = "up"
-	CreatedPointsBoostRoundingNearest CreatedPointsBoostRounding = "nearest"
-)
-
-func NewCreatedPointsBoostRoundingFromString(s string) (CreatedPointsBoostRounding, error) {
-	switch s {
-	case "down":
-		return CreatedPointsBoostRoundingDown, nil
-	case "up":
-		return CreatedPointsBoostRoundingUp, nil
-	case "nearest":
-		return CreatedPointsBoostRoundingNearest, nil
-	}
-	var t CreatedPointsBoostRounding
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreatedPointsBoostRounding) Ptr() *CreatedPointsBoostRounding {
-	return &c
-}
-
-// The status of the boost.
-type CreatedPointsBoostStatus string
-
-const (
-	CreatedPointsBoostStatusActive    CreatedPointsBoostStatus = "active"
-	CreatedPointsBoostStatusScheduled CreatedPointsBoostStatus = "scheduled"
-	CreatedPointsBoostStatusFinished  CreatedPointsBoostStatus = "finished"
-)
-
-func NewCreatedPointsBoostStatusFromString(s string) (CreatedPointsBoostStatus, error) {
-	switch s {
-	case "active":
-		return CreatedPointsBoostStatusActive, nil
-	case "scheduled":
-		return CreatedPointsBoostStatusScheduled, nil
-	case "finished":
-		return CreatedPointsBoostStatusFinished, nil
-	}
-	var t CreatedPointsBoostStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (c CreatedPointsBoostStatus) Ptr() *CreatedPointsBoostStatus {
 	return &c
 }
 
@@ -2328,6 +4169,177 @@ func (d *DeletePointsBoostsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (d *DeletePointsBoostsResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Response containing the points levels that were deleted and any per-item issues.
+type DeletePointsLevelsResponse struct {
+	// Array of deleted points levels represented by ID.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during level deletion.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePointsLevelsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeletePointsLevelsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeletePointsLevelsResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeletePointsLevelsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePointsLevelsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePointsLevelsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePointsLevelsResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Response containing deleted points system IDs and any per-item issues.
+type DeletePointsSystemsResponse struct {
+	// Array of deleted points system IDs.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during deletion.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePointsSystemsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeletePointsSystemsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeletePointsSystemsResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeletePointsSystemsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePointsSystemsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePointsSystemsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePointsSystemsResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Response containing the points triggers that were deleted and any per-item issues.
+type DeletePointsTriggersResponse struct {
+	// Array of deleted points triggers represented by ID.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during trigger deletion.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeletePointsTriggersResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeletePointsTriggersResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeletePointsTriggersResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeletePointsTriggersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeletePointsTriggersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeletePointsTriggersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeletePointsTriggersResponse) String() string {
 	if len(d.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
 			return value
@@ -2677,6 +4689,18 @@ type ListLeaderboardsResponse = []*AdminLeaderboard
 // A paginated list of metrics.
 type ListMetricsResponse = []*CreatedMetric
 
+// A paginated list of points boosts.
+type ListPointsBoostsResponse = []*AdminPointsBoost
+
+// A paginated list of points levels.
+type ListPointsLevelsResponse = []*AdminPointsLevel
+
+// Response containing a list of points systems.
+type ListPointsSystemsResponse = []*AdminPointsSystem
+
+// A paginated list of points triggers.
+type ListPointsTriggersResponse = []*AdminPointsTrigger
+
 // Points system response for metric events and achievement completions.
 type MetricEventPointsResponse struct {
 	// The ID of the points system
@@ -2804,6 +4828,840 @@ func (m *MetricEventPointsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", m)
+}
+
+// Array of points boost patches. Maximum 100 per request.
+type PatchPointsBoostsRequest = []*PatchPointsBoostsRequestItem
+
+type PatchPointsBoostsRequestItem struct {
+	// The UUID of the boost to update.
+	Id string `json:"id" url:"id"`
+	// Updated name for the boost.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// Updated start date (YYYY-MM-DD).
+	Start *string `json:"start,omitempty" url:"start,omitempty"`
+	// Updated end date (YYYY-MM-DD) or null to remove end date.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// Updated points multiplier.
+	Multiplier *float64 `json:"multiplier,omitempty" url:"multiplier,omitempty"`
+	// Updated rounding strategy.
+	Rounding *PatchPointsBoostsRequestItemRounding `json:"rounding,omitempty" url:"rounding,omitempty"`
+	// Updated user attribute filters. Cannot be set on user-specific boosts. Set to null to clear.
+	UserAttributes []*PatchPointsBoostsRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsBoostsRequestItem) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PatchPointsBoostsRequestItem) GetName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Name
+}
+
+func (p *PatchPointsBoostsRequestItem) GetStart() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Start
+}
+
+func (p *PatchPointsBoostsRequestItem) GetEnd() *string {
+	if p == nil {
+		return nil
+	}
+	return p.End
+}
+
+func (p *PatchPointsBoostsRequestItem) GetMultiplier() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.Multiplier
+}
+
+func (p *PatchPointsBoostsRequestItem) GetRounding() *PatchPointsBoostsRequestItemRounding {
+	if p == nil {
+		return nil
+	}
+	return p.Rounding
+}
+
+func (p *PatchPointsBoostsRequestItem) GetUserAttributes() []*PatchPointsBoostsRequestItemUserAttributesItem {
+	if p == nil {
+		return nil
+	}
+	return p.UserAttributes
+}
+
+func (p *PatchPointsBoostsRequestItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsBoostsRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsBoostsRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsBoostsRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsBoostsRequestItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Updated rounding strategy.
+type PatchPointsBoostsRequestItemRounding string
+
+const (
+	PatchPointsBoostsRequestItemRoundingDown    PatchPointsBoostsRequestItemRounding = "down"
+	PatchPointsBoostsRequestItemRoundingUp      PatchPointsBoostsRequestItemRounding = "up"
+	PatchPointsBoostsRequestItemRoundingNearest PatchPointsBoostsRequestItemRounding = "nearest"
+)
+
+func NewPatchPointsBoostsRequestItemRoundingFromString(s string) (PatchPointsBoostsRequestItemRounding, error) {
+	switch s {
+	case "down":
+		return PatchPointsBoostsRequestItemRoundingDown, nil
+	case "up":
+		return PatchPointsBoostsRequestItemRoundingUp, nil
+	case "nearest":
+		return PatchPointsBoostsRequestItemRoundingNearest, nil
+	}
+	var t PatchPointsBoostsRequestItemRounding
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PatchPointsBoostsRequestItemRounding) Ptr() *PatchPointsBoostsRequestItemRounding {
+	return &p
+}
+
+type PatchPointsBoostsRequestItemUserAttributesItem struct {
+	// The UUID of the user attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The value to match.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsBoostsRequestItemUserAttributesItem) GetAttributeId() string {
+	if p == nil {
+		return ""
+	}
+	return p.AttributeId
+}
+
+func (p *PatchPointsBoostsRequestItemUserAttributesItem) GetAttributeValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.AttributeValue
+}
+
+func (p *PatchPointsBoostsRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsBoostsRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsBoostsRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsBoostsRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsBoostsRequestItemUserAttributesItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Response containing updated boosts and any issues encountered.
+type PatchPointsBoostsResponse struct {
+	// Array of successfully updated boosts.
+	Updated []*AdminPointsBoost `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during boost updates.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsBoostsResponse) GetUpdated() []*AdminPointsBoost {
+	if p == nil {
+		return nil
+	}
+	return p.Updated
+}
+
+func (p *PatchPointsBoostsResponse) GetIssues() []*AdminIssue {
+	if p == nil {
+		return nil
+	}
+	return p.Issues
+}
+
+func (p *PatchPointsBoostsResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsBoostsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsBoostsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsBoostsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsBoostsResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Array of points level patches. Maximum 100 per request.
+type PatchPointsLevelsRequest = []*PatchPointsLevelsRequestItem
+
+type PatchPointsLevelsRequestItem struct {
+	// The UUID of the level to update.
+	Id string `json:"id" url:"id"`
+	// The updated level name.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The updated threshold points value.
+	Points *int `json:"points,omitempty" url:"points,omitempty"`
+	// The updated level description.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The updated badge, or `null` to clear it.
+	Badge *PatchPointsLevelsRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsLevelsRequestItem) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PatchPointsLevelsRequestItem) GetName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Name
+}
+
+func (p *PatchPointsLevelsRequestItem) GetPoints() *int {
+	if p == nil {
+		return nil
+	}
+	return p.Points
+}
+
+func (p *PatchPointsLevelsRequestItem) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PatchPointsLevelsRequestItem) GetBadge() *PatchPointsLevelsRequestItemBadge {
+	if p == nil {
+		return nil
+	}
+	return p.Badge
+}
+
+func (p *PatchPointsLevelsRequestItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsLevelsRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsLevelsRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsLevelsRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsLevelsRequestItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PatchPointsLevelsRequestItemBadge struct {
+	// The URL of the badge image.
+	Url string `json:"url" url:"url"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsLevelsRequestItemBadge) GetUrl() string {
+	if p == nil {
+		return ""
+	}
+	return p.Url
+}
+
+func (p *PatchPointsLevelsRequestItemBadge) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsLevelsRequestItemBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsLevelsRequestItemBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsLevelsRequestItemBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsLevelsRequestItemBadge) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Response containing updated levels and any issues encountered.
+type PatchPointsLevelsResponse struct {
+	// Array of successfully updated levels.
+	Updated []*AdminPointsLevel `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during level updates.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsLevelsResponse) GetUpdated() []*AdminPointsLevel {
+	if p == nil {
+		return nil
+	}
+	return p.Updated
+}
+
+func (p *PatchPointsLevelsResponse) GetIssues() []*AdminIssue {
+	if p == nil {
+		return nil
+	}
+	return p.Issues
+}
+
+func (p *PatchPointsLevelsResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsLevelsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsLevelsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsLevelsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsLevelsResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Array of points trigger patches. Maximum 100 per request.
+type PatchPointsTriggersRequest = []*PatchPointsTriggersRequestItem
+
+type PatchPointsTriggersRequestItem struct {
+	// The UUID of the trigger to update.
+	Id string `json:"id" url:"id"`
+	// Updated trigger type. Can only be changed when the trigger is inactive. Required fields for the new type must be provided.
+	Type *PatchPointsTriggersRequestItemType `json:"type,omitempty" url:"type,omitempty"`
+	// Updated points value.
+	Points *int `json:"points,omitempty" url:"points,omitempty"`
+	// Updated status.
+	Status *PatchPointsTriggersRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// Updated user attribute filters. Set to null to clear.
+	UserAttributes []*PatchPointsTriggersRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Updated metric ID. Only permitted for metric triggers.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// Updated metric threshold. Only permitted for metric triggers.
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// Updated event attribute filters. Only permitted for metric triggers. Set to null to clear.
+	EventAttributes []*PatchPointsTriggersRequestItemEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// Updated achievement ID. Only permitted for achievement triggers.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// Updated streak length. Only permitted for streak triggers.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// Updated time unit. Only permitted for time triggers.
+	TimeUnit *PatchPointsTriggersRequestItemTimeUnit `json:"timeUnit,omitempty" url:"timeUnit,omitempty"`
+	// Updated time interval. Only permitted for time triggers.
+	TimeInterval *int `json:"timeInterval,omitempty" url:"timeInterval,omitempty"`
+	// Updated block-if-out-of-points setting.
+	BlockIfOutOfPoints *bool `json:"blockIfOutOfPoints,omitempty" url:"blockIfOutOfPoints,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsTriggersRequestItem) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
+}
+
+func (p *PatchPointsTriggersRequestItem) GetType() *PatchPointsTriggersRequestItemType {
+	if p == nil {
+		return nil
+	}
+	return p.Type
+}
+
+func (p *PatchPointsTriggersRequestItem) GetPoints() *int {
+	if p == nil {
+		return nil
+	}
+	return p.Points
+}
+
+func (p *PatchPointsTriggersRequestItem) GetStatus() *PatchPointsTriggersRequestItemStatus {
+	if p == nil {
+		return nil
+	}
+	return p.Status
+}
+
+func (p *PatchPointsTriggersRequestItem) GetUserAttributes() []*PatchPointsTriggersRequestItemUserAttributesItem {
+	if p == nil {
+		return nil
+	}
+	return p.UserAttributes
+}
+
+func (p *PatchPointsTriggersRequestItem) GetMetricId() *string {
+	if p == nil {
+		return nil
+	}
+	return p.MetricId
+}
+
+func (p *PatchPointsTriggersRequestItem) GetMetricThreshold() *int {
+	if p == nil {
+		return nil
+	}
+	return p.MetricThreshold
+}
+
+func (p *PatchPointsTriggersRequestItem) GetEventAttributes() []*PatchPointsTriggersRequestItemEventAttributesItem {
+	if p == nil {
+		return nil
+	}
+	return p.EventAttributes
+}
+
+func (p *PatchPointsTriggersRequestItem) GetAchievementId() *string {
+	if p == nil {
+		return nil
+	}
+	return p.AchievementId
+}
+
+func (p *PatchPointsTriggersRequestItem) GetStreakLength() *int {
+	if p == nil {
+		return nil
+	}
+	return p.StreakLength
+}
+
+func (p *PatchPointsTriggersRequestItem) GetTimeUnit() *PatchPointsTriggersRequestItemTimeUnit {
+	if p == nil {
+		return nil
+	}
+	return p.TimeUnit
+}
+
+func (p *PatchPointsTriggersRequestItem) GetTimeInterval() *int {
+	if p == nil {
+		return nil
+	}
+	return p.TimeInterval
+}
+
+func (p *PatchPointsTriggersRequestItem) GetBlockIfOutOfPoints() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.BlockIfOutOfPoints
+}
+
+func (p *PatchPointsTriggersRequestItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsTriggersRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsTriggersRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsTriggersRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsTriggersRequestItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PatchPointsTriggersRequestItemEventAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsTriggersRequestItemEventAttributesItem) GetAttributeId() string {
+	if p == nil {
+		return ""
+	}
+	return p.AttributeId
+}
+
+func (p *PatchPointsTriggersRequestItemEventAttributesItem) GetAttributeValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.AttributeValue
+}
+
+func (p *PatchPointsTriggersRequestItemEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsTriggersRequestItemEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsTriggersRequestItemEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsTriggersRequestItemEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsTriggersRequestItemEventAttributesItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Updated status.
+type PatchPointsTriggersRequestItemStatus string
+
+const (
+	PatchPointsTriggersRequestItemStatusActive   PatchPointsTriggersRequestItemStatus = "active"
+	PatchPointsTriggersRequestItemStatusInactive PatchPointsTriggersRequestItemStatus = "inactive"
+)
+
+func NewPatchPointsTriggersRequestItemStatusFromString(s string) (PatchPointsTriggersRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return PatchPointsTriggersRequestItemStatusActive, nil
+	case "inactive":
+		return PatchPointsTriggersRequestItemStatusInactive, nil
+	}
+	var t PatchPointsTriggersRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PatchPointsTriggersRequestItemStatus) Ptr() *PatchPointsTriggersRequestItemStatus {
+	return &p
+}
+
+// Updated time unit. Only permitted for time triggers.
+type PatchPointsTriggersRequestItemTimeUnit string
+
+const (
+	PatchPointsTriggersRequestItemTimeUnitHours PatchPointsTriggersRequestItemTimeUnit = "hours"
+	PatchPointsTriggersRequestItemTimeUnitDays  PatchPointsTriggersRequestItemTimeUnit = "days"
+)
+
+func NewPatchPointsTriggersRequestItemTimeUnitFromString(s string) (PatchPointsTriggersRequestItemTimeUnit, error) {
+	switch s {
+	case "hours":
+		return PatchPointsTriggersRequestItemTimeUnitHours, nil
+	case "days":
+		return PatchPointsTriggersRequestItemTimeUnitDays, nil
+	}
+	var t PatchPointsTriggersRequestItemTimeUnit
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PatchPointsTriggersRequestItemTimeUnit) Ptr() *PatchPointsTriggersRequestItemTimeUnit {
+	return &p
+}
+
+// Updated trigger type. Can only be changed when the trigger is inactive. Required fields for the new type must be provided.
+type PatchPointsTriggersRequestItemType string
+
+const (
+	PatchPointsTriggersRequestItemTypeMetric       PatchPointsTriggersRequestItemType = "metric"
+	PatchPointsTriggersRequestItemTypeAchievement  PatchPointsTriggersRequestItemType = "achievement"
+	PatchPointsTriggersRequestItemTypeStreak       PatchPointsTriggersRequestItemType = "streak"
+	PatchPointsTriggersRequestItemTypeTime         PatchPointsTriggersRequestItemType = "time"
+	PatchPointsTriggersRequestItemTypeUserCreation PatchPointsTriggersRequestItemType = "user_creation"
+)
+
+func NewPatchPointsTriggersRequestItemTypeFromString(s string) (PatchPointsTriggersRequestItemType, error) {
+	switch s {
+	case "metric":
+		return PatchPointsTriggersRequestItemTypeMetric, nil
+	case "achievement":
+		return PatchPointsTriggersRequestItemTypeAchievement, nil
+	case "streak":
+		return PatchPointsTriggersRequestItemTypeStreak, nil
+	case "time":
+		return PatchPointsTriggersRequestItemTypeTime, nil
+	case "user_creation":
+		return PatchPointsTriggersRequestItemTypeUserCreation, nil
+	}
+	var t PatchPointsTriggersRequestItemType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PatchPointsTriggersRequestItemType) Ptr() *PatchPointsTriggersRequestItemType {
+	return &p
+}
+
+type PatchPointsTriggersRequestItemUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsTriggersRequestItemUserAttributesItem) GetAttributeId() string {
+	if p == nil {
+		return ""
+	}
+	return p.AttributeId
+}
+
+func (p *PatchPointsTriggersRequestItemUserAttributesItem) GetAttributeValue() string {
+	if p == nil {
+		return ""
+	}
+	return p.AttributeValue
+}
+
+func (p *PatchPointsTriggersRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsTriggersRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsTriggersRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsTriggersRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsTriggersRequestItemUserAttributesItem) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+// Response containing updated triggers and any issues encountered.
+type PatchPointsTriggersResponse struct {
+	// Array of successfully updated triggers.
+	Updated []*AdminPointsTrigger `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during trigger updates.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchPointsTriggersResponse) GetUpdated() []*AdminPointsTrigger {
+	if p == nil {
+		return nil
+	}
+	return p.Updated
+}
+
+func (p *PatchPointsTriggersResponse) GetIssues() []*AdminIssue {
+	if p == nil {
+		return nil
+	}
+	return p.Issues
+}
+
+func (p *PatchPointsTriggersResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchPointsTriggersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchPointsTriggersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchPointsTriggersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchPointsTriggersResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 type PointsAward struct {
@@ -4537,6 +7395,196 @@ func (u *UpdateMetricsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (u *UpdateMetricsResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// A points system update object. Only id is required; all other fields are optional.
+type UpdatePointsSystemRequestItem struct {
+	// The UUID of the points system to update.
+	Id string `json:"id" url:"id"`
+	// Updated name.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// Updated description.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// Updated badge. Set to null to remove.
+	Badge *UpdatePointsSystemRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+	// Updated max points. Set to null to remove.
+	MaxPoints *int `json:"maxPoints,omitempty" url:"maxPoints,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePointsSystemRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdatePointsSystemRequestItem) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdatePointsSystemRequestItem) GetDescription() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Description
+}
+
+func (u *UpdatePointsSystemRequestItem) GetBadge() *UpdatePointsSystemRequestItemBadge {
+	if u == nil {
+		return nil
+	}
+	return u.Badge
+}
+
+func (u *UpdatePointsSystemRequestItem) GetMaxPoints() *int {
+	if u == nil {
+		return nil
+	}
+	return u.MaxPoints
+}
+
+func (u *UpdatePointsSystemRequestItem) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdatePointsSystemRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePointsSystemRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePointsSystemRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePointsSystemRequestItem) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UpdatePointsSystemRequestItemBadge struct {
+	Url string `json:"url" url:"url"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePointsSystemRequestItemBadge) GetUrl() string {
+	if u == nil {
+		return ""
+	}
+	return u.Url
+}
+
+func (u *UpdatePointsSystemRequestItemBadge) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdatePointsSystemRequestItemBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePointsSystemRequestItemBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePointsSystemRequestItemBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePointsSystemRequestItemBadge) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Request body for updating points systems.
+type UpdatePointsSystemsRequest = []*UpdatePointsSystemRequestItem
+
+// Response containing updated points systems and any per-item issues.
+type UpdatePointsSystemsResponse struct {
+	// Array of successfully updated points systems.
+	Updated []*AdminPointsSystem `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during update.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdatePointsSystemsResponse) GetUpdated() []*AdminPointsSystem {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdatePointsSystemsResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdatePointsSystemsResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdatePointsSystemsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdatePointsSystemsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdatePointsSystemsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdatePointsSystemsResponse) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value

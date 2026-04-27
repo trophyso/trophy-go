@@ -2,14 +2,14 @@
 
 package points
 
-type BoostsDeleteRequest struct {
-	// A list of up to 100 boost IDs.
+type LevelsDeleteRequest struct {
+	// Comma-separated list of level UUIDs to delete.
 	Ids []*string `json:"-" url:"ids,omitempty"`
 }
 
-type BoostsListRequest struct {
-	// Maximum number of results to return (1-100, default 10).
+type LevelsListRequest struct {
+	// Number of records to return.
 	Limit *int `json:"-" url:"limit,omitempty"`
-	// Number of results to skip for pagination (default 0).
+	// Number of records to skip from the start of the list.
 	Skip *int `json:"-" url:"skip,omitempty"`
 }

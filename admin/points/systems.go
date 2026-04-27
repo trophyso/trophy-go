@@ -2,14 +2,14 @@
 
 package points
 
-type BoostsDeleteRequest struct {
-	// A list of up to 100 boost IDs.
+type SystemsDeleteRequest struct {
+	// The IDs of the points systems to delete.
 	Ids []*string `json:"-" url:"ids,omitempty"`
 }
 
-type BoostsListRequest struct {
-	// Maximum number of results to return (1-100, default 10).
+type SystemsListRequest struct {
+	// Number of records to return.
 	Limit *int `json:"-" url:"limit,omitempty"`
-	// Number of results to skip for pagination (default 0).
+	// Number of records to skip from the start of the list.
 	Skip *int `json:"-" url:"skip,omitempty"`
 }
