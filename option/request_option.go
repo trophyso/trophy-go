@@ -69,3 +69,12 @@ func WithApiKey(apiKey string) *core.ApiKeyOption {
 		ApiKey: apiKey,
 	}
 }
+
+// WithTenantId sets the tenantId request header.
+//
+// The tenant identifier for multi-tenant organisations. Required when the organisation has multi-tenancy enabled. The value should be your internal ID for the tenant. Ignored for single-tenant organisations.
+func WithTenantId(tenantId *string) *core.TenantIdOption {
+	return &core.TenantIdOption{
+		TenantId: tenantId,
+	}
+}

@@ -8,6 +8,7 @@ import (
 	metrics "github.com/trophyso/trophy-go/admin/metrics"
 	pointsclient "github.com/trophyso/trophy-go/admin/points/client"
 	streaksclient "github.com/trophyso/trophy-go/admin/streaks/client"
+	tenants "github.com/trophyso/trophy-go/admin/tenants"
 	core "github.com/trophyso/trophy-go/core"
 	internal "github.com/trophyso/trophy-go/internal"
 	option "github.com/trophyso/trophy-go/option"
@@ -23,6 +24,7 @@ type Client struct {
 	Metrics      *metrics.Client
 	Leaderboards *leaderboards.Client
 	Streaks      *streaksclient.Client
+	Tenants      *tenants.Client
 	Points       *pointsclient.Client
 }
 
@@ -41,6 +43,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		Metrics:      metrics.NewClient(opts...),
 		Leaderboards: leaderboards.NewClient(opts...),
 		Streaks:      streaksclient.NewClient(opts...),
+		Tenants:      tenants.NewClient(opts...),
 		Points:       pointsclient.NewClient(opts...),
 	}
 }

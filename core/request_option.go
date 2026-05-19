@@ -25,6 +25,7 @@ type RequestOptions struct {
 	QueryParameters url.Values
 	MaxAttempts     uint
 	ApiKey          string
+	TenantId        *string
 }
 
 // NewRequestOptions returns a new *RequestOptions value.
@@ -49,6 +50,9 @@ func (r *RequestOptions) ToHeader() http.Header {
 	header := r.cloneHeader()
 	if r.ApiKey != "" {
 		header.Set("X-API-KEY", fmt.Sprintf("%v", r.ApiKey))
+	}
+	if r.TenantId != nil {
+		header.Set("Tenant-ID", fmt.Sprintf("%v", *r.TenantId))
 	}
 	return header
 }
@@ -118,4 +122,13 @@ type ApiKeyOption struct {
 
 func (a *ApiKeyOption) applyRequestOptions(opts *RequestOptions) {
 	opts.ApiKey = a.ApiKey
+}
+
+// TenantIdOption implements the RequestOption interface.
+type TenantIdOption struct {
+	TenantId *string
+}
+
+func (t *TenantIdOption) applyRequestOptions(opts *RequestOptions) {
+	opts.TenantId = t.TenantId
 }

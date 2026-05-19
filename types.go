@@ -1020,7 +1020,7 @@ type AdminPointsBoost struct {
 	Multiplier float64 `json:"multiplier" url:"multiplier"`
 	// How boosted points are rounded.
 	Rounding AdminPointsBoostRounding `json:"rounding" url:"rounding"`
-	// The customer ID of the user the boost was created for, or null for global/attribute-filtered boosts.
+	// The ID of the user the boost was created for, or null for global/attribute-filtered boosts.
 	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
 	// User attribute filters applied to the boost. Only present for non-user-specific boosts (i.e. when `userId` is null). Empty array if no filters are set.
 	UserAttributes []*AdminPointsBoostUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
@@ -1883,6 +1883,144 @@ func (a *AdminPointsTriggerUserAttributesItem) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", a)
+}
+
+// A tenant in a multi-tenant environment.
+type AdminTenant struct {
+	// The tenant UUID.
+	Id string `json:"id" url:"id"`
+	// The external customer ID for this tenant.
+	CustomerId string `json:"customerId" url:"customerId"`
+	// Human-readable name for the tenant.
+	Name string `json:"name" url:"name"`
+	// The lifecycle status of the tenant.
+	Status AdminTenantStatus `json:"status" url:"status"`
+	// When the tenant was created.
+	Created time.Time `json:"created" url:"created"`
+	// When the tenant was last updated.
+	Updated time.Time `json:"updated" url:"updated"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminTenant) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminTenant) GetCustomerId() string {
+	if a == nil {
+		return ""
+	}
+	return a.CustomerId
+}
+
+func (a *AdminTenant) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminTenant) GetStatus() AdminTenantStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminTenant) GetCreated() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.Created
+}
+
+func (a *AdminTenant) GetUpdated() time.Time {
+	if a == nil {
+		return time.Time{}
+	}
+	return a.Updated
+}
+
+func (a *AdminTenant) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AdminTenant) UnmarshalJSON(data []byte) error {
+	type embed AdminTenant
+	var unmarshaler = struct {
+		embed
+		Created *internal.DateTime `json:"created"`
+		Updated *internal.DateTime `json:"updated"`
+	}{
+		embed: embed(*a),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*a = AdminTenant(unmarshaler.embed)
+	a.Created = unmarshaler.Created.Time()
+	a.Updated = unmarshaler.Updated.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminTenant) MarshalJSON() ([]byte, error) {
+	type embed AdminTenant
+	var marshaler = struct {
+		embed
+		Created *internal.DateTime `json:"created"`
+		Updated *internal.DateTime `json:"updated"`
+	}{
+		embed:   embed(*a),
+		Created: internal.NewDateTime(a.Created),
+		Updated: internal.NewDateTime(a.Updated),
+	}
+	return json.Marshal(marshaler)
+}
+
+func (a *AdminTenant) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The lifecycle status of the tenant.
+type AdminTenantStatus string
+
+const (
+	AdminTenantStatusActive   AdminTenantStatus = "active"
+	AdminTenantStatusArchived AdminTenantStatus = "archived"
+)
+
+func NewAdminTenantStatusFromString(s string) (AdminTenantStatus, error) {
+	switch s {
+	case "active":
+		return AdminTenantStatusActive, nil
+	case "archived":
+		return AdminTenantStatusArchived, nil
+	}
+	var t AdminTenantStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminTenantStatus) Ptr() *AdminTenantStatus {
+	return &a
 }
 
 type BaseStreakResponse struct {
@@ -3716,6 +3854,123 @@ func (c *CreateStreakFreezesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// A tenant to create.
+type CreateTenantRequestItem struct {
+	// The external customer ID. Must be unique within the environment.
+	CustomerId string `json:"customerId" url:"customerId"`
+	// Human-readable name for the tenant.
+	Name string `json:"name" url:"name"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateTenantRequestItem) GetCustomerId() string {
+	if c == nil {
+		return ""
+	}
+	return c.CustomerId
+}
+
+func (c *CreateTenantRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreateTenantRequestItem) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateTenantRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateTenantRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateTenantRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateTenantRequestItem) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Request body for creating tenants.
+type CreateTenantsRequest = []*CreateTenantRequestItem
+
+// Response containing created tenants and any issues.
+type CreateTenantsResponse struct {
+	// Array of successfully created tenants.
+	Created []*AdminTenant `json:"created,omitempty" url:"created,omitempty"`
+	// Array of issues encountered during creation.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateTenantsResponse) GetCreated() []*AdminTenant {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateTenantsResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateTenantsResponse) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CreateTenantsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateTenantsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateTenantsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateTenantsResponse) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // A points system returned from the creation endpoint. Extends AdminPointsSystem with optional sub-entity arrays that are present when those sub-entities were included in the creation request.
 type CreatedAdminPointsSystem struct {
 	// The UUID of the points system.
@@ -4351,6 +4606,63 @@ func (d *DeletePointsTriggersResponse) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
+// Response containing deleted tenant IDs and any issues.
+type DeleteTenantsResponse struct {
+	// Array of deleted tenant IDs.
+	Deleted []*DeletedResource `json:"deleted,omitempty" url:"deleted,omitempty"`
+	// Array of issues encountered during deletion.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteTenantsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteTenantsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteTenantsResponse) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeleteTenantsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteTenantsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteTenantsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteTenantsResponse) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
 // A deleted resource represented by ID.
 type DeletedResource struct {
 	// The ID of the deleted resource.
@@ -4700,6 +5012,9 @@ type ListPointsSystemsResponse = []*AdminPointsSystem
 
 // A paginated list of points triggers.
 type ListPointsTriggersResponse = []*AdminPointsTrigger
+
+// Array of tenants.
+type ListTenantsResponse = []*AdminTenant
 
 // Points system response for metric events and achievement completions.
 type MetricEventPointsResponse struct {
@@ -7585,6 +7900,132 @@ func (u *UpdatePointsSystemsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (u *UpdatePointsSystemsResponse) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// A tenant to update.
+type UpdateTenantRequestItem struct {
+	// The UUID of the tenant to update.
+	Id string `json:"id" url:"id"`
+	// New external customer ID.
+	CustomerId *string `json:"customerId,omitempty" url:"customerId,omitempty"`
+	// New display name for the tenant.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateTenantRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdateTenantRequestItem) GetCustomerId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.CustomerId
+}
+
+func (u *UpdateTenantRequestItem) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdateTenantRequestItem) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateTenantRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateTenantRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateTenantRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateTenantRequestItem) String() string {
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Request body for updating tenants.
+type UpdateTenantsRequest = []*UpdateTenantRequestItem
+
+// Response containing updated tenants and any issues.
+type UpdateTenantsResponse struct {
+	// Array of successfully updated tenants.
+	Updated []*AdminTenant `json:"updated,omitempty" url:"updated,omitempty"`
+	// Array of issues encountered during update.
+	Issues []*AdminIssue `json:"issues,omitempty" url:"issues,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateTenantsResponse) GetUpdated() []*AdminTenant {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdateTenantsResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdateTenantsResponse) GetExtraProperties() map[string]interface{} {
+	return u.extraProperties
+}
+
+func (u *UpdateTenantsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateTenantsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateTenantsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateTenantsResponse) String() string {
 	if len(u.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
 			return value
