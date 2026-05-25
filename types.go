@@ -777,7 +777,7 @@ type AdminLeaderboard struct {
 	// The points system ID used when `rankBy` is `points`.
 	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
 	// The maximum number of participants.
-	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The leaderboard start date in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The optional leaderboard end date in YYYY-MM-DD format.
@@ -849,9 +849,9 @@ func (a *AdminLeaderboard) GetPointsSystemId() *string {
 	return a.PointsSystemId
 }
 
-func (a *AdminLeaderboard) GetMaxParticipants() int {
+func (a *AdminLeaderboard) GetMaxParticipants() *int {
 	if a == nil {
-		return 0
+		return nil
 	}
 	return a.MaxParticipants
 }
@@ -4786,7 +4786,7 @@ type LeaderboardResponse struct {
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
 	// The maximum number of participants in the leaderboard.
-	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
@@ -4887,9 +4887,9 @@ func (l *LeaderboardResponse) GetEnd() *string {
 	return l.End
 }
 
-func (l *LeaderboardResponse) GetMaxParticipants() int {
+func (l *LeaderboardResponse) GetMaxParticipants() *int {
 	if l == nil {
-		return 0
+		return nil
 	}
 	return l.MaxParticipants
 }
@@ -8452,7 +8452,7 @@ type WebhookUserLeaderboardResponse struct {
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
 	// The maximum number of participants in the leaderboard.
-	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
@@ -8561,9 +8561,9 @@ func (w *WebhookUserLeaderboardResponse) GetEnd() *string {
 	return w.End
 }
 
-func (w *WebhookUserLeaderboardResponse) GetMaxParticipants() int {
+func (w *WebhookUserLeaderboardResponse) GetMaxParticipants() *int {
 	if w == nil {
-		return 0
+		return nil
 	}
 	return w.MaxParticipants
 }

@@ -129,7 +129,7 @@ type LeaderboardResponseWithRankings struct {
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
 	// The maximum number of participants in the leaderboard.
-	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
@@ -234,9 +234,9 @@ func (l *LeaderboardResponseWithRankings) GetEnd() *string {
 	return l.End
 }
 
-func (l *LeaderboardResponseWithRankings) GetMaxParticipants() int {
+func (l *LeaderboardResponseWithRankings) GetMaxParticipants() *int {
 	if l == nil {
-		return 0
+		return nil
 	}
 	return l.MaxParticipants
 }
@@ -355,7 +355,7 @@ type LeaderboardsAllResponseItem struct {
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
 	// The maximum number of participants in the leaderboard.
-	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
@@ -458,9 +458,9 @@ func (l *LeaderboardsAllResponseItem) GetEnd() *string {
 	return l.End
 }
 
-func (l *LeaderboardsAllResponseItem) GetMaxParticipants() int {
+func (l *LeaderboardsAllResponseItem) GetMaxParticipants() *int {
 	if l == nil {
-		return 0
+		return nil
 	}
 	return l.MaxParticipants
 }

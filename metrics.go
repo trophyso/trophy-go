@@ -176,7 +176,7 @@ type MetricEventLeaderboardResponse struct {
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
 	// The maximum number of participants in the leaderboard.
-	MaxParticipants int `json:"maxParticipants" url:"maxParticipants"`
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
@@ -312,9 +312,9 @@ func (m *MetricEventLeaderboardResponse) GetStart() string {
 	return m.Start
 }
 
-func (m *MetricEventLeaderboardResponse) GetMaxParticipants() int {
+func (m *MetricEventLeaderboardResponse) GetMaxParticipants() *int {
 	if m == nil {
-		return 0
+		return nil
 	}
 	return m.MaxParticipants
 }
