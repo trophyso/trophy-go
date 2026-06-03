@@ -17,7 +17,7 @@ type UsersAchievementsRequest struct {
 type UsersLeaderboardRequest struct {
 	// Specific run date in YYYY-MM-DD format. If not provided, returns the current run.
 	Run *string `json:"-" url:"run,omitempty"`
-	// The number of events to return in the history array.
+	// The number of days to return in the leaderboard history for the user.
 	NumEvents *int `json:"-" url:"numEvents,omitempty"`
 }
 
@@ -168,10 +168,12 @@ func (g *GetUserPointsResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// A leaderboard event representing a change in a user's rank or value.
+// A daily leaderboard snapshot entry representing the user's rank/value state and the previous persisted state.
 type LeaderboardEvent struct {
-	// The timestamp when the event occurred.
-	Timestamp *time.Time `json:"timestamp,omitempty" url:"timestamp,omitempty"`
+	// The leaderboard snapshot date in YYYY-MM-DD format.
+	Date string `json:"date" url:"date"`
+	// Deprecated ISO timestamp for the snapshot day boundary. Use `date` instead.
+	Timestamp time.Time `json:"timestamp" url:"timestamp"`
 	// The user's rank before this event, or null if they were not on the leaderboard.
 	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
 	// The user's rank after this event, or null if they are no longer on the leaderboard.
@@ -185,9 +187,16 @@ type LeaderboardEvent struct {
 	rawJSON         json.RawMessage
 }
 
-func (l *LeaderboardEvent) GetTimestamp() *time.Time {
+func (l *LeaderboardEvent) GetDate() string {
 	if l == nil {
-		return nil
+		return ""
+	}
+	return l.Date
+}
+
+func (l *LeaderboardEvent) GetTimestamp() time.Time {
+	if l == nil {
+		return time.Time{}
 	}
 	return l.Timestamp
 }
@@ -228,7 +237,7 @@ func (l *LeaderboardEvent) UnmarshalJSON(data []byte) error {
 	type embed LeaderboardEvent
 	var unmarshaler = struct {
 		embed
-		Timestamp *internal.DateTime `json:"timestamp,omitempty"`
+		Timestamp *internal.DateTime `json:"timestamp"`
 	}{
 		embed: embed(*l),
 	}
@@ -236,7 +245,7 @@ func (l *LeaderboardEvent) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*l = LeaderboardEvent(unmarshaler.embed)
-	l.Timestamp = unmarshaler.Timestamp.TimePtr()
+	l.Timestamp = unmarshaler.Timestamp.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *l)
 	if err != nil {
 		return err
@@ -250,10 +259,10 @@ func (l *LeaderboardEvent) MarshalJSON() ([]byte, error) {
 	type embed LeaderboardEvent
 	var marshaler = struct {
 		embed
-		Timestamp *internal.DateTime `json:"timestamp,omitempty"`
+		Timestamp *internal.DateTime `json:"timestamp"`
 	}{
 		embed:     embed(*l),
-		Timestamp: internal.NewOptionalDateTime(l.Timestamp),
+		Timestamp: internal.NewDateTime(l.Timestamp),
 	}
 	return json.Marshal(marshaler)
 }
@@ -1272,7 +1281,7 @@ type UserLeaderboardResponseWithHistory struct {
 	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 	// The user's current value in this leaderboard. Null if the user is not on the leaderboard.
 	Value *int `json:"value,omitempty" url:"value,omitempty"`
-	// An array of events showing the user's rank and value changes over time.
+	// An array of daily change events showing the user's rank and value over time.
 	History []*LeaderboardEvent `json:"history,omitempty" url:"history,omitempty"`
 
 	extraProperties map[string]interface{}

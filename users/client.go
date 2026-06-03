@@ -924,7 +924,7 @@ func (c *Client) PointsEventSummary(
 	return response, nil
 }
 
-// Get a user's rank, value, and history for a specific leaderboard.
+// Get a user's rank, value, and daily ranking history for a specific leaderboard.
 func (c *Client) Leaderboard(
 	ctx context.Context,
 	// The user's ID in your database.
