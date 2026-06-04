@@ -482,10 +482,10 @@ type StreakResponse struct {
 	FreezeAutoEarnInterval *int `json:"freezeAutoEarnInterval,omitempty" url:"freezeAutoEarnInterval,omitempty"`
 	// The amount of streak freezes the user will earn per interval. Only present if the organization has enabled streak freeze auto-earn.
 	FreezeAutoEarnAmount *int `json:"freezeAutoEarnAmount,omitempty" url:"freezeAutoEarnAmount,omitempty"`
+	// The timestamp the streak was most recently extended. Null if the streak is not active.
+	Extended *time.Time `json:"extended,omitempty" url:"extended,omitempty"`
 	// A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
 	StreakHistory []*StreakResponseStreakHistoryItem `json:"streakHistory,omitempty" url:"streakHistory,omitempty"`
-	// Deprecated. The user's rank across all users. Null if the user has no active streak.
-	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -561,6 +561,13 @@ func (s *StreakResponse) GetFreezeAutoEarnAmount() *int {
 	return s.FreezeAutoEarnAmount
 }
 
+func (s *StreakResponse) GetExtended() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.Extended
+}
+
 func (s *StreakResponse) GetStreakHistory() []*StreakResponseStreakHistoryItem {
 	if s == nil {
 		return nil
@@ -568,24 +575,23 @@ func (s *StreakResponse) GetStreakHistory() []*StreakResponseStreakHistoryItem {
 	return s.StreakHistory
 }
 
-func (s *StreakResponse) GetRank() *int {
-	if s == nil {
-		return nil
-	}
-	return s.Rank
-}
-
 func (s *StreakResponse) GetExtraProperties() map[string]interface{} {
 	return s.extraProperties
 }
 
 func (s *StreakResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler StreakResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed StreakResponse
+	var unmarshaler = struct {
+		embed
+		Extended *internal.DateTime `json:"extended,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*s = StreakResponse(value)
+	*s = StreakResponse(unmarshaler.embed)
+	s.Extended = unmarshaler.Extended.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *s)
 	if err != nil {
 		return err
@@ -593,6 +599,18 @@ func (s *StreakResponse) UnmarshalJSON(data []byte) error {
 	s.extraProperties = extraProperties
 	s.rawJSON = json.RawMessage(data)
 	return nil
+}
+
+func (s *StreakResponse) MarshalJSON() ([]byte, error) {
+	type embed StreakResponse
+	var marshaler = struct {
+		embed
+		Extended *internal.DateTime `json:"extended,omitempty"`
+	}{
+		embed:    embed(*s),
+		Extended: internal.NewOptionalDateTime(s.Extended),
+	}
+	return json.Marshal(marshaler)
 }
 
 func (s *StreakResponse) String() string {
