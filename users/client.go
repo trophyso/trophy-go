@@ -335,7 +335,7 @@ func (c *Client) GetPreferences(
 	return response, nil
 }
 
-// Update a user's notification preferences.
+// Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
 func (c *Client) UpdatePreferences(
 	ctx context.Context,
 	// The user's ID in your database.
@@ -361,6 +361,11 @@ func (c *Client) UpdatePreferences(
 	errorCodes := internal.ErrorCodes{
 		401: func(apiError *core.APIError) error {
 			return &trophygo.UnauthorizedError{
+				APIError: apiError,
+			}
+		},
+		403: func(apiError *core.APIError) error {
+			return &trophygo.ForbiddenError{
 				APIError: apiError,
 			}
 		},

@@ -460,6 +460,142 @@ func (n *NotificationPreferences) String() string {
 	return fmt.Sprintf("%#v", n)
 }
 
+// Whether meeting any single metric threshold (`OR`) or all configured metric thresholds (`AND`) extends the user's streak. Matches the evaluation mode configured in dashboard streak settings.
+type StreakEvaluationModePreference string
+
+const (
+	StreakEvaluationModePreferenceOr  StreakEvaluationModePreference = "OR"
+	StreakEvaluationModePreferenceAnd StreakEvaluationModePreference = "AND"
+)
+
+func NewStreakEvaluationModePreferenceFromString(s string) (StreakEvaluationModePreference, error) {
+	switch s {
+	case "OR":
+		return StreakEvaluationModePreferenceOr, nil
+	case "AND":
+		return StreakEvaluationModePreferenceAnd, nil
+	}
+	var t StreakEvaluationModePreference
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s StreakEvaluationModePreference) Ptr() *StreakEvaluationModePreference {
+	return &s
+}
+
+// Per-metric streak threshold override for a user.
+type StreakMetricPreference struct {
+	// The metric key.
+	Key string `json:"key" url:"key"`
+	// Minimum metric change in a streak period to count toward the streak.
+	Threshold float64 `json:"threshold" url:"threshold"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakMetricPreference) GetKey() string {
+	if s == nil {
+		return ""
+	}
+	return s.Key
+}
+
+func (s *StreakMetricPreference) GetThreshold() float64 {
+	if s == nil {
+		return 0
+	}
+	return s.Threshold
+}
+
+func (s *StreakMetricPreference) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StreakMetricPreference) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakMetricPreference
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakMetricPreference(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakMetricPreference) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+// Per-user streak configuration. Requires streak customization to be enabled in dashboard settings.
+type StreakPreferences struct {
+	EvaluationMode *StreakEvaluationModePreference `json:"evaluationMode,omitempty" url:"evaluationMode,omitempty"`
+	// Metrics and thresholds that count toward this user's streak.
+	Metrics []*StreakMetricPreference `json:"metrics,omitempty" url:"metrics,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakPreferences) GetEvaluationMode() *StreakEvaluationModePreference {
+	if s == nil {
+		return nil
+	}
+	return s.EvaluationMode
+}
+
+func (s *StreakPreferences) GetMetrics() []*StreakMetricPreference {
+	if s == nil {
+		return nil
+	}
+	return s.Metrics
+}
+
+func (s *StreakPreferences) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StreakPreferences) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakPreferences
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakPreferences(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakPreferences) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
 // An object representing the user's streak.
 type StreakResponse struct {
 	// The length of the user's current streak.
@@ -1474,6 +1610,7 @@ func (u *UserLeaderboardResponseWithHistory) String() string {
 // A user's preferences.
 type UserPreferencesResponse struct {
 	Notifications *NotificationPreferences `json:"notifications,omitempty" url:"notifications,omitempty"`
+	Streak        *StreakPreferences       `json:"streak,omitempty" url:"streak,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1484,6 +1621,13 @@ func (u *UserPreferencesResponse) GetNotifications() *NotificationPreferences {
 		return nil
 	}
 	return u.Notifications
+}
+
+func (u *UserPreferencesResponse) GetStreak() *StreakPreferences {
+	if u == nil {
+		return nil
+	}
+	return u.Streak
 }
 
 func (u *UserPreferencesResponse) GetExtraProperties() map[string]interface{} {
@@ -2650,6 +2794,7 @@ func (u *UsersPointsEventSummaryResponseItem) String() string {
 
 type UpdateUserPreferencesRequest struct {
 	Notifications *NotificationPreferences `json:"notifications,omitempty" url:"-"`
+	Streak        *StreakPreferences       `json:"streak,omitempty" url:"-"`
 }
 
 type UsersWrappedRequest struct {
