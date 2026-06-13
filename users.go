@@ -540,14 +540,23 @@ func (s *StreakMetricPreference) String() string {
 	return fmt.Sprintf("%#v", s)
 }
 
-// Per-user streak configuration. Requires streak customization to be enabled in dashboard settings.
+// Per-user streak configuration. Metric and evaluation mode overrides require streak customization to be enabled in dashboard settings.
 type StreakPreferences struct {
+	// Whether streaks are calculated for this user. When false, the user's streak is always 0 and streak webhooks and notifications are not sent.
+	Enabled        *bool                           `json:"enabled,omitempty" url:"enabled,omitempty"`
 	EvaluationMode *StreakEvaluationModePreference `json:"evaluationMode,omitempty" url:"evaluationMode,omitempty"`
 	// Metrics and thresholds that count toward this user's streak.
 	Metrics []*StreakMetricPreference `json:"metrics,omitempty" url:"metrics,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (s *StreakPreferences) GetEnabled() *bool {
+	if s == nil {
+		return nil
+	}
+	return s.Enabled
 }
 
 func (s *StreakPreferences) GetEvaluationMode() *StreakEvaluationModePreference {
