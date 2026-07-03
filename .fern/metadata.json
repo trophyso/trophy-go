@@ -1,0 +1,13 @@
+{
+  "cliVersion": "5.62.0",
+  "generatorName": "fernapi/fern-go-sdk",
+  "generatorVersion": "1.46.2",
+  "generatorConfig": {
+    "importPath": "github.com/trophyso/trophy-go",
+    "retryStatusCodes": "legacy"
+  },
+  "originGitCommit": "b18b99972464468a34beacaa16d18002f3d55fce",
+  "originGitCommitIsDirty": false,
+  "invokedBy": "ci",
+  "ciProvider": "github"
+}
