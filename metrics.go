@@ -326,9 +326,11 @@ var (
 	metricEventLeaderboardResponseFieldPointsSystemName         = big.NewInt(1 << 15)
 	metricEventLeaderboardResponseFieldDescription              = big.NewInt(1 << 16)
 	metricEventLeaderboardResponseFieldStart                    = big.NewInt(1 << 17)
-	metricEventLeaderboardResponseFieldMaxParticipants          = big.NewInt(1 << 18)
-	metricEventLeaderboardResponseFieldRunUnit                  = big.NewInt(1 << 19)
-	metricEventLeaderboardResponseFieldRunInterval              = big.NewInt(1 << 20)
+	metricEventLeaderboardResponseFieldStartTime                = big.NewInt(1 << 18)
+	metricEventLeaderboardResponseFieldEndTime                  = big.NewInt(1 << 19)
+	metricEventLeaderboardResponseFieldMaxParticipants          = big.NewInt(1 << 20)
+	metricEventLeaderboardResponseFieldRunUnit                  = big.NewInt(1 << 21)
+	metricEventLeaderboardResponseFieldRunInterval              = big.NewInt(1 << 22)
 )
 
 type MetricEventLeaderboardResponse struct {
@@ -368,6 +370,10 @@ type MetricEventLeaderboardResponse struct {
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The start date of the leaderboard in YYYY-MM-DD format.
 	Start string `json:"start" url:"start"`
+	// When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+	StartTime *string `json:"startTime,omitempty" url:"startTime,omitempty"`
+	// When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+	EndTime *string `json:"endTime,omitempty" url:"endTime,omitempty"`
 	// The maximum number of participants in the leaderboard.
 	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
@@ -506,6 +512,20 @@ func (m *MetricEventLeaderboardResponse) GetStart() string {
 		return ""
 	}
 	return m.Start
+}
+
+func (m *MetricEventLeaderboardResponse) GetStartTime() *string {
+	if m == nil {
+		return nil
+	}
+	return m.StartTime
+}
+
+func (m *MetricEventLeaderboardResponse) GetEndTime() *string {
+	if m == nil {
+		return nil
+	}
+	return m.EndTime
 }
 
 func (m *MetricEventLeaderboardResponse) GetMaxParticipants() *int {
@@ -667,6 +687,20 @@ func (m *MetricEventLeaderboardResponse) SetDescription(description *string) {
 func (m *MetricEventLeaderboardResponse) SetStart(start string) {
 	m.Start = start
 	m.require(metricEventLeaderboardResponseFieldStart)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetStartTime(startTime *string) {
+	m.StartTime = startTime
+	m.require(metricEventLeaderboardResponseFieldStartTime)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetEndTime(endTime *string) {
+	m.EndTime = endTime
+	m.require(metricEventLeaderboardResponseFieldEndTime)
 }
 
 // SetMaxParticipants sets the MaxParticipants field and marks it as non-optional;

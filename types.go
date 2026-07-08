@@ -1426,9 +1426,11 @@ var (
 	adminLeaderboardFieldMaxParticipants     = big.NewInt(1 << 8)
 	adminLeaderboardFieldStart               = big.NewInt(1 << 9)
 	adminLeaderboardFieldEnd                 = big.NewInt(1 << 10)
-	adminLeaderboardFieldBreakdownAttributes = big.NewInt(1 << 11)
-	adminLeaderboardFieldRunUnit             = big.NewInt(1 << 12)
-	adminLeaderboardFieldRunInterval         = big.NewInt(1 << 13)
+	adminLeaderboardFieldStartTime           = big.NewInt(1 << 11)
+	adminLeaderboardFieldEndTime             = big.NewInt(1 << 12)
+	adminLeaderboardFieldBreakdownAttributes = big.NewInt(1 << 13)
+	adminLeaderboardFieldRunUnit             = big.NewInt(1 << 14)
+	adminLeaderboardFieldRunInterval         = big.NewInt(1 << 15)
 )
 
 type AdminLeaderboard struct {
@@ -1454,6 +1456,10 @@ type AdminLeaderboard struct {
 	Start string `json:"start" url:"start"`
 	// The optional leaderboard end date in YYYY-MM-DD format.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+	StartTime *string `json:"startTime,omitempty" url:"startTime,omitempty"`
+	// When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+	EndTime *string `json:"endTime,omitempty" url:"endTime,omitempty"`
 	// The UUIDs of the user attributes used for ranking breakdowns.
 	BreakdownAttributes []string `json:"breakdownAttributes" url:"breakdownAttributes"`
 	// The recurrence unit when the leaderboard repeats.
@@ -1543,6 +1549,20 @@ func (a *AdminLeaderboard) GetEnd() *string {
 		return nil
 	}
 	return a.End
+}
+
+func (a *AdminLeaderboard) GetStartTime() *string {
+	if a == nil {
+		return nil
+	}
+	return a.StartTime
+}
+
+func (a *AdminLeaderboard) GetEndTime() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EndTime
 }
 
 func (a *AdminLeaderboard) GetBreakdownAttributes() []string {
@@ -1655,6 +1675,20 @@ func (a *AdminLeaderboard) SetStart(start string) {
 func (a *AdminLeaderboard) SetEnd(end *string) {
 	a.End = end
 	a.require(adminLeaderboardFieldEnd)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminLeaderboard) SetStartTime(startTime *string) {
+	a.StartTime = startTime
+	a.require(adminLeaderboardFieldStartTime)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminLeaderboard) SetEndTime(endTime *string) {
+	a.EndTime = endTime
+	a.require(adminLeaderboardFieldEndTime)
 }
 
 // SetBreakdownAttributes sets the BreakdownAttributes field and marks it as non-optional;
@@ -4001,9 +4035,11 @@ var (
 	createLeaderboardRequestItemFieldMaxParticipants     = big.NewInt(1 << 7)
 	createLeaderboardRequestItemFieldStart               = big.NewInt(1 << 8)
 	createLeaderboardRequestItemFieldEnd                 = big.NewInt(1 << 9)
-	createLeaderboardRequestItemFieldBreakdownAttributes = big.NewInt(1 << 10)
-	createLeaderboardRequestItemFieldRunUnit             = big.NewInt(1 << 11)
-	createLeaderboardRequestItemFieldRunInterval         = big.NewInt(1 << 12)
+	createLeaderboardRequestItemFieldStartTime           = big.NewInt(1 << 10)
+	createLeaderboardRequestItemFieldEndTime             = big.NewInt(1 << 11)
+	createLeaderboardRequestItemFieldBreakdownAttributes = big.NewInt(1 << 12)
+	createLeaderboardRequestItemFieldRunUnit             = big.NewInt(1 << 13)
+	createLeaderboardRequestItemFieldRunInterval         = big.NewInt(1 << 14)
 )
 
 type CreateLeaderboardRequestItem struct {
@@ -4027,6 +4063,10 @@ type CreateLeaderboardRequestItem struct {
 	Start *string `json:"start,omitempty" url:"start,omitempty"`
 	// The optional leaderboard end date in YYYY-MM-DD format.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+	StartTime *string `json:"startTime,omitempty" url:"startTime,omitempty"`
+	// When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+	EndTime *string `json:"endTime,omitempty" url:"endTime,omitempty"`
 	// The UUIDs of the active user attributes to break rankings down by.
 	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// How often the leaderboard repeats. Omit for a non-recurring leaderboard. Streak leaderboards cannot repeat.
@@ -4109,6 +4149,20 @@ func (c *CreateLeaderboardRequestItem) GetEnd() *string {
 		return nil
 	}
 	return c.End
+}
+
+func (c *CreateLeaderboardRequestItem) GetStartTime() *string {
+	if c == nil {
+		return nil
+	}
+	return c.StartTime
+}
+
+func (c *CreateLeaderboardRequestItem) GetEndTime() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EndTime
 }
 
 func (c *CreateLeaderboardRequestItem) GetBreakdownAttributes() []string {
@@ -4214,6 +4268,20 @@ func (c *CreateLeaderboardRequestItem) SetStart(start *string) {
 func (c *CreateLeaderboardRequestItem) SetEnd(end *string) {
 	c.End = end
 	c.require(createLeaderboardRequestItemFieldEnd)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateLeaderboardRequestItem) SetStartTime(startTime *string) {
+	c.StartTime = startTime
+	c.require(createLeaderboardRequestItemFieldStartTime)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateLeaderboardRequestItem) SetEndTime(endTime *string) {
+	c.EndTime = endTime
+	c.require(createLeaderboardRequestItemFieldEndTime)
 }
 
 // SetBreakdownAttributes sets the BreakdownAttributes field and marks it as non-optional;
@@ -8277,9 +8345,11 @@ var (
 	leaderboardResponseFieldDescription         = big.NewInt(1 << 10)
 	leaderboardResponseFieldStart               = big.NewInt(1 << 11)
 	leaderboardResponseFieldEnd                 = big.NewInt(1 << 12)
-	leaderboardResponseFieldMaxParticipants     = big.NewInt(1 << 13)
-	leaderboardResponseFieldRunUnit             = big.NewInt(1 << 14)
-	leaderboardResponseFieldRunInterval         = big.NewInt(1 << 15)
+	leaderboardResponseFieldStartTime           = big.NewInt(1 << 13)
+	leaderboardResponseFieldEndTime             = big.NewInt(1 << 14)
+	leaderboardResponseFieldMaxParticipants     = big.NewInt(1 << 15)
+	leaderboardResponseFieldRunUnit             = big.NewInt(1 << 16)
+	leaderboardResponseFieldRunInterval         = big.NewInt(1 << 17)
 )
 
 type LeaderboardResponse struct {
@@ -8309,6 +8379,10 @@ type LeaderboardResponse struct {
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+	StartTime *string `json:"startTime,omitempty" url:"startTime,omitempty"`
+	// When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+	EndTime *string `json:"endTime,omitempty" url:"endTime,omitempty"`
 	// The maximum number of participants in the leaderboard.
 	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
@@ -8412,6 +8486,20 @@ func (l *LeaderboardResponse) GetEnd() *string {
 		return nil
 	}
 	return l.End
+}
+
+func (l *LeaderboardResponse) GetStartTime() *string {
+	if l == nil {
+		return nil
+	}
+	return l.StartTime
+}
+
+func (l *LeaderboardResponse) GetEndTime() *string {
+	if l == nil {
+		return nil
+	}
+	return l.EndTime
 }
 
 func (l *LeaderboardResponse) GetMaxParticipants() *int {
@@ -8538,6 +8626,20 @@ func (l *LeaderboardResponse) SetStart(start string) {
 func (l *LeaderboardResponse) SetEnd(end *string) {
 	l.End = end
 	l.require(leaderboardResponseFieldEnd)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LeaderboardResponse) SetStartTime(startTime *string) {
+	l.StartTime = startTime
+	l.require(leaderboardResponseFieldStartTime)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LeaderboardResponse) SetEndTime(endTime *string) {
+	l.EndTime = endTime
+	l.require(leaderboardResponseFieldEndTime)
 }
 
 // SetMaxParticipants sets the MaxParticipants field and marks it as non-optional;
@@ -12518,9 +12620,11 @@ var (
 	updateLeaderboardRequestItemFieldMaxParticipants     = big.NewInt(1 << 8)
 	updateLeaderboardRequestItemFieldStart               = big.NewInt(1 << 9)
 	updateLeaderboardRequestItemFieldEnd                 = big.NewInt(1 << 10)
-	updateLeaderboardRequestItemFieldBreakdownAttributes = big.NewInt(1 << 11)
-	updateLeaderboardRequestItemFieldRunUnit             = big.NewInt(1 << 12)
-	updateLeaderboardRequestItemFieldRunInterval         = big.NewInt(1 << 13)
+	updateLeaderboardRequestItemFieldStartTime           = big.NewInt(1 << 11)
+	updateLeaderboardRequestItemFieldEndTime             = big.NewInt(1 << 12)
+	updateLeaderboardRequestItemFieldBreakdownAttributes = big.NewInt(1 << 13)
+	updateLeaderboardRequestItemFieldRunUnit             = big.NewInt(1 << 14)
+	updateLeaderboardRequestItemFieldRunInterval         = big.NewInt(1 << 15)
 )
 
 type UpdateLeaderboardRequestItem struct {
@@ -12546,6 +12650,10 @@ type UpdateLeaderboardRequestItem struct {
 	Start *string `json:"start,omitempty" url:"start,omitempty"`
 	// The updated end date in YYYY-MM-DD format, or `null` to clear it.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The updated start of the daily ranking time window in HH:mm format, or `null` to clear it.
+	StartTime *string `json:"startTime,omitempty" url:"startTime,omitempty"`
+	// The updated end of the daily ranking time window in HH:mm format, or `null` to clear it.
+	EndTime *string `json:"endTime,omitempty" url:"endTime,omitempty"`
 	// The updated breakdown attribute UUIDs.
 	BreakdownAttributes []string `json:"breakdownAttributes,omitempty" url:"breakdownAttributes,omitempty"`
 	// The updated recurrence unit.
@@ -12635,6 +12743,20 @@ func (u *UpdateLeaderboardRequestItem) GetEnd() *string {
 		return nil
 	}
 	return u.End
+}
+
+func (u *UpdateLeaderboardRequestItem) GetStartTime() *string {
+	if u == nil {
+		return nil
+	}
+	return u.StartTime
+}
+
+func (u *UpdateLeaderboardRequestItem) GetEndTime() *string {
+	if u == nil {
+		return nil
+	}
+	return u.EndTime
 }
 
 func (u *UpdateLeaderboardRequestItem) GetBreakdownAttributes() []string {
@@ -12747,6 +12869,20 @@ func (u *UpdateLeaderboardRequestItem) SetStart(start *string) {
 func (u *UpdateLeaderboardRequestItem) SetEnd(end *string) {
 	u.End = end
 	u.require(updateLeaderboardRequestItemFieldEnd)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateLeaderboardRequestItem) SetStartTime(startTime *string) {
+	u.StartTime = startTime
+	u.require(updateLeaderboardRequestItemFieldStartTime)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateLeaderboardRequestItem) SetEndTime(endTime *string) {
+	u.EndTime = endTime
+	u.require(updateLeaderboardRequestItemFieldEndTime)
 }
 
 // SetBreakdownAttributes sets the BreakdownAttributes field and marks it as non-optional;
@@ -14539,13 +14675,15 @@ var (
 	webhookUserLeaderboardResponseFieldDescription         = big.NewInt(1 << 10)
 	webhookUserLeaderboardResponseFieldStart               = big.NewInt(1 << 11)
 	webhookUserLeaderboardResponseFieldEnd                 = big.NewInt(1 << 12)
-	webhookUserLeaderboardResponseFieldMaxParticipants     = big.NewInt(1 << 13)
-	webhookUserLeaderboardResponseFieldRunUnit             = big.NewInt(1 << 14)
-	webhookUserLeaderboardResponseFieldRunInterval         = big.NewInt(1 << 15)
-	webhookUserLeaderboardResponseFieldRank                = big.NewInt(1 << 16)
-	webhookUserLeaderboardResponseFieldValue               = big.NewInt(1 << 17)
-	webhookUserLeaderboardResponseFieldPreviousRank        = big.NewInt(1 << 18)
-	webhookUserLeaderboardResponseFieldPreviousValue       = big.NewInt(1 << 19)
+	webhookUserLeaderboardResponseFieldStartTime           = big.NewInt(1 << 13)
+	webhookUserLeaderboardResponseFieldEndTime             = big.NewInt(1 << 14)
+	webhookUserLeaderboardResponseFieldMaxParticipants     = big.NewInt(1 << 15)
+	webhookUserLeaderboardResponseFieldRunUnit             = big.NewInt(1 << 16)
+	webhookUserLeaderboardResponseFieldRunInterval         = big.NewInt(1 << 17)
+	webhookUserLeaderboardResponseFieldRank                = big.NewInt(1 << 18)
+	webhookUserLeaderboardResponseFieldValue               = big.NewInt(1 << 19)
+	webhookUserLeaderboardResponseFieldPreviousRank        = big.NewInt(1 << 20)
+	webhookUserLeaderboardResponseFieldPreviousValue       = big.NewInt(1 << 21)
 )
 
 type WebhookUserLeaderboardResponse struct {
@@ -14575,6 +14713,10 @@ type WebhookUserLeaderboardResponse struct {
 	Start string `json:"start" url:"start"`
 	// The end date of the leaderboard in YYYY-MM-DD format, or null if it runs forever.
 	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+	StartTime *string `json:"startTime,omitempty" url:"startTime,omitempty"`
+	// When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+	EndTime *string `json:"endTime,omitempty" url:"endTime,omitempty"`
 	// The maximum number of participants in the leaderboard.
 	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
 	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
@@ -14686,6 +14828,20 @@ func (w *WebhookUserLeaderboardResponse) GetEnd() *string {
 		return nil
 	}
 	return w.End
+}
+
+func (w *WebhookUserLeaderboardResponse) GetStartTime() *string {
+	if w == nil {
+		return nil
+	}
+	return w.StartTime
+}
+
+func (w *WebhookUserLeaderboardResponse) GetEndTime() *string {
+	if w == nil {
+		return nil
+	}
+	return w.EndTime
 }
 
 func (w *WebhookUserLeaderboardResponse) GetMaxParticipants() *int {
@@ -14840,6 +14996,20 @@ func (w *WebhookUserLeaderboardResponse) SetStart(start string) {
 func (w *WebhookUserLeaderboardResponse) SetEnd(end *string) {
 	w.End = end
 	w.require(webhookUserLeaderboardResponseFieldEnd)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhookUserLeaderboardResponse) SetStartTime(startTime *string) {
+	w.StartTime = startTime
+	w.require(webhookUserLeaderboardResponseFieldStartTime)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhookUserLeaderboardResponse) SetEndTime(endTime *string) {
+	w.EndTime = endTime
+	w.require(webhookUserLeaderboardResponseFieldEndTime)
 }
 
 // SetMaxParticipants sets the MaxParticipants field and marks it as non-optional;
