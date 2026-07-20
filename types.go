@@ -15222,6 +15222,768 @@ func (w *WebhooksAchievementCompletedPayload) String() string {
 }
 
 var (
+	webhooksEmailsAchievementDuePayloadFieldTimestamp   = big.NewInt(1 << 0)
+	webhooksEmailsAchievementDuePayloadFieldUser        = big.NewInt(1 << 1)
+	webhooksEmailsAchievementDuePayloadFieldAchievement = big.NewInt(1 << 2)
+)
+
+type WebhooksEmailsAchievementDuePayload struct {
+	// The time the webhook was sent.
+	Timestamp time.Time `json:"timestamp" url:"timestamp"`
+	// The user the achievement message is due for.
+	User *User `json:"user" url:"user"`
+	// The achievement that was completed.
+	Achievement *UserAchievementResponse `json:"achievement" url:"achievement"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+	type_          string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) GetTimestamp() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.Timestamp
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) GetAchievement() *UserAchievementResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Achievement
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetTimestamp sets the Timestamp field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsAchievementDuePayload) SetTimestamp(timestamp time.Time) {
+	w.Timestamp = timestamp
+	w.require(webhooksEmailsAchievementDuePayloadFieldTimestamp)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsAchievementDuePayload) SetUser(user *User) {
+	w.User = user
+	w.require(webhooksEmailsAchievementDuePayloadFieldUser)
+}
+
+// SetAchievement sets the Achievement field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsAchievementDuePayload) SetAchievement(achievement *UserAchievementResponse) {
+	w.Achievement = achievement
+	w.require(webhooksEmailsAchievementDuePayloadFieldAchievement)
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksEmailsAchievementDuePayload
+	var unmarshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksEmailsAchievementDuePayload(unmarshaler.embed)
+	w.Timestamp = unmarshaler.Timestamp.Time()
+	if unmarshaler.Type != "emails.achievement_due" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "emails.achievement_due", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksEmailsAchievementDuePayload
+	var marshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed:     embed(*w),
+		Timestamp: internal.NewDateTime(w.Timestamp),
+		Type:      "emails.achievement_due",
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebhooksEmailsAchievementDuePayload) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+var (
+	webhooksEmailsReactivationDuePayloadFieldTimestamp    = big.NewInt(1 << 0)
+	webhooksEmailsReactivationDuePayloadFieldUser         = big.NewInt(1 << 1)
+	webhooksEmailsReactivationDuePayloadFieldReactivation = big.NewInt(1 << 2)
+)
+
+type WebhooksEmailsReactivationDuePayload struct {
+	// The time the webhook was sent.
+	Timestamp time.Time `json:"timestamp" url:"timestamp"`
+	// The user the reactivation message is due for.
+	User *User `json:"user" url:"user"`
+	// Details about the reactivation message.
+	Reactivation *WebhooksEmailsReactivationDuePayloadReactivation `json:"reactivation" url:"reactivation"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+	type_          string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) GetTimestamp() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.Timestamp
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) GetReactivation() *WebhooksEmailsReactivationDuePayloadReactivation {
+	if w == nil {
+		return nil
+	}
+	return w.Reactivation
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetTimestamp sets the Timestamp field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsReactivationDuePayload) SetTimestamp(timestamp time.Time) {
+	w.Timestamp = timestamp
+	w.require(webhooksEmailsReactivationDuePayloadFieldTimestamp)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsReactivationDuePayload) SetUser(user *User) {
+	w.User = user
+	w.require(webhooksEmailsReactivationDuePayloadFieldUser)
+}
+
+// SetReactivation sets the Reactivation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsReactivationDuePayload) SetReactivation(reactivation *WebhooksEmailsReactivationDuePayloadReactivation) {
+	w.Reactivation = reactivation
+	w.require(webhooksEmailsReactivationDuePayloadFieldReactivation)
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksEmailsReactivationDuePayload
+	var unmarshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksEmailsReactivationDuePayload(unmarshaler.embed)
+	w.Timestamp = unmarshaler.Timestamp.Time()
+	if unmarshaler.Type != "emails.reactivation_due" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "emails.reactivation_due", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksEmailsReactivationDuePayload
+	var marshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed:     embed(*w),
+		Timestamp: internal.NewDateTime(w.Timestamp),
+		Type:      "emails.reactivation_due",
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebhooksEmailsReactivationDuePayload) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// Details about the reactivation message.
+var (
+	webhooksEmailsReactivationDuePayloadReactivationFieldMessageNumber       = big.NewInt(1 << 0)
+	webhooksEmailsReactivationDuePayloadReactivationFieldDaysSinceLastActive = big.NewInt(1 << 1)
+)
+
+type WebhooksEmailsReactivationDuePayloadReactivation struct {
+	// The reactivation message number in the sequence.
+	MessageNumber int `json:"messageNumber" url:"messageNumber"`
+	// The number of days since the user was last active.
+	DaysSinceLastActive int `json:"daysSinceLastActive" url:"daysSinceLastActive"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) GetMessageNumber() int {
+	if w == nil {
+		return 0
+	}
+	return w.MessageNumber
+}
+
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) GetDaysSinceLastActive() int {
+	if w == nil {
+		return 0
+	}
+	return w.DaysSinceLastActive
+}
+
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetMessageNumber sets the MessageNumber field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) SetMessageNumber(messageNumber int) {
+	w.MessageNumber = messageNumber
+	w.require(webhooksEmailsReactivationDuePayloadReactivationFieldMessageNumber)
+}
+
+// SetDaysSinceLastActive sets the DaysSinceLastActive field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) SetDaysSinceLastActive(daysSinceLastActive int) {
+	w.DaysSinceLastActive = daysSinceLastActive
+	w.require(webhooksEmailsReactivationDuePayloadReactivationFieldDaysSinceLastActive)
+}
+
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) UnmarshalJSON(data []byte) error {
+	type unmarshaler WebhooksEmailsReactivationDuePayloadReactivation
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WebhooksEmailsReactivationDuePayloadReactivation(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) MarshalJSON() ([]byte, error) {
+	type embed WebhooksEmailsReactivationDuePayloadReactivation
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*w),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebhooksEmailsReactivationDuePayloadReactivation) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+var (
+	webhooksEmailsRecapDuePayloadFieldTimestamp = big.NewInt(1 << 0)
+	webhooksEmailsRecapDuePayloadFieldUser      = big.NewInt(1 << 1)
+	webhooksEmailsRecapDuePayloadFieldRecap     = big.NewInt(1 << 2)
+)
+
+type WebhooksEmailsRecapDuePayload struct {
+	// The time the webhook was sent.
+	Timestamp time.Time `json:"timestamp" url:"timestamp"`
+	// The user the recap is due for.
+	User *User `json:"user" url:"user"`
+	// Details about the recap period.
+	Recap *WebhooksEmailsRecapDuePayloadRecap `json:"recap" url:"recap"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+	type_          string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksEmailsRecapDuePayload) GetTimestamp() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.Timestamp
+}
+
+func (w *WebhooksEmailsRecapDuePayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksEmailsRecapDuePayload) GetRecap() *WebhooksEmailsRecapDuePayloadRecap {
+	if w == nil {
+		return nil
+	}
+	return w.Recap
+}
+
+func (w *WebhooksEmailsRecapDuePayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksEmailsRecapDuePayload) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebhooksEmailsRecapDuePayload) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetTimestamp sets the Timestamp field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsRecapDuePayload) SetTimestamp(timestamp time.Time) {
+	w.Timestamp = timestamp
+	w.require(webhooksEmailsRecapDuePayloadFieldTimestamp)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsRecapDuePayload) SetUser(user *User) {
+	w.User = user
+	w.require(webhooksEmailsRecapDuePayloadFieldUser)
+}
+
+// SetRecap sets the Recap field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsRecapDuePayload) SetRecap(recap *WebhooksEmailsRecapDuePayloadRecap) {
+	w.Recap = recap
+	w.require(webhooksEmailsRecapDuePayloadFieldRecap)
+}
+
+func (w *WebhooksEmailsRecapDuePayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksEmailsRecapDuePayload
+	var unmarshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksEmailsRecapDuePayload(unmarshaler.embed)
+	w.Timestamp = unmarshaler.Timestamp.Time()
+	if unmarshaler.Type != "emails.recap_due" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "emails.recap_due", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksEmailsRecapDuePayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksEmailsRecapDuePayload
+	var marshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed:     embed(*w),
+		Timestamp: internal.NewDateTime(w.Timestamp),
+		Type:      "emails.recap_due",
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebhooksEmailsRecapDuePayload) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// Details about the recap period.
+var (
+	webhooksEmailsRecapDuePayloadRecapFieldPeriodStart = big.NewInt(1 << 0)
+	webhooksEmailsRecapDuePayloadRecapFieldPeriodEnd   = big.NewInt(1 << 1)
+)
+
+type WebhooksEmailsRecapDuePayloadRecap struct {
+	// The start of the recap period.
+	PeriodStart string `json:"periodStart" url:"periodStart"`
+	// The end of the recap period.
+	PeriodEnd string `json:"periodEnd" url:"periodEnd"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksEmailsRecapDuePayloadRecap) GetPeriodStart() string {
+	if w == nil {
+		return ""
+	}
+	return w.PeriodStart
+}
+
+func (w *WebhooksEmailsRecapDuePayloadRecap) GetPeriodEnd() string {
+	if w == nil {
+		return ""
+	}
+	return w.PeriodEnd
+}
+
+func (w *WebhooksEmailsRecapDuePayloadRecap) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebhooksEmailsRecapDuePayloadRecap) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsRecapDuePayloadRecap) SetPeriodStart(periodStart string) {
+	w.PeriodStart = periodStart
+	w.require(webhooksEmailsRecapDuePayloadRecapFieldPeriodStart)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsRecapDuePayloadRecap) SetPeriodEnd(periodEnd string) {
+	w.PeriodEnd = periodEnd
+	w.require(webhooksEmailsRecapDuePayloadRecapFieldPeriodEnd)
+}
+
+func (w *WebhooksEmailsRecapDuePayloadRecap) UnmarshalJSON(data []byte) error {
+	type unmarshaler WebhooksEmailsRecapDuePayloadRecap
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WebhooksEmailsRecapDuePayloadRecap(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksEmailsRecapDuePayloadRecap) MarshalJSON() ([]byte, error) {
+	type embed WebhooksEmailsRecapDuePayloadRecap
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*w),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebhooksEmailsRecapDuePayloadRecap) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+var (
+	webhooksEmailsStreakReminderDuePayloadFieldTimestamp = big.NewInt(1 << 0)
+	webhooksEmailsStreakReminderDuePayloadFieldUser      = big.NewInt(1 << 1)
+	webhooksEmailsStreakReminderDuePayloadFieldStreak    = big.NewInt(1 << 2)
+)
+
+type WebhooksEmailsStreakReminderDuePayload struct {
+	// The time the webhook was sent.
+	Timestamp time.Time `json:"timestamp" url:"timestamp"`
+	// The user the streak reminder is due for.
+	User *User `json:"user" url:"user"`
+	// The user's current streak data.
+	Streak *StreakResponse `json:"streak" url:"streak"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+	type_          string
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) GetTimestamp() time.Time {
+	if w == nil {
+		return time.Time{}
+	}
+	return w.Timestamp
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) GetUser() *User {
+	if w == nil {
+		return nil
+	}
+	return w.User
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) GetStreak() *StreakResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Streak
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) Type() string {
+	return w.type_
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) GetExtraProperties() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.extraProperties
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) require(field *big.Int) {
+	if w.explicitFields == nil {
+		w.explicitFields = big.NewInt(0)
+	}
+	w.explicitFields.Or(w.explicitFields, field)
+}
+
+// SetTimestamp sets the Timestamp field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsStreakReminderDuePayload) SetTimestamp(timestamp time.Time) {
+	w.Timestamp = timestamp
+	w.require(webhooksEmailsStreakReminderDuePayloadFieldTimestamp)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsStreakReminderDuePayload) SetUser(user *User) {
+	w.User = user
+	w.require(webhooksEmailsStreakReminderDuePayloadFieldUser)
+}
+
+// SetStreak sets the Streak field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhooksEmailsStreakReminderDuePayload) SetStreak(streak *StreakResponse) {
+	w.Streak = streak
+	w.require(webhooksEmailsStreakReminderDuePayloadFieldStreak)
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) UnmarshalJSON(data []byte) error {
+	type embed WebhooksEmailsStreakReminderDuePayload
+	var unmarshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed: embed(*w),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*w = WebhooksEmailsStreakReminderDuePayload(unmarshaler.embed)
+	w.Timestamp = unmarshaler.Timestamp.Time()
+	if unmarshaler.Type != "emails.streak_reminder_due" {
+		return fmt.Errorf("unexpected value for literal on type %T; expected %v got %v", w, "emails.streak_reminder_due", unmarshaler.Type)
+	}
+	w.type_ = unmarshaler.Type
+	extraProperties, err := internal.ExtractExtraProperties(data, *w, "type")
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) MarshalJSON() ([]byte, error) {
+	type embed WebhooksEmailsStreakReminderDuePayload
+	var marshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+		Type      string             `json:"type"`
+	}{
+		embed:     embed(*w),
+		Timestamp: internal.NewDateTime(w.Timestamp),
+		Type:      "emails.streak_reminder_due",
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, w.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (w *WebhooksEmailsStreakReminderDuePayload) String() string {
+	if w == nil {
+		return "<nil>"
+	}
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+var (
 	webhooksLeaderboardChangedPayloadFieldLeaderboard = big.NewInt(1 << 0)
 )
 
