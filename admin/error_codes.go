@@ -30,5 +30,10 @@ var ErrorCodes internal.ErrorCodes = internal.ErrorCodes{
             APIError: apiError,
         }
     },
+    403: func(apiError *core.APIError) error{
+        return &trophygo.ForbiddenError{
+            APIError: apiError,
+        }
+    },
 }
 

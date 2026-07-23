@@ -3128,6 +3128,138 @@ client.Admin.Streaks.Restore(
 </dl>
 </details>
 
+## Admin ApplicationApiKeys
+<details><summary><code>client.Admin.ApplicationApiKeys.Create(request) -> *trophygo.CreateApplicationKeysResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create application API keys scoped to specific users. Each key can only perform operations on behalf of the user it was created for.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.CreateApplicationKeyRequestItem{
+        &trophygo.CreateApplicationKeyRequestItem{
+            UserId: "user_123",
+        },
+        &trophygo.CreateApplicationKeyRequestItem{
+            UserId: "user_456",
+        },
+    }
+client.Admin.ApplicationApiKeys.Create(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `trophygo.CreateApplicationKeysRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.ApplicationApiKeys.Delete() -> *trophygo.DeleteApplicationKeysResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete application API keys by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &admin.ApplicationApiKeysDeleteRequest{
+        Ids: []*string{
+            trophygo.String(
+                "550e8400-e29b-41d4-a716-446655440000",
+            ),
+        },
+    }
+client.Admin.ApplicationApiKeys.Delete(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**ids:** `*string` — Application API key IDs (UUIDs returned at creation time). Repeat the query param or provide a comma-separated list. Maximum 100 IDs per request.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Admin Tenants
 <details><summary><code>client.Admin.Tenants.List() -> trophygo.ListTenantsResponse</code></summary>
 <dl>

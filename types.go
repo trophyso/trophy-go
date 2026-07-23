@@ -1238,14 +1238,17 @@ func (a *AdminErrorBody) String() string {
 
 // An issue encountered while processing an item in an admin API request.
 var (
-	adminIssueFieldUserId   = big.NewInt(1 << 0)
-	adminIssueFieldBoostId  = big.NewInt(1 << 1)
-	adminIssueFieldIndex    = big.NewInt(1 << 2)
-	adminIssueFieldSeverity = big.NewInt(1 << 3)
-	adminIssueFieldMessage  = big.NewInt(1 << 4)
+	adminIssueFieldId       = big.NewInt(1 << 0)
+	adminIssueFieldUserId   = big.NewInt(1 << 1)
+	adminIssueFieldBoostId  = big.NewInt(1 << 2)
+	adminIssueFieldIndex    = big.NewInt(1 << 3)
+	adminIssueFieldSeverity = big.NewInt(1 << 4)
+	adminIssueFieldMessage  = big.NewInt(1 << 5)
 )
 
 type AdminIssue struct {
+	// The ID of the resource the issue relates to, when applicable.
+	Id *string `json:"id,omitempty" url:"id,omitempty"`
 	// The ID of the user the issue relates to, when applicable.
 	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
 	// The ID of the points boost the issue relates to, when applicable.
@@ -1262,6 +1265,13 @@ type AdminIssue struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (a *AdminIssue) GetId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Id
 }
 
 func (a *AdminIssue) GetUserId() *string {
@@ -1311,6 +1321,13 @@ func (a *AdminIssue) require(field *big.Int) {
 		a.explicitFields = big.NewInt(0)
 	}
 	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminIssue) SetId(id *string) {
+	a.Id = id
+	a.require(adminIssueFieldId)
 }
 
 // SetUserId sets the UserId field and marks it as non-optional;
@@ -3772,6 +3789,198 @@ func (b *BaseStreakResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", b)
+}
+
+// A user to create an application API key for.
+var (
+	createApplicationKeyRequestItemFieldUserId = big.NewInt(1 << 0)
+)
+
+type CreateApplicationKeyRequestItem struct {
+	// The user ID to scope the application API key to.
+	UserId string `json:"userId" url:"userId"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateApplicationKeyRequestItem) GetUserId() string {
+	if c == nil {
+		return ""
+	}
+	return c.UserId
+}
+
+func (c *CreateApplicationKeyRequestItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateApplicationKeyRequestItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetUserId sets the UserId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateApplicationKeyRequestItem) SetUserId(userId string) {
+	c.UserId = userId
+	c.require(createApplicationKeyRequestItemFieldUserId)
+}
+
+func (c *CreateApplicationKeyRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateApplicationKeyRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateApplicationKeyRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateApplicationKeyRequestItem) MarshalJSON() ([]byte, error) {
+	type embed CreateApplicationKeyRequestItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateApplicationKeyRequestItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Request body for creating application API keys.
+type CreateApplicationKeysRequest = []*CreateApplicationKeyRequestItem
+
+// Response containing created application API keys and any issues.
+var (
+	createApplicationKeysResponseFieldCreated = big.NewInt(1 << 0)
+	createApplicationKeysResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type CreateApplicationKeysResponse struct {
+	// Array of successfully created application API keys.
+	Created []*CreatedApplicationKey `json:"created" url:"created"`
+	// Array of issues encountered during creation.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateApplicationKeysResponse) GetCreated() []*CreatedApplicationKey {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateApplicationKeysResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateApplicationKeysResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateApplicationKeysResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreated sets the Created field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateApplicationKeysResponse) SetCreated(created []*CreatedApplicationKey) {
+	c.Created = created
+	c.require(createApplicationKeysResponseFieldCreated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateApplicationKeysResponse) SetIssues(issues []*AdminIssue) {
+	c.Issues = issues
+	c.require(createApplicationKeysResponseFieldIssues)
+}
+
+func (c *CreateApplicationKeysResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateApplicationKeysResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateApplicationKeysResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateApplicationKeysResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateApplicationKeysResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateApplicationKeysResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 // An attribute to create.
@@ -7159,6 +7368,143 @@ func (c *CreatedAdminPointsSystem) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// A newly created application API key.
+var (
+	createdApplicationKeyFieldId     = big.NewInt(1 << 0)
+	createdApplicationKeyFieldUserId = big.NewInt(1 << 1)
+	createdApplicationKeyFieldKey    = big.NewInt(1 << 2)
+	createdApplicationKeyFieldPrefix = big.NewInt(1 << 3)
+)
+
+type CreatedApplicationKey struct {
+	// The unique identifier of the API key. Use this ID to delete the key.
+	Id string `json:"id" url:"id"`
+	// The user ID the key is scoped to.
+	UserId string `json:"userId" url:"userId"`
+	// The full API key value. This is only returned once at creation time and cannot be retrieved again.
+	Key string `json:"key" url:"key"`
+	// The key prefix used for cache lookup.
+	Prefix string `json:"prefix" url:"prefix"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatedApplicationKey) GetId() string {
+	if c == nil {
+		return ""
+	}
+	return c.Id
+}
+
+func (c *CreatedApplicationKey) GetUserId() string {
+	if c == nil {
+		return ""
+	}
+	return c.UserId
+}
+
+func (c *CreatedApplicationKey) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreatedApplicationKey) GetPrefix() string {
+	if c == nil {
+		return ""
+	}
+	return c.Prefix
+}
+
+func (c *CreatedApplicationKey) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreatedApplicationKey) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedApplicationKey) SetId(id string) {
+	c.Id = id
+	c.require(createdApplicationKeyFieldId)
+}
+
+// SetUserId sets the UserId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedApplicationKey) SetUserId(userId string) {
+	c.UserId = userId
+	c.require(createdApplicationKeyFieldUserId)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedApplicationKey) SetKey(key string) {
+	c.Key = key
+	c.require(createdApplicationKeyFieldKey)
+}
+
+// SetPrefix sets the Prefix field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedApplicationKey) SetPrefix(prefix string) {
+	c.Prefix = prefix
+	c.require(createdApplicationKeyFieldPrefix)
+}
+
+func (c *CreatedApplicationKey) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatedApplicationKey
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatedApplicationKey(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatedApplicationKey) MarshalJSON() ([]byte, error) {
+	type embed CreatedApplicationKey
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreatedApplicationKey) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // A successfully created metric returned from the create endpoint.
 var (
 	createdMetricFieldId       = big.NewInt(1 << 0)
@@ -7334,6 +7680,109 @@ func NewCreatedMetricUnitTypeFromString(s string) (CreatedMetricUnitType, error)
 
 func (c CreatedMetricUnitType) Ptr() *CreatedMetricUnitType {
 	return &c
+}
+
+// Response containing deleted application API key IDs and any issues.
+var (
+	deleteApplicationKeysResponseFieldDeleted = big.NewInt(1 << 0)
+	deleteApplicationKeysResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type DeleteApplicationKeysResponse struct {
+	// Array of deleted application API key IDs.
+	Deleted []*DeletedResource `json:"deleted" url:"deleted"`
+	// Array of issues encountered during deletion.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteApplicationKeysResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteApplicationKeysResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteApplicationKeysResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteApplicationKeysResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetDeleted sets the Deleted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteApplicationKeysResponse) SetDeleted(deleted []*DeletedResource) {
+	d.Deleted = deleted
+	d.require(deleteApplicationKeysResponseFieldDeleted)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteApplicationKeysResponse) SetIssues(issues []*AdminIssue) {
+	d.Issues = issues
+	d.require(deleteApplicationKeysResponseFieldIssues)
+}
+
+func (d *DeleteApplicationKeysResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteApplicationKeysResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteApplicationKeysResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteApplicationKeysResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteApplicationKeysResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteApplicationKeysResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
 }
 
 // Response containing deleted attributes represented by ID and any per-item issues, including invalid or missing attribute IDs.
@@ -10888,7 +11337,7 @@ type PointsBoostWebhookPayload struct {
 	Name string `json:"name" url:"name"`
 	// The status of the points boost.
 	Status PointsBoostWebhookPayloadStatus `json:"status" url:"status"`
-	// The customer-facing user ID that the boost is scoped to, or null for global boosts.
+	// The user ID the boost is scoped to, or null for global boosts.
 	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
 	// The ID of the points system this boost applies to.
 	PointsSystemId string `json:"pointsSystemId" url:"pointsSystemId"`

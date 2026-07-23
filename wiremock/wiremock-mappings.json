@@ -1123,7 +1123,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"type\": \"user\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Name not a string\"\n    },\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 1,\n      \"severity\": \"error\",\n      \"message\": \"Key already in use by another attribute of this type\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"type\": \"user\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Name not a string\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 1,\n      \"severity\": \"error\",\n      \"message\": \"Key already in use by another attribute of this type\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1166,7 +1166,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1197,7 +1197,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Subscription Plan\",\n      \"key\": \"plan\",\n      \"type\": \"user\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Subscription Plan\",\n      \"key\": \"plan\",\n      \"type\": \"user\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1304,7 +1304,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"unitType\": \"number\",\n      \"units\": \"units\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Name not a string\"\n    },\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 1,\n      \"severity\": \"error\",\n      \"message\": \"Key already in use by another metric\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"unitType\": \"number\",\n      \"units\": \"units\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Name not a string\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 1,\n      \"severity\": \"error\",\n      \"message\": \"Key already in use by another metric\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1347,7 +1347,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1378,7 +1378,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Invites Completed\",\n      \"key\": \"invites-sent\",\n      \"unitType\": \"number\",\n      \"units\": \"invites\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Invites Completed\",\n      \"key\": \"invites-sent\",\n      \"unitType\": \"number\",\n      \"units\": \"invites\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1485,7 +1485,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"description\": \"description\",\n      \"status\": \"inactive\",\n      \"rankBy\": \"metric\",\n      \"metricId\": \"metricId\",\n      \"pointsSystemId\": \"pointsSystemId\",\n      \"maxParticipants\": 1,\n      \"start\": \"start\",\n      \"end\": \"end\",\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"breakdownAttributes\": [\n        \"breakdownAttributes\"\n      ],\n      \"runUnit\": \"day\",\n      \"runInterval\": 1\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"description\": \"description\",\n      \"status\": \"inactive\",\n      \"rankBy\": \"metric\",\n      \"metricId\": \"metricId\",\n      \"pointsSystemId\": \"pointsSystemId\",\n      \"maxParticipants\": 1,\n      \"start\": \"start\",\n      \"end\": \"end\",\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"breakdownAttributes\": [\n        \"breakdownAttributes\"\n      ],\n      \"runUnit\": \"day\",\n      \"runInterval\": 1\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1525,7 +1525,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"id\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"id\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1556,7 +1556,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"description\": \"description\",\n      \"status\": \"inactive\",\n      \"rankBy\": \"metric\",\n      \"metricId\": \"metricId\",\n      \"pointsSystemId\": \"pointsSystemId\",\n      \"maxParticipants\": 1,\n      \"start\": \"start\",\n      \"end\": \"end\",\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"breakdownAttributes\": [\n        \"breakdownAttributes\"\n      ],\n      \"runUnit\": \"day\",\n      \"runInterval\": 1\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"description\": \"description\",\n      \"status\": \"inactive\",\n      \"rankBy\": \"metric\",\n      \"metricId\": \"metricId\",\n      \"pointsSystemId\": \"pointsSystemId\",\n      \"maxParticipants\": 1,\n      \"start\": \"start\",\n      \"end\": \"end\",\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"breakdownAttributes\": [\n        \"breakdownAttributes\"\n      ],\n      \"runUnit\": \"day\",\n      \"runInterval\": 1\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1623,12 +1623,83 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"restoredUsers\": [\n    \"user-123\",\n    \"user-456\"\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"warning\",\n      \"message\": \"No streak to restore\"\n    }\n  ]\n}",
+        "body": "{\n  \"restoredUsers\": [\n    \"user-123\",\n    \"user-456\"\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"warning\",\n      \"message\": \"No streak to restore\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
       },
       "uuid": "2c5b783e-c4be-45f0-9546-543660822b91",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "c93e1842-a1da-47a0-86df-deca7465dc3a",
+      "name": "Create application API keys for users - Create application keys",
+      "request": {
+        "urlPathTemplate": "/application-api-keys",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user_123\",\n      \"key\": \"app_XXXXX.YOUR_API_KEY\",\n      \"prefix\": \"app_XXXXX\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "c93e1842-a1da-47a0-86df-deca7465dc3a",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "e4e508c6-f6f9-4458-9b60-e3309d1f1a5a",
+      "name": "Delete application API keys - Success",
+      "request": {
+        "urlPathTemplate": "/application-api-keys",
+        "method": "DELETE",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "queryParameters": {
+          "ids": {
+            "hasExactly": [
+              {
+                "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "e4e508c6-f6f9-4458-9b60-e3309d1f1a5a",
       "persistent": true,
       "priority": 3,
       "metadata": {
@@ -1694,7 +1765,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"customerId\": \"customer_12345\",\n      \"name\": \"Acme Corp\",\n      \"status\": \"active\",\n      \"created\": \"2024-01-15T09:30:00Z\",\n      \"updated\": \"2024-01-15T09:30:00Z\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Customer ID \\\"customer_12345\\\" already exists in this environment\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"customerId\": \"customer_12345\",\n      \"name\": \"Acme Corp\",\n      \"status\": \"active\",\n      \"created\": \"2024-01-15T09:30:00Z\",\n      \"updated\": \"2024-01-15T09:30:00Z\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Customer ID \\\"customer_12345\\\" already exists in this environment\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1737,7 +1808,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1768,7 +1839,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"customerId\": \"customer_12345\",\n      \"name\": \"Acme Corporation\",\n      \"status\": \"active\",\n      \"created\": \"2026-01-15T09:30:00Z\",\n      \"updated\": \"2026-05-16T10:00:00Z\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"customerId\": \"customer_12345\",\n      \"name\": \"Acme Corporation\",\n      \"status\": \"active\",\n      \"created\": \"2026-01-15T09:30:00Z\",\n      \"updated\": \"2026-05-16T10:00:00Z\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1875,7 +1946,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"description\": \"description\",\n      \"status\": \"active\",\n      \"badge\": {\n        \"url\": \"url\"\n      },\n      \"maxPoints\": 1,\n      \"levels\": [\n        {\n          \"id\": \"id\",\n          \"name\": \"name\",\n          \"key\": \"key\",\n          \"points\": 1,\n          \"description\": \"description\",\n          \"badge\": null\n        }\n      ],\n      \"boosts\": [\n        {\n          \"id\": \"id\",\n          \"name\": \"name\",\n          \"status\": \"active\",\n          \"start\": \"start\",\n          \"end\": null,\n          \"multiplier\": 1.1,\n          \"rounding\": \"down\",\n          \"userId\": null\n        }\n      ],\n      \"triggers\": [\n        {\n          \"id\": \"id\",\n          \"type\": \"metric\",\n          \"points\": 1,\n          \"status\": \"active\",\n          \"userAttributes\": [\n            {\n              \"attributeId\": \"attributeId\",\n              \"attributeValue\": \"attributeValue\"\n            }\n          ],\n          \"blockIfOutOfPoints\": true\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"name must be a string\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"description\": \"description\",\n      \"status\": \"active\",\n      \"badge\": {\n        \"url\": \"url\"\n      },\n      \"maxPoints\": 1,\n      \"levels\": [\n        {\n          \"id\": \"id\",\n          \"name\": \"name\",\n          \"key\": \"key\",\n          \"points\": 1,\n          \"description\": \"description\",\n          \"badge\": null\n        }\n      ],\n      \"boosts\": [\n        {\n          \"id\": \"id\",\n          \"name\": \"name\",\n          \"status\": \"active\",\n          \"start\": \"start\",\n          \"end\": null,\n          \"multiplier\": 1.1,\n          \"rounding\": \"down\",\n          \"userId\": null\n        }\n      ],\n      \"triggers\": [\n        {\n          \"id\": \"id\",\n          \"type\": \"metric\",\n          \"points\": 1,\n          \"status\": \"active\",\n          \"userAttributes\": [\n            {\n              \"attributeId\": \"attributeId\",\n              \"attributeValue\": \"attributeValue\"\n            }\n          ],\n          \"blockIfOutOfPoints\": true\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"name must be a string\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1915,7 +1986,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1946,7 +2017,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"New Name\",\n      \"key\": \"xp\",\n      \"description\": \"\",\n      \"status\": \"active\",\n      \"badge\": null,\n      \"maxPoints\": null\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"New Name\",\n      \"key\": \"xp\",\n      \"description\": \"\",\n      \"status\": \"active\",\n      \"badge\": null,\n      \"maxPoints\": null\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2062,7 +2133,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"status\": \"active\",\n      \"start\": \"start\",\n      \"end\": \"end\",\n      \"multiplier\": 1.1,\n      \"rounding\": \"down\",\n      \"userId\": \"userId\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"User does not exist\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"status\": \"active\",\n      \"start\": \"start\",\n      \"end\": \"end\",\n      \"multiplier\": 1.1,\n      \"rounding\": \"down\",\n      \"userId\": \"userId\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"User does not exist\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2107,7 +2178,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440001\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440002\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440001\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440002\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2143,7 +2214,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Updated Boost Name\",\n      \"status\": \"active\",\n      \"start\": \"2024-01-01\",\n      \"end\": \"2024-01-03\",\n      \"multiplier\": 3,\n      \"rounding\": \"down\",\n      \"userId\": \"user-123\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Updated Boost Name\",\n      \"status\": \"active\",\n      \"start\": \"2024-01-01\",\n      \"end\": \"2024-01-03\",\n      \"multiplier\": 3,\n      \"rounding\": \"down\",\n      \"userId\": \"user-123\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2262,7 +2333,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"points\": 1,\n      \"description\": \"description\",\n      \"badge\": {\n        \"url\": \"url\"\n      }\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Key already in use by another level\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"points\": 1,\n      \"description\": \"description\",\n      \"badge\": {\n        \"url\": \"url\"\n      }\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Key already in use by another level\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2307,7 +2378,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2343,7 +2414,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Bronze Tier\",\n      \"key\": \"bronze\",\n      \"points\": 150,\n      \"description\": \"Starting level\",\n      \"badge\": null\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Bronze Tier\",\n      \"key\": \"bronze\",\n      \"points\": 150,\n      \"description\": \"Starting level\",\n      \"badge\": null\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2462,7 +2533,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"type\": \"metric\",\n      \"points\": 1,\n      \"status\": \"active\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"metricId\": \"metricId\",\n      \"metricThreshold\": 1,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"achievementId\": \"achievementId\",\n      \"streakLength\": 1,\n      \"timeUnit\": \"hours\",\n      \"timeInterval\": 1,\n      \"blockIfOutOfPoints\": true\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"type\": \"metric\",\n      \"points\": 1,\n      \"status\": \"active\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"metricId\": \"metricId\",\n      \"metricThreshold\": 1,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"achievementId\": \"achievementId\",\n      \"streakLength\": 1,\n      \"timeUnit\": \"hours\",\n      \"timeInterval\": 1,\n      \"blockIfOutOfPoints\": true\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2507,7 +2578,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2543,7 +2614,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"type\": \"metric\",\n      \"points\": 20,\n      \"status\": \"active\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"metricId\": \"660f9500-f30c-42e5-b827-557766550001\",\n      \"metricThreshold\": 5,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"achievementId\": \"achievementId\",\n      \"streakLength\": 1,\n      \"timeUnit\": \"hours\",\n      \"timeInterval\": 1,\n      \"blockIfOutOfPoints\": false\n    }\n  ],\n  \"issues\": [\n    {\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"type\": \"metric\",\n      \"points\": 20,\n      \"status\": \"active\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"metricId\": \"660f9500-f30c-42e5-b827-557766550001\",\n      \"metricThreshold\": 5,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"achievementId\": \"achievementId\",\n      \"streakLength\": 1,\n      \"timeUnit\": \"hours\",\n      \"timeInterval\": 1,\n      \"blockIfOutOfPoints\": false\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2613,7 +2684,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"issues\": [\n    {\n      \"userId\": \"user-789\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"warning\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "body": "{\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-789\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"warning\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2632,6 +2703,6 @@
     }
   ],
   "meta": {
-    "total": 69
+    "total": 71
   }
 }

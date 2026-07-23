@@ -34,11 +34,11 @@ func (b *BadRequestError) Unwrap() error {
 // Streak customization is not enabled for this organisation
 type ForbiddenError struct {
 	*core.APIError
-	Body *ErrorBody
+	Body any
 }
 
 func (f *ForbiddenError) UnmarshalJSON(data []byte) error {
-	var body *ErrorBody
+	var body any
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
