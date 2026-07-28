@@ -1432,6 +1432,37 @@
       }
     },
     {
+      "id": "793f4771-9e7a-4f2c-95d5-54ace9c6f585",
+      "name": "Submit a batch of metric events - Successful operation",
+      "request": {
+        "urlPathTemplate": "/metrics/events",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 202,
+        "body": "{\n  \"accepted\": 1\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "793f4771-9e7a-4f2c-95d5-54ace9c6f585",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
       "id": "d31af611-4509-4d40-9871-2e10a7df17de",
       "name": "List leaderboards - Leaderboards list",
       "request": {
@@ -2703,6 +2734,6 @@
     }
   ],
   "meta": {
-    "total": 71
+    "total": 72
   }
 }

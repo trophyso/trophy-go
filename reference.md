@@ -2696,6 +2696,90 @@ client.Admin.Metrics.Get(
 </dl>
 </details>
 
+<details><summary><code>client.Admin.Metrics.BatchEvents(request) -> *trophygo.BatchEventsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Submit up to 1,000 metric events for asynchronous processing.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.BatchMetricEvent{
+        &trophygo.BatchMetricEvent{
+            Key: "words-written",
+            User: &trophygo.BatchMetricEventUser{
+                Id: "18",
+                Email: trophygo.String(
+                    "user@example.com",
+                ),
+                Tz: trophygo.String(
+                    "Europe/London",
+                ),
+                Attributes: map[string]string{
+                    "department": "engineering",
+                    "role": "developer",
+                },
+            },
+            Value: 750,
+            Attributes: map[string]string{
+                "category": "writing",
+                "source": "mobile-app",
+            },
+            IdempotencyKey: trophygo.String(
+                "e4296e4b-8493-4bd1-9c30-5a1a9ac4d78f",
+            ),
+        },
+    }
+client.Admin.Metrics.BatchEvents(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `[]*trophygo.BatchMetricEvent` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Admin Leaderboards
 <details><summary><code>client.Admin.Leaderboards.List() -> trophygo.ListLeaderboardsResponse</code></summary>
 <dl>

@@ -23,7 +23,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.18.0"
+        options.SdkVersion = "1.19.0"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -117,6 +117,23 @@ func (c *Client) Get(
     response, err := c.WithRawResponse.Get(
         ctx,
         id,
+        opts...,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return response.Body, nil
+}
+
+// Submit up to 1,000 metric events for asynchronous processing.
+func (c *Client) BatchEvents(
+    ctx context.Context,
+    request []*trophygo.BatchMetricEvent,
+    opts ...option.RequestOption,
+) (*trophygo.BatchEventsResponse, error){
+    response, err := c.WithRawResponse.BatchEvents(
+        ctx,
+        request,
         opts...,
     )
     if err != nil {

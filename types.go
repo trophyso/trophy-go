@@ -3791,6 +3791,434 @@ func (b *BaseStreakResponse) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
+// Response returned when a batch of metric events is accepted.
+var (
+	batchEventsResponseFieldAccepted = big.NewInt(1 << 0)
+)
+
+type BatchEventsResponse struct {
+	// The number of events accepted into the processing queue.
+	Accepted int `json:"accepted" url:"accepted"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BatchEventsResponse) GetAccepted() int {
+	if b == nil {
+		return 0
+	}
+	return b.Accepted
+}
+
+func (b *BatchEventsResponse) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BatchEventsResponse) require(field *big.Int) {
+	if b.explicitFields == nil {
+		b.explicitFields = big.NewInt(0)
+	}
+	b.explicitFields.Or(b.explicitFields, field)
+}
+
+// SetAccepted sets the Accepted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchEventsResponse) SetAccepted(accepted int) {
+	b.Accepted = accepted
+	b.require(batchEventsResponseFieldAccepted)
+}
+
+func (b *BatchEventsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler BatchEventsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BatchEventsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BatchEventsResponse) MarshalJSON() ([]byte, error) {
+	type embed BatchEventsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BatchEventsResponse) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+// A metric event submitted as part of a batch. Same shape as a single metric event, with the metric key included in the body.
+var (
+	batchMetricEventFieldKey            = big.NewInt(1 << 0)
+	batchMetricEventFieldUser           = big.NewInt(1 << 1)
+	batchMetricEventFieldValue          = big.NewInt(1 << 2)
+	batchMetricEventFieldAttributes     = big.NewInt(1 << 3)
+	batchMetricEventFieldIdempotencyKey = big.NewInt(1 << 4)
+)
+
+type BatchMetricEvent struct {
+	// Unique reference of the metric as set when created.
+	Key string `json:"key" url:"key"`
+	// The user that triggered the event.
+	User *BatchMetricEventUser `json:"user" url:"user"`
+	// The value to add to the user's current total for the given metric.
+	Value float64 `json:"value" url:"value"`
+	// Event attributes as key-value pairs. Keys must match existing event attributes set up in the Trophy dashboard.
+	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
+	// Optional idempotency key for this event. When provided, the event is ignored if another event with the same idempotency key has already  been processed.
+	IdempotencyKey *string `json:"idempotencyKey,omitempty" url:"idempotencyKey,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BatchMetricEvent) GetKey() string {
+	if b == nil {
+		return ""
+	}
+	return b.Key
+}
+
+func (b *BatchMetricEvent) GetUser() *BatchMetricEventUser {
+	if b == nil {
+		return nil
+	}
+	return b.User
+}
+
+func (b *BatchMetricEvent) GetValue() float64 {
+	if b == nil {
+		return 0
+	}
+	return b.Value
+}
+
+func (b *BatchMetricEvent) GetAttributes() map[string]string {
+	if b == nil {
+		return nil
+	}
+	return b.Attributes
+}
+
+func (b *BatchMetricEvent) GetIdempotencyKey() *string {
+	if b == nil {
+		return nil
+	}
+	return b.IdempotencyKey
+}
+
+func (b *BatchMetricEvent) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BatchMetricEvent) require(field *big.Int) {
+	if b.explicitFields == nil {
+		b.explicitFields = big.NewInt(0)
+	}
+	b.explicitFields.Or(b.explicitFields, field)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEvent) SetKey(key string) {
+	b.Key = key
+	b.require(batchMetricEventFieldKey)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEvent) SetUser(user *BatchMetricEventUser) {
+	b.User = user
+	b.require(batchMetricEventFieldUser)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEvent) SetValue(value float64) {
+	b.Value = value
+	b.require(batchMetricEventFieldValue)
+}
+
+// SetAttributes sets the Attributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEvent) SetAttributes(attributes map[string]string) {
+	b.Attributes = attributes
+	b.require(batchMetricEventFieldAttributes)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEvent) SetIdempotencyKey(idempotencyKey *string) {
+	b.IdempotencyKey = idempotencyKey
+	b.require(batchMetricEventFieldIdempotencyKey)
+}
+
+func (b *BatchMetricEvent) UnmarshalJSON(data []byte) error {
+	type unmarshaler BatchMetricEvent
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BatchMetricEvent(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BatchMetricEvent) MarshalJSON() ([]byte, error) {
+	type embed BatchMetricEvent
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BatchMetricEvent) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+// The user that triggered a batch metric event.
+var (
+	batchMetricEventUserFieldId                = big.NewInt(1 << 0)
+	batchMetricEventUserFieldEmail             = big.NewInt(1 << 1)
+	batchMetricEventUserFieldName              = big.NewInt(1 << 2)
+	batchMetricEventUserFieldTz                = big.NewInt(1 << 3)
+	batchMetricEventUserFieldDeviceTokens      = big.NewInt(1 << 4)
+	batchMetricEventUserFieldSubscribeToEmails = big.NewInt(1 << 5)
+	batchMetricEventUserFieldAttributes        = big.NewInt(1 << 6)
+)
+
+type BatchMetricEventUser struct {
+	// The ID of the user in your database. Must be a string.
+	Id string `json:"id" url:"id"`
+	// The user's email address. Required if subscribeToEmails is true.
+	Email *string `json:"email,omitempty" url:"email,omitempty"`
+	// The name to refer to the user by in emails.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The user's timezone (used for email scheduling).
+	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
+	// The user's device tokens, used for push notifications.
+	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
+	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
+	SubscribeToEmails *bool `json:"subscribeToEmails,omitempty" url:"subscribeToEmails,omitempty"`
+	// User attributes as key-value pairs. Keys must match existing user attributes set up in the Trophy dashboard.
+	Attributes map[string]string `json:"attributes,omitempty" url:"attributes,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BatchMetricEventUser) GetId() string {
+	if b == nil {
+		return ""
+	}
+	return b.Id
+}
+
+func (b *BatchMetricEventUser) GetEmail() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Email
+}
+
+func (b *BatchMetricEventUser) GetName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Name
+}
+
+func (b *BatchMetricEventUser) GetTz() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Tz
+}
+
+func (b *BatchMetricEventUser) GetDeviceTokens() []string {
+	if b == nil {
+		return nil
+	}
+	return b.DeviceTokens
+}
+
+func (b *BatchMetricEventUser) GetSubscribeToEmails() *bool {
+	if b == nil {
+		return nil
+	}
+	return b.SubscribeToEmails
+}
+
+func (b *BatchMetricEventUser) GetAttributes() map[string]string {
+	if b == nil {
+		return nil
+	}
+	return b.Attributes
+}
+
+func (b *BatchMetricEventUser) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BatchMetricEventUser) require(field *big.Int) {
+	if b.explicitFields == nil {
+		b.explicitFields = big.NewInt(0)
+	}
+	b.explicitFields.Or(b.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEventUser) SetId(id string) {
+	b.Id = id
+	b.require(batchMetricEventUserFieldId)
+}
+
+// SetEmail sets the Email field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEventUser) SetEmail(email *string) {
+	b.Email = email
+	b.require(batchMetricEventUserFieldEmail)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEventUser) SetName(name *string) {
+	b.Name = name
+	b.require(batchMetricEventUserFieldName)
+}
+
+// SetTz sets the Tz field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEventUser) SetTz(tz *string) {
+	b.Tz = tz
+	b.require(batchMetricEventUserFieldTz)
+}
+
+// SetDeviceTokens sets the DeviceTokens field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEventUser) SetDeviceTokens(deviceTokens []string) {
+	b.DeviceTokens = deviceTokens
+	b.require(batchMetricEventUserFieldDeviceTokens)
+}
+
+// SetSubscribeToEmails sets the SubscribeToEmails field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEventUser) SetSubscribeToEmails(subscribeToEmails *bool) {
+	b.SubscribeToEmails = subscribeToEmails
+	b.require(batchMetricEventUserFieldSubscribeToEmails)
+}
+
+// SetAttributes sets the Attributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BatchMetricEventUser) SetAttributes(attributes map[string]string) {
+	b.Attributes = attributes
+	b.require(batchMetricEventUserFieldAttributes)
+}
+
+func (b *BatchMetricEventUser) UnmarshalJSON(data []byte) error {
+	type unmarshaler BatchMetricEventUser
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BatchMetricEventUser(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BatchMetricEventUser) MarshalJSON() ([]byte, error) {
+	type embed BatchMetricEventUser
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BatchMetricEventUser) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
 // A user to create an application API key for.
 var (
 	createApplicationKeyRequestItemFieldUserId = big.NewInt(1 << 0)

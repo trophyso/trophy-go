@@ -243,4 +243,53 @@ func TestAdminMetricsGetWithWireMock(
     VerifyRequestCount(t, "TestAdminMetricsGetWithWireMock", "GET", "/metrics/550e8400-e29b-41d4-a716-446655440000", nil, 1)
 }
 
+func TestAdminMetricsBatchEventsWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+        request := []*trophygo.BatchMetricEvent{
+            &trophygo.BatchMetricEvent{
+                Key: "words-written",
+                User: &trophygo.BatchMetricEventUser{
+                    Id: "18",
+                    Email: trophygo.String(
+                        "user@example.com",
+                    ),
+                    Tz: trophygo.String(
+                        "Europe/London",
+                    ),
+                    Attributes: map[string]string{
+                        "department": "engineering",
+                        "role": "developer",
+                    },
+                },
+                Value: 750,
+                Attributes: map[string]string{
+                    "category": "writing",
+                    "source": "mobile-app",
+                },
+                IdempotencyKey: trophygo.String(
+                    "e4296e4b-8493-4bd1-9c30-5a1a9ac4d78f",
+                ),
+            },
+        }
+    _, invocationErr :=     client.Admin.Metrics.BatchEvents(
+            context.TODO(),
+            request,
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestAdminMetricsBatchEventsWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestAdminMetricsBatchEventsWithWireMock", "POST", "/metrics/events", nil, 1)
+}
+
 
