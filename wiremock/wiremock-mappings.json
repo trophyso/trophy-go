@@ -74,8 +74,8 @@
       }
     },
     {
-      "id": "f9a58035-d34e-48f3-b10e-9062b5b659de",
-      "name": "Send a metric change event - Successful operation",
+      "id": "9b78afba-bab7-433e-a689-0b7a849c99ec",
+      "name": "Submit a metric event - Successful operation",
       "request": {
         "urlPathTemplate": "/metrics/{key}/event",
         "method": "POST",
@@ -97,7 +97,7 @@
           "Content-Type": "application/json"
         }
       },
-      "uuid": "f9a58035-d34e-48f3-b10e-9062b5b659de",
+      "uuid": "9b78afba-bab7-433e-a689-0b7a849c99ec",
       "persistent": true,
       "priority": 3,
       "metadata": {
