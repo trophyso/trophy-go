@@ -3347,6 +3347,183 @@ func (a *AdminPointsTriggerUserAttributesItem) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+// A streak pause returned from the admin pauses endpoints.
+var (
+	adminStreakPauseFieldId     = big.NewInt(1 << 0)
+	adminStreakPauseFieldUserId = big.NewInt(1 << 1)
+	adminStreakPauseFieldStart  = big.NewInt(1 << 2)
+	adminStreakPauseFieldEnd    = big.NewInt(1 << 3)
+	adminStreakPauseFieldStatus = big.NewInt(1 << 4)
+)
+
+type AdminStreakPause struct {
+	// The unique ID of the streak pause.
+	Id string `json:"id" url:"id"`
+	// The ID of the user the pause belongs to.
+	UserId string `json:"userId" url:"userId"`
+	// The first date the pause covers.
+	Start string `json:"start" url:"start"`
+	// The last date the pause covers.
+	End string `json:"end" url:"end"`
+	// The status of the pause.
+	Status AdminStreakPauseStatus `json:"status" url:"status"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminStreakPause) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminStreakPause) GetUserId() string {
+	if a == nil {
+		return ""
+	}
+	return a.UserId
+}
+
+func (a *AdminStreakPause) GetStart() string {
+	if a == nil {
+		return ""
+	}
+	return a.Start
+}
+
+func (a *AdminStreakPause) GetEnd() string {
+	if a == nil {
+		return ""
+	}
+	return a.End
+}
+
+func (a *AdminStreakPause) GetStatus() AdminStreakPauseStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminStreakPause) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminStreakPause) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminStreakPause) SetId(id string) {
+	a.Id = id
+	a.require(adminStreakPauseFieldId)
+}
+
+// SetUserId sets the UserId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminStreakPause) SetUserId(userId string) {
+	a.UserId = userId
+	a.require(adminStreakPauseFieldUserId)
+}
+
+// SetStart sets the Start field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminStreakPause) SetStart(start string) {
+	a.Start = start
+	a.require(adminStreakPauseFieldStart)
+}
+
+// SetEnd sets the End field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminStreakPause) SetEnd(end string) {
+	a.End = end
+	a.require(adminStreakPauseFieldEnd)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminStreakPause) SetStatus(status AdminStreakPauseStatus) {
+	a.Status = status
+	a.require(adminStreakPauseFieldStatus)
+}
+
+func (a *AdminStreakPause) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminStreakPause
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminStreakPause(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminStreakPause) MarshalJSON() ([]byte, error) {
+	type embed AdminStreakPause
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminStreakPause) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The status of the pause.
+type AdminStreakPauseStatus string
+
+const (
+	AdminStreakPauseStatusActive   AdminStreakPauseStatus = "active"
+	AdminStreakPauseStatusArchived AdminStreakPauseStatus = "archived"
+)
+
+func NewAdminStreakPauseStatusFromString(s string) (AdminStreakPauseStatus, error) {
+	switch s {
+	case "active":
+		return AdminStreakPauseStatusActive, nil
+	case "archived":
+		return AdminStreakPauseStatusArchived, nil
+	}
+	var t AdminStreakPauseStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminStreakPauseStatus) Ptr() *AdminStreakPauseStatus {
+	return &a
+}
+
 // A tenant in a multi-tenant environment.
 var (
 	adminTenantFieldId         = big.NewInt(1 << 0)
@@ -7348,6 +7525,109 @@ func (c *CreateStreakFreezesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// Response containing created streak pauses and any issues encountered.
+var (
+	createStreakPausesResponseFieldCreated = big.NewInt(1 << 0)
+	createStreakPausesResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type CreateStreakPausesResponse struct {
+	// Array of streak pauses that were created.
+	Created []*AdminStreakPause `json:"created" url:"created"`
+	// Array of issues encountered during pause creation.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateStreakPausesResponse) GetCreated() []*AdminStreakPause {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateStreakPausesResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateStreakPausesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateStreakPausesResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreated sets the Created field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateStreakPausesResponse) SetCreated(created []*AdminStreakPause) {
+	c.Created = created
+	c.require(createStreakPausesResponseFieldCreated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateStreakPausesResponse) SetIssues(issues []*AdminIssue) {
+	c.Issues = issues
+	c.require(createStreakPausesResponseFieldIssues)
+}
+
+func (c *CreateStreakPausesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateStreakPausesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateStreakPausesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateStreakPausesResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateStreakPausesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateStreakPausesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // A tenant to create.
 var (
 	createTenantRequestItemFieldCustomerId = big.NewInt(1 << 0)
@@ -8920,6 +9200,109 @@ func (d *DeletePointsTriggersResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DeletePointsTriggersResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Response containing archived streak pauses and any issues encountered.
+var (
+	deleteStreakPausesResponseFieldDeleted = big.NewInt(1 << 0)
+	deleteStreakPausesResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type DeleteStreakPausesResponse struct {
+	// Array of archived streak pause IDs.
+	Deleted []*DeletedResource `json:"deleted" url:"deleted"`
+	// Array of issues encountered during pause archival.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteStreakPausesResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteStreakPausesResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteStreakPausesResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteStreakPausesResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetDeleted sets the Deleted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteStreakPausesResponse) SetDeleted(deleted []*DeletedResource) {
+	d.Deleted = deleted
+	d.require(deleteStreakPausesResponseFieldDeleted)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteStreakPausesResponse) SetIssues(issues []*AdminIssue) {
+	d.Issues = issues
+	d.require(deleteStreakPausesResponseFieldIssues)
+}
+
+func (d *DeleteStreakPausesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteStreakPausesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteStreakPausesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteStreakPausesResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteStreakPausesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteStreakPausesResponse) String() string {
 	if d == nil {
 		return "<nil>"
 	}

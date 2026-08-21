@@ -5218,3 +5218,144 @@ client.Admin.Streaks.Freezes.Create(
 </dl>
 </details>
 
+## Admin Streaks Pauses
+<details><summary><code>client.Admin.Streaks.Pauses.Create(request) -> *trophygo.CreateStreakPausesResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create streak pauses for multiple users. A pause covers a specific date range and maintains the user's streak length during that range instead of ending the streak. Start dates in the past are rejected.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &streaks.CreateStreakPausesRequest{
+        Pauses: []*streaks.CreateStreakPausesRequestPausesItem{
+            &streaks.CreateStreakPausesRequestPausesItem{
+                UserId: "user-123",
+                Start: "2026-08-20",
+                End: "2026-08-27",
+            },
+            &streaks.CreateStreakPausesRequestPausesItem{
+                UserId: "user-456",
+                Start: "2026-09-01",
+                End: "2026-09-07",
+            },
+        },
+    }
+client.Admin.Streaks.Pauses.Create(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**pauses:** `[]*streaks.CreateStreakPausesRequestPausesItem` — Array of pauses to create. Maximum 100 pauses per request.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Streaks.Pauses.Delete() -> *trophygo.DeleteStreakPausesResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &streaks.PausesDeleteRequest{
+        Ids: []*string{
+            trophygo.String(
+                "550e8400-e29b-41d4-a716-446655440000",
+            ),
+            trophygo.String(
+                "550e8400-e29b-41d4-a716-446655440001",
+            ),
+        },
+    }
+client.Admin.Streaks.Pauses.Delete(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**ids:** `*string` — Streak pause IDs to archive. Repeat the query param or provide a comma-separated list.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+

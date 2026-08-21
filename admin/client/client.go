@@ -31,7 +31,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.20.1"
+        options.SdkVersion = "1.21.0"
     }
     return &Client{
         Attributes: attributes.NewClient(options),

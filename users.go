@@ -1188,6 +1188,7 @@ var (
 	streakResponseFieldFreezeAutoEarnAmount   = big.NewInt(1 << 9)
 	streakResponseFieldExtended               = big.NewInt(1 << 10)
 	streakResponseFieldStreakHistory          = big.NewInt(1 << 11)
+	streakResponseFieldPauses                 = big.NewInt(1 << 12)
 )
 
 type StreakResponse struct {
@@ -1215,6 +1216,8 @@ type StreakResponse struct {
 	Extended *time.Time `json:"extended,omitempty" url:"extended,omitempty"`
 	// A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
 	StreakHistory []*StreakResponseStreakHistoryItem `json:"streakHistory" url:"streakHistory"`
+	// Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.
+	Pauses []*StreakResponsePausesItem `json:"pauses" url:"pauses"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1305,6 +1308,13 @@ func (s *StreakResponse) GetStreakHistory() []*StreakResponseStreakHistoryItem {
 		return nil
 	}
 	return s.StreakHistory
+}
+
+func (s *StreakResponse) GetPauses() []*StreakResponsePausesItem {
+	if s == nil {
+		return nil
+	}
+	return s.Pauses
 }
 
 func (s *StreakResponse) GetExtraProperties() map[string]interface{} {
@@ -1405,6 +1415,13 @@ func (s *StreakResponse) SetStreakHistory(streakHistory []*StreakResponseStreakH
 	s.require(streakResponseFieldStreakHistory)
 }
 
+// SetPauses sets the Pauses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakResponse) SetPauses(pauses []*StreakResponsePausesItem) {
+	s.Pauses = pauses
+	s.require(streakResponseFieldPauses)
+}
+
 func (s *StreakResponse) UnmarshalJSON(data []byte) error {
 	type embed StreakResponse
 	var unmarshaler = struct {
@@ -1455,12 +1472,133 @@ func (s *StreakResponse) String() string {
 	return fmt.Sprintf("%#v", s)
 }
 
+// An object representing a streak pause.
+var (
+	streakResponsePausesItemFieldId    = big.NewInt(1 << 0)
+	streakResponsePausesItemFieldStart = big.NewInt(1 << 1)
+	streakResponsePausesItemFieldEnd   = big.NewInt(1 << 2)
+)
+
+type StreakResponsePausesItem struct {
+	// The unique ID of the streak pause.
+	Id string `json:"id" url:"id"`
+	// The first date the pause covers.
+	Start string `json:"start" url:"start"`
+	// The last date the pause covers.
+	End string `json:"end" url:"end"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakResponsePausesItem) GetId() string {
+	if s == nil {
+		return ""
+	}
+	return s.Id
+}
+
+func (s *StreakResponsePausesItem) GetStart() string {
+	if s == nil {
+		return ""
+	}
+	return s.Start
+}
+
+func (s *StreakResponsePausesItem) GetEnd() string {
+	if s == nil {
+		return ""
+	}
+	return s.End
+}
+
+func (s *StreakResponsePausesItem) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StreakResponsePausesItem) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakResponsePausesItem) SetId(id string) {
+	s.Id = id
+	s.require(streakResponsePausesItemFieldId)
+}
+
+// SetStart sets the Start field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakResponsePausesItem) SetStart(start string) {
+	s.Start = start
+	s.require(streakResponsePausesItemFieldStart)
+}
+
+// SetEnd sets the End field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakResponsePausesItem) SetEnd(end string) {
+	s.End = end
+	s.require(streakResponsePausesItemFieldEnd)
+}
+
+func (s *StreakResponsePausesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakResponsePausesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakResponsePausesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakResponsePausesItem) MarshalJSON() ([]byte, error) {
+	type embed StreakResponsePausesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StreakResponsePausesItem) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
 // An object representing a past streak period.
 var (
 	streakResponseStreakHistoryItemFieldPeriodStart = big.NewInt(1 << 0)
 	streakResponseStreakHistoryItemFieldPeriodEnd   = big.NewInt(1 << 1)
 	streakResponseStreakHistoryItemFieldLength      = big.NewInt(1 << 2)
 	streakResponseStreakHistoryItemFieldUsedFreeze  = big.NewInt(1 << 3)
+	streakResponseStreakHistoryItemFieldUsedPause   = big.NewInt(1 << 4)
 )
 
 type StreakResponseStreakHistoryItem struct {
@@ -1472,6 +1610,8 @@ type StreakResponseStreakHistoryItem struct {
 	Length int `json:"length" url:"length"`
 	// Whether the user used a streak freeze during this period. Only present if the organization has enabled streak freezes.
 	UsedFreeze *bool `json:"usedFreeze,omitempty" url:"usedFreeze,omitempty"`
+	// Whether the user's streak was paused during this period.
+	UsedPause bool `json:"usedPause" url:"usedPause"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1506,6 +1646,13 @@ func (s *StreakResponseStreakHistoryItem) GetUsedFreeze() *bool {
 		return nil
 	}
 	return s.UsedFreeze
+}
+
+func (s *StreakResponseStreakHistoryItem) GetUsedPause() bool {
+	if s == nil {
+		return false
+	}
+	return s.UsedPause
 }
 
 func (s *StreakResponseStreakHistoryItem) GetExtraProperties() map[string]interface{} {
@@ -1548,6 +1695,13 @@ func (s *StreakResponseStreakHistoryItem) SetLength(length int) {
 func (s *StreakResponseStreakHistoryItem) SetUsedFreeze(usedFreeze *bool) {
 	s.UsedFreeze = usedFreeze
 	s.require(streakResponseStreakHistoryItemFieldUsedFreeze)
+}
+
+// SetUsedPause sets the UsedPause field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakResponseStreakHistoryItem) SetUsedPause(usedPause bool) {
+	s.UsedPause = usedPause
+	s.require(streakResponseStreakHistoryItemFieldUsedPause)
 }
 
 func (s *StreakResponseStreakHistoryItem) UnmarshalJSON(data []byte) error {

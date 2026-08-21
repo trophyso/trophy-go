@@ -510,7 +510,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"length\": 1,\n  \"frequency\": \"weekly\",\n  \"started\": \"2025-04-02\",\n  \"periodStart\": \"2025-03-31\",\n  \"periodEnd\": \"2025-04-05\",\n  \"expires\": \"2025-04-12\",\n  \"freezes\": 1,\n  \"maxFreezes\": 1,\n  \"freezeAutoEarnInterval\": 1,\n  \"freezeAutoEarnAmount\": 1,\n  \"extended\": \"2025-04-03T14:30:00Z\",\n  \"streakHistory\": [\n    {\n      \"periodStart\": \"2025-03-30\",\n      \"periodEnd\": \"2025-04-05\",\n      \"length\": 1,\n      \"usedFreeze\": false\n    },\n    {\n      \"periodStart\": \"2025-04-06\",\n      \"periodEnd\": \"2025-04-12\",\n      \"length\": 2,\n      \"usedFreeze\": false\n    },\n    {\n      \"periodStart\": \"2025-04-13\",\n      \"periodEnd\": \"2025-04-19\",\n      \"length\": 3,\n      \"usedFreeze\": false\n    },\n    {\n      \"periodStart\": \"2025-04-20\",\n      \"periodEnd\": \"2025-04-26\",\n      \"length\": 0,\n      \"usedFreeze\": false\n    },\n    {\n      \"periodStart\": \"2025-04-27\",\n      \"periodEnd\": \"2025-05-03\",\n      \"length\": 1,\n      \"usedFreeze\": false\n    },\n    {\n      \"periodStart\": \"2025-05-04\",\n      \"periodEnd\": \"2025-05-10\",\n      \"length\": 2,\n      \"usedFreeze\": false\n    },\n    {\n      \"periodStart\": \"2025-05-11\",\n      \"periodEnd\": \"2025-05-17\",\n      \"length\": 3,\n      \"usedFreeze\": false\n    }\n  ]\n}",
+        "body": "{\n  \"length\": 1,\n  \"frequency\": \"weekly\",\n  \"started\": \"2025-04-02\",\n  \"periodStart\": \"2025-03-31\",\n  \"periodEnd\": \"2025-04-05\",\n  \"expires\": \"2025-04-12\",\n  \"freezes\": 1,\n  \"maxFreezes\": 1,\n  \"freezeAutoEarnInterval\": 1,\n  \"freezeAutoEarnAmount\": 1,\n  \"extended\": \"2025-04-03T14:30:00Z\",\n  \"streakHistory\": [\n    {\n      \"periodStart\": \"2025-03-30\",\n      \"periodEnd\": \"2025-04-05\",\n      \"length\": 1,\n      \"usedFreeze\": false,\n      \"usedPause\": false\n    },\n    {\n      \"periodStart\": \"2025-04-06\",\n      \"periodEnd\": \"2025-04-12\",\n      \"length\": 2,\n      \"usedFreeze\": false,\n      \"usedPause\": false\n    },\n    {\n      \"periodStart\": \"2025-04-13\",\n      \"periodEnd\": \"2025-04-19\",\n      \"length\": 3,\n      \"usedFreeze\": false,\n      \"usedPause\": false\n    },\n    {\n      \"periodStart\": \"2025-04-20\",\n      \"periodEnd\": \"2025-04-26\",\n      \"length\": 0,\n      \"usedFreeze\": false,\n      \"usedPause\": false\n    },\n    {\n      \"periodStart\": \"2025-04-27\",\n      \"periodEnd\": \"2025-05-03\",\n      \"length\": 1,\n      \"usedFreeze\": false,\n      \"usedPause\": false\n    },\n    {\n      \"periodStart\": \"2025-05-04\",\n      \"periodEnd\": \"2025-05-10\",\n      \"length\": 2,\n      \"usedFreeze\": false,\n      \"usedPause\": false\n    },\n    {\n      \"periodStart\": \"2025-05-11\",\n      \"periodEnd\": \"2025-05-17\",\n      \"length\": 3,\n      \"usedFreeze\": false,\n      \"usedPause\": false\n    }\n  ],\n  \"pauses\": [\n    {\n      \"id\": \"id\",\n      \"start\": \"2026-08-20\",\n      \"end\": \"2026-08-27\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -2731,9 +2731,83 @@
           }
         }
       }
+    },
+    {
+      "id": "800c7911-3162-4889-a34d-5e39eafede7d",
+      "name": "Create streak pauses for multiple users - Mixed success and errors",
+      "request": {
+        "urlPathTemplate": "/streaks/pauses",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"userId\": \"user-123\",\n      \"start\": \"2026-08-20\",\n      \"end\": \"2026-08-27\",\n      \"status\": \"active\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"non-existent-user\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"User does not exist\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "800c7911-3162-4889-a34d-5e39eafede7d",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "d7efb147-5ee5-4fa1-9b3d-1f4ee2b19c7b",
+      "name": "Archive streak pauses - Success with no issues",
+      "request": {
+        "urlPathTemplate": "/streaks/pauses",
+        "method": "DELETE",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "queryParameters": {
+          "ids": {
+            "hasExactly": [
+              {
+                "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+              },
+              {
+                "equalTo": "550e8400-e29b-41d4-a716-446655440001"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "d7efb147-5ee5-4fa1-9b3d-1f4ee2b19c7b",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
     }
   ],
   "meta": {
-    "total": 72
+    "total": 74
   }
 }
