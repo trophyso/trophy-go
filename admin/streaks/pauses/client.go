@@ -23,7 +23,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.21.0"
+        options.SdkVersion = "1.21.1"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -56,7 +56,7 @@ func (c *Client) Create(
     return response.Body, nil
 }
 
-// Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+// Delete streak pauses by ID.
 func (c *Client) Delete(
     ctx context.Context,
     request *streaks.PausesDeleteRequest,

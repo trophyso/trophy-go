@@ -1216,7 +1216,7 @@ type StreakResponse struct {
 	Extended *time.Time `json:"extended,omitempty" url:"extended,omitempty"`
 	// A list of the user's past streak periods up through the current period. Each period includes the start and end dates and the length of the streak.
 	StreakHistory []*StreakResponseStreakHistoryItem `json:"streakHistory" url:"streakHistory"`
-	// Upcoming and currently active streak pauses for the user. Past and archived pauses are omitted.
+	// Upcoming and currently active streak pauses for the user.
 	Pauses []*StreakResponsePausesItem `json:"pauses" url:"pauses"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted

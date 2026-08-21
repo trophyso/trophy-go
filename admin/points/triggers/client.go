@@ -23,7 +23,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.21.0"
+        options.SdkVersion = "1.21.1"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -79,7 +79,7 @@ func (c *Client) Create(
     return response.Body, nil
 }
 
-// Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+// Delete points triggers by ID. Maximum 100 trigger IDs per request.
 func (c *Client) Delete(
     ctx context.Context,
     // The UUID of the points system.

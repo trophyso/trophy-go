@@ -61,7 +61,7 @@ var (
 )
 
 type PausesDeleteRequest struct {
-	// Streak pause IDs to archive. Repeat the query param or provide a comma-separated list.
+	// Streak pause IDs to delete. Repeat the query param or provide a comma-separated list.
 	Ids []*string `json:"-" url:"ids,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted

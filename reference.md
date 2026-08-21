@@ -3845,7 +3845,7 @@ client.Admin.Points.Systems.Create(
 <dl>
 <dd>
 
-Delete (archive) points systems by ID.
+Delete points systems by ID.
 </dd>
 </dl>
 </dd>
@@ -4945,7 +4945,7 @@ client.Admin.Points.Triggers.Create(
 <dl>
 <dd>
 
-Delete (archive) points triggers by ID. Maximum 100 trigger IDs per request.
+Delete points triggers by ID. Maximum 100 trigger IDs per request.
 </dd>
 </dl>
 </dd>
@@ -5303,7 +5303,7 @@ client.Admin.Streaks.Pauses.Create(
 <dl>
 <dd>
 
-Archive streak pauses by ID. Pause records are not deleted; their status is set to archived so they no longer apply to streak logic.
+Delete streak pauses by ID.
 </dd>
 </dl>
 </dd>
@@ -5347,7 +5347,7 @@ client.Admin.Streaks.Pauses.Delete(
 <dl>
 <dd>
 
-**ids:** `*string` — Streak pause IDs to archive. Repeat the query param or provide a comma-separated list.
+**ids:** `*string` — Streak pause IDs to delete. Repeat the query param or provide a comma-separated list.
     
 </dd>
 </dl>

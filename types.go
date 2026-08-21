@@ -9214,16 +9214,16 @@ func (d *DeletePointsTriggersResponse) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
-// Response containing archived streak pauses and any issues encountered.
+// Response containing deleted streak pauses and any issues encountered.
 var (
 	deleteStreakPausesResponseFieldDeleted = big.NewInt(1 << 0)
 	deleteStreakPausesResponseFieldIssues  = big.NewInt(1 << 1)
 )
 
 type DeleteStreakPausesResponse struct {
-	// Array of archived streak pause IDs.
+	// Array of deleted streak pause IDs.
 	Deleted []*DeletedResource `json:"deleted" url:"deleted"`
-	// Array of issues encountered during pause archival.
+	// Array of issues encountered during pause deletion.
 	Issues []*AdminIssue `json:"issues" url:"issues"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted

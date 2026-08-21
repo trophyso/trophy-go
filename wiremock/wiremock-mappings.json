@@ -2764,8 +2764,8 @@
       }
     },
     {
-      "id": "d7efb147-5ee5-4fa1-9b3d-1f4ee2b19c7b",
-      "name": "Archive streak pauses - Success with no issues",
+      "id": "7967c37a-8b4c-4eff-a50e-806f39bb63f5",
+      "name": "Delete streak pauses - Success with no issues",
       "request": {
         "urlPathTemplate": "/streaks/pauses",
         "method": "DELETE",
@@ -2794,7 +2794,7 @@
           "Content-Type": "application/json"
         }
       },
-      "uuid": "d7efb147-5ee5-4fa1-9b3d-1f4ee2b19c7b",
+      "uuid": "7967c37a-8b4c-4eff-a50e-806f39bb63f5",
       "persistent": true,
       "priority": 3,
       "metadata": {
