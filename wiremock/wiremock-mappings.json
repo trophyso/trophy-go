@@ -267,7 +267,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"notifications\": {\n    \"achievement_completed\": [\n      \"email\",\n      \"push\"\n    ],\n    \"recap\": [\n      \"email\"\n    ],\n    \"reactivation\": [\n      \"push\"\n    ],\n    \"streak_reminder\": [\n      \"email\",\n      \"push\"\n    ]\n  },\n  \"streak\": {\n    \"enabled\": true,\n    \"evaluationMode\": \"OR\",\n    \"metrics\": [\n      {\n        \"key\": \"words-written\",\n        \"threshold\": 500\n      }\n    ]\n  }\n}",
+        "body": "{\n  \"notifications\": {\n    \"achievement_completed\": [\n      \"email\",\n      \"push\"\n    ],\n    \"recap\": [\n      \"email\"\n    ],\n    \"reactivation\": [\n      \"push\"\n    ],\n    \"streak_reminder\": [\n      \"email\",\n      \"push\"\n    ]\n  },\n  \"streak\": {\n    \"enabled\": true,\n    \"evaluationMode\": \"OR\",\n    \"metrics\": [\n      {\n        \"key\": \"words-written\",\n        \"threshold\": 500\n      }\n    ],\n    \"daysOff\": [\n      0,\n      6\n    ]\n  }\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -303,7 +303,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"notifications\": {\n    \"achievement_completed\": [\n      \"email\",\n      \"push\"\n    ],\n    \"recap\": [\n      \"email\"\n    ],\n    \"reactivation\": [\n      \"email\",\n      \"push\"\n    ],\n    \"streak_reminder\": [\n      \"email\"\n    ]\n  },\n  \"streak\": {\n    \"enabled\": true,\n    \"evaluationMode\": \"OR\",\n    \"metrics\": [\n      {\n        \"key\": \"words-written\",\n        \"threshold\": 500\n      }\n    ]\n  }\n}",
+        "body": "{\n  \"notifications\": {\n    \"achievement_completed\": [\n      \"email\",\n      \"push\"\n    ],\n    \"recap\": [\n      \"email\"\n    ],\n    \"reactivation\": [\n      \"email\",\n      \"push\"\n    ],\n    \"streak_reminder\": [\n      \"email\"\n    ]\n  },\n  \"streak\": {\n    \"enabled\": true,\n    \"evaluationMode\": \"OR\",\n    \"metrics\": [\n      {\n        \"key\": \"words-written\",\n        \"threshold\": 500\n      }\n    ],\n    \"daysOff\": [\n      0,\n      6\n    ]\n  }\n}",
         "headers": {
           "Content-Type": "application/json"
         }

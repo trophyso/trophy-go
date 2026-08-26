@@ -22,7 +22,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.21.1"
+        options.SdkVersion = "1.22.0"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -131,7 +131,7 @@ func (c *Client) GetPreferences(
     return response.Body, nil
 }
 
-// Update a user's notification and streak preferences. Streak preferences require streak customization to be enabled in your Trophy dashboard settings.
+// Update a user's notification and streak preferences. Streak preferences other than `streak.enabled` require streak customization to be enabled in your Trophy dashboard settings.
 func (c *Client) UpdatePreferences(
     ctx context.Context,
     // The user's ID in your database.

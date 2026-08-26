@@ -23,7 +23,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.21.1"
+        options.SdkVersion = "1.22.0"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),

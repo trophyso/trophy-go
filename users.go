@@ -1055,11 +1055,12 @@ func (s *StreakMetricPreference) String() string {
 	return fmt.Sprintf("%#v", s)
 }
 
-// Per-user streak configuration. Metric and evaluation mode overrides require streak customization to be enabled in dashboard settings.
+// Per-user streak configuration. Metric, evaluation mode, and days off overrides require streak customization to be enabled in dashboard settings.
 var (
 	streakPreferencesFieldEnabled        = big.NewInt(1 << 0)
 	streakPreferencesFieldEvaluationMode = big.NewInt(1 << 1)
 	streakPreferencesFieldMetrics        = big.NewInt(1 << 2)
+	streakPreferencesFieldDaysOff        = big.NewInt(1 << 3)
 )
 
 type StreakPreferences struct {
@@ -1068,6 +1069,8 @@ type StreakPreferences struct {
 	EvaluationMode *StreakEvaluationModePreference `json:"evaluationMode,omitempty" url:"evaluationMode,omitempty"`
 	// Metrics and thresholds that count toward this user's streak.
 	Metrics []*StreakMetricPreference `json:"metrics,omitempty" url:"metrics,omitempty"`
+	// Days of the week that do not count toward the user's daily streak. Represented as zero-based integers matching JavaScript `Date.getDay()` (0 = Sunday, 6 = Saturday). For example, `[0, 6]` means Sunday and Saturday are days off. Only applied when streak frequency is daily. Users can still increase their streak on these days; if they do not, the streak stays paused at its current length instead of being lost.
+	DaysOff []int `json:"daysOff,omitempty" url:"daysOff,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1095,6 +1098,13 @@ func (s *StreakPreferences) GetMetrics() []*StreakMetricPreference {
 		return nil
 	}
 	return s.Metrics
+}
+
+func (s *StreakPreferences) GetDaysOff() []int {
+	if s == nil {
+		return nil
+	}
+	return s.DaysOff
 }
 
 func (s *StreakPreferences) GetExtraProperties() map[string]interface{} {
@@ -1130,6 +1140,13 @@ func (s *StreakPreferences) SetEvaluationMode(evaluationMode *StreakEvaluationMo
 func (s *StreakPreferences) SetMetrics(metrics []*StreakMetricPreference) {
 	s.Metrics = metrics
 	s.require(streakPreferencesFieldMetrics)
+}
+
+// SetDaysOff sets the DaysOff field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakPreferences) SetDaysOff(daysOff []int) {
+	s.DaysOff = daysOff
+	s.require(streakPreferencesFieldDaysOff)
 }
 
 func (s *StreakPreferences) UnmarshalJSON(data []byte) error {
