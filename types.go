@@ -11,20 +11,21 @@ import (
 )
 
 var (
-	achievementResponseFieldId              = big.NewInt(1 << 0)
-	achievementResponseFieldName            = big.NewInt(1 << 1)
-	achievementResponseFieldTrigger         = big.NewInt(1 << 2)
-	achievementResponseFieldDescription     = big.NewInt(1 << 3)
-	achievementResponseFieldBadgeUrl        = big.NewInt(1 << 4)
-	achievementResponseFieldKey             = big.NewInt(1 << 5)
-	achievementResponseFieldStreakLength    = big.NewInt(1 << 6)
-	achievementResponseFieldAchievementIds  = big.NewInt(1 << 7)
-	achievementResponseFieldMetricId        = big.NewInt(1 << 8)
-	achievementResponseFieldMetricValue     = big.NewInt(1 << 9)
-	achievementResponseFieldMetricName      = big.NewInt(1 << 10)
-	achievementResponseFieldUserAttributes  = big.NewInt(1 << 11)
-	achievementResponseFieldEventAttribute  = big.NewInt(1 << 12)
-	achievementResponseFieldEventAttributes = big.NewInt(1 << 13)
+	achievementResponseFieldId               = big.NewInt(1 << 0)
+	achievementResponseFieldName             = big.NewInt(1 << 1)
+	achievementResponseFieldTrigger          = big.NewInt(1 << 2)
+	achievementResponseFieldDescription      = big.NewInt(1 << 3)
+	achievementResponseFieldBadgeUrl         = big.NewInt(1 << 4)
+	achievementResponseFieldKey              = big.NewInt(1 << 5)
+	achievementResponseFieldStreakLength     = big.NewInt(1 << 6)
+	achievementResponseFieldAnniversaryYears = big.NewInt(1 << 7)
+	achievementResponseFieldAchievementIds   = big.NewInt(1 << 8)
+	achievementResponseFieldMetricId         = big.NewInt(1 << 9)
+	achievementResponseFieldMetricValue      = big.NewInt(1 << 10)
+	achievementResponseFieldMetricName       = big.NewInt(1 << 11)
+	achievementResponseFieldUserAttributes   = big.NewInt(1 << 12)
+	achievementResponseFieldEventAttribute   = big.NewInt(1 << 13)
+	achievementResponseFieldEventAttributes  = big.NewInt(1 << 14)
 )
 
 type AchievementResponse struct {
@@ -42,6 +43,8 @@ type AchievementResponse struct {
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The number of years after sign-up required to complete the achievement (only applicable if trigger = 'anniversary')
+	AnniversaryYears *int `json:"anniversaryYears,omitempty" url:"anniversaryYears,omitempty"`
 	// The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
 	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
@@ -111,6 +114,13 @@ func (a *AchievementResponse) GetStreakLength() *int {
 		return nil
 	}
 	return a.StreakLength
+}
+
+func (a *AchievementResponse) GetAnniversaryYears() *int {
+	if a == nil {
+		return nil
+	}
+	return a.AnniversaryYears
 }
 
 func (a *AchievementResponse) GetAchievementIds() []string {
@@ -223,6 +233,13 @@ func (a *AchievementResponse) SetKey(key *string) {
 func (a *AchievementResponse) SetStreakLength(streakLength *int) {
 	a.StreakLength = streakLength
 	a.require(achievementResponseFieldStreakLength)
+}
+
+// SetAnniversaryYears sets the AnniversaryYears field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AchievementResponse) SetAnniversaryYears(anniversaryYears *int) {
+	a.AnniversaryYears = anniversaryYears
+	a.require(achievementResponseFieldAnniversaryYears)
 }
 
 // SetAchievementIds sets the AchievementIds field and marks it as non-optional;
@@ -529,6 +546,7 @@ const (
 	AchievementResponseTriggerStreak      AchievementResponseTrigger = "streak"
 	AchievementResponseTriggerApi         AchievementResponseTrigger = "api"
 	AchievementResponseTriggerAchievement AchievementResponseTrigger = "achievement"
+	AchievementResponseTriggerAnniversary AchievementResponseTrigger = "anniversary"
 )
 
 func NewAchievementResponseTriggerFromString(s string) (AchievementResponseTrigger, error) {
@@ -541,6 +559,8 @@ func NewAchievementResponseTriggerFromString(s string) (AchievementResponseTrigg
 		return AchievementResponseTriggerApi, nil
 	case "achievement":
 		return AchievementResponseTriggerAchievement, nil
+	case "anniversary":
+		return AchievementResponseTriggerAnniversary, nil
 	}
 	var t AchievementResponseTrigger
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -653,22 +673,23 @@ func (a *AchievementResponseUserAttributesItem) String() string {
 }
 
 var (
-	achievementWithStatsResponseFieldId              = big.NewInt(1 << 0)
-	achievementWithStatsResponseFieldName            = big.NewInt(1 << 1)
-	achievementWithStatsResponseFieldTrigger         = big.NewInt(1 << 2)
-	achievementWithStatsResponseFieldDescription     = big.NewInt(1 << 3)
-	achievementWithStatsResponseFieldBadgeUrl        = big.NewInt(1 << 4)
-	achievementWithStatsResponseFieldKey             = big.NewInt(1 << 5)
-	achievementWithStatsResponseFieldStreakLength    = big.NewInt(1 << 6)
-	achievementWithStatsResponseFieldAchievementIds  = big.NewInt(1 << 7)
-	achievementWithStatsResponseFieldMetricId        = big.NewInt(1 << 8)
-	achievementWithStatsResponseFieldMetricValue     = big.NewInt(1 << 9)
-	achievementWithStatsResponseFieldMetricName      = big.NewInt(1 << 10)
-	achievementWithStatsResponseFieldUserAttributes  = big.NewInt(1 << 11)
-	achievementWithStatsResponseFieldEventAttribute  = big.NewInt(1 << 12)
-	achievementWithStatsResponseFieldEventAttributes = big.NewInt(1 << 13)
-	achievementWithStatsResponseFieldCompletions     = big.NewInt(1 << 14)
-	achievementWithStatsResponseFieldRarity          = big.NewInt(1 << 15)
+	achievementWithStatsResponseFieldId               = big.NewInt(1 << 0)
+	achievementWithStatsResponseFieldName             = big.NewInt(1 << 1)
+	achievementWithStatsResponseFieldTrigger          = big.NewInt(1 << 2)
+	achievementWithStatsResponseFieldDescription      = big.NewInt(1 << 3)
+	achievementWithStatsResponseFieldBadgeUrl         = big.NewInt(1 << 4)
+	achievementWithStatsResponseFieldKey              = big.NewInt(1 << 5)
+	achievementWithStatsResponseFieldStreakLength     = big.NewInt(1 << 6)
+	achievementWithStatsResponseFieldAnniversaryYears = big.NewInt(1 << 7)
+	achievementWithStatsResponseFieldAchievementIds   = big.NewInt(1 << 8)
+	achievementWithStatsResponseFieldMetricId         = big.NewInt(1 << 9)
+	achievementWithStatsResponseFieldMetricValue      = big.NewInt(1 << 10)
+	achievementWithStatsResponseFieldMetricName       = big.NewInt(1 << 11)
+	achievementWithStatsResponseFieldUserAttributes   = big.NewInt(1 << 12)
+	achievementWithStatsResponseFieldEventAttribute   = big.NewInt(1 << 13)
+	achievementWithStatsResponseFieldEventAttributes  = big.NewInt(1 << 14)
+	achievementWithStatsResponseFieldCompletions      = big.NewInt(1 << 15)
+	achievementWithStatsResponseFieldRarity           = big.NewInt(1 << 16)
 )
 
 type AchievementWithStatsResponse struct {
@@ -686,6 +707,8 @@ type AchievementWithStatsResponse struct {
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The number of years after sign-up required to complete the achievement (only applicable if trigger = 'anniversary')
+	AnniversaryYears *int `json:"anniversaryYears,omitempty" url:"anniversaryYears,omitempty"`
 	// The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
 	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
@@ -759,6 +782,13 @@ func (a *AchievementWithStatsResponse) GetStreakLength() *int {
 		return nil
 	}
 	return a.StreakLength
+}
+
+func (a *AchievementWithStatsResponse) GetAnniversaryYears() *int {
+	if a == nil {
+		return nil
+	}
+	return a.AnniversaryYears
 }
 
 func (a *AchievementWithStatsResponse) GetAchievementIds() []string {
@@ -885,6 +915,13 @@ func (a *AchievementWithStatsResponse) SetKey(key *string) {
 func (a *AchievementWithStatsResponse) SetStreakLength(streakLength *int) {
 	a.StreakLength = streakLength
 	a.require(achievementWithStatsResponseFieldStreakLength)
+}
+
+// SetAnniversaryYears sets the AnniversaryYears field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AchievementWithStatsResponse) SetAnniversaryYears(anniversaryYears *int) {
+	a.AnniversaryYears = anniversaryYears
+	a.require(achievementWithStatsResponseFieldAnniversaryYears)
 }
 
 // SetAchievementIds sets the AchievementIds field and marks it as non-optional;
@@ -15235,9 +15272,10 @@ var (
 	updatedUserFieldEmail             = big.NewInt(1 << 0)
 	updatedUserFieldName              = big.NewInt(1 << 1)
 	updatedUserFieldTz                = big.NewInt(1 << 2)
-	updatedUserFieldDeviceTokens      = big.NewInt(1 << 3)
-	updatedUserFieldSubscribeToEmails = big.NewInt(1 << 4)
-	updatedUserFieldAttributes        = big.NewInt(1 << 5)
+	updatedUserFieldSignUpDate        = big.NewInt(1 << 3)
+	updatedUserFieldDeviceTokens      = big.NewInt(1 << 4)
+	updatedUserFieldSubscribeToEmails = big.NewInt(1 << 5)
+	updatedUserFieldAttributes        = big.NewInt(1 << 6)
 )
 
 type UpdatedUser struct {
@@ -15247,6 +15285,8 @@ type UpdatedUser struct {
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	// The user's timezone (used for email scheduling).
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
+	// The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.
+	SignUpDate *string `json:"signUpDate,omitempty" url:"signUpDate,omitempty"`
 	// The user's device tokens, used for push notifications.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
@@ -15280,6 +15320,13 @@ func (u *UpdatedUser) GetTz() *string {
 		return nil
 	}
 	return u.Tz
+}
+
+func (u *UpdatedUser) GetSignUpDate() *string {
+	if u == nil {
+		return nil
+	}
+	return u.SignUpDate
 }
 
 func (u *UpdatedUser) GetDeviceTokens() []string {
@@ -15336,6 +15383,13 @@ func (u *UpdatedUser) SetName(name *string) {
 func (u *UpdatedUser) SetTz(tz *string) {
 	u.Tz = tz
 	u.require(updatedUserFieldTz)
+}
+
+// SetSignUpDate sets the SignUpDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatedUser) SetSignUpDate(signUpDate *string) {
+	u.SignUpDate = signUpDate
+	u.require(updatedUserFieldSignUpDate)
 }
 
 // SetDeviceTokens sets the DeviceTokens field and marks it as non-optional;
@@ -15406,10 +15460,11 @@ var (
 	upsertedUserFieldEmail             = big.NewInt(1 << 0)
 	upsertedUserFieldName              = big.NewInt(1 << 1)
 	upsertedUserFieldTz                = big.NewInt(1 << 2)
-	upsertedUserFieldDeviceTokens      = big.NewInt(1 << 3)
-	upsertedUserFieldSubscribeToEmails = big.NewInt(1 << 4)
-	upsertedUserFieldAttributes        = big.NewInt(1 << 5)
-	upsertedUserFieldId                = big.NewInt(1 << 6)
+	upsertedUserFieldSignUpDate        = big.NewInt(1 << 3)
+	upsertedUserFieldDeviceTokens      = big.NewInt(1 << 4)
+	upsertedUserFieldSubscribeToEmails = big.NewInt(1 << 5)
+	upsertedUserFieldAttributes        = big.NewInt(1 << 6)
+	upsertedUserFieldId                = big.NewInt(1 << 7)
 )
 
 type UpsertedUser struct {
@@ -15419,6 +15474,8 @@ type UpsertedUser struct {
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	// The user's timezone (used for email scheduling).
 	Tz *string `json:"tz,omitempty" url:"tz,omitempty"`
+	// The date the user signed up on your platform, as YYYY-MM-DD. ISO 8601 date-times are accepted and stored as their UTC calendar day. Must not be after today in the user's timezone. Required for anniversary achievements. Users without a signUpDate are not eligible.
+	SignUpDate *string `json:"signUpDate,omitempty" url:"signUpDate,omitempty"`
 	// The user's device tokens, used for push notifications.
 	DeviceTokens []string `json:"deviceTokens,omitempty" url:"deviceTokens,omitempty"`
 	// Whether the user should receive Trophy-powered emails. If false, Trophy will not store the user's email address.
@@ -15454,6 +15511,13 @@ func (u *UpsertedUser) GetTz() *string {
 		return nil
 	}
 	return u.Tz
+}
+
+func (u *UpsertedUser) GetSignUpDate() *string {
+	if u == nil {
+		return nil
+	}
+	return u.SignUpDate
 }
 
 func (u *UpsertedUser) GetDeviceTokens() []string {
@@ -15517,6 +15581,13 @@ func (u *UpsertedUser) SetName(name *string) {
 func (u *UpsertedUser) SetTz(tz *string) {
 	u.Tz = tz
 	u.require(upsertedUserFieldTz)
+}
+
+// SetSignUpDate sets the SignUpDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertedUser) SetSignUpDate(signUpDate *string) {
+	u.SignUpDate = signUpDate
+	u.require(upsertedUserFieldSignUpDate)
 }
 
 // SetDeviceTokens sets the DeviceTokens field and marks it as non-optional;
@@ -15590,21 +15661,22 @@ func (u *UpsertedUser) String() string {
 }
 
 var (
-	userAchievementResponseFieldId              = big.NewInt(1 << 0)
-	userAchievementResponseFieldName            = big.NewInt(1 << 1)
-	userAchievementResponseFieldTrigger         = big.NewInt(1 << 2)
-	userAchievementResponseFieldDescription     = big.NewInt(1 << 3)
-	userAchievementResponseFieldBadgeUrl        = big.NewInt(1 << 4)
-	userAchievementResponseFieldKey             = big.NewInt(1 << 5)
-	userAchievementResponseFieldStreakLength    = big.NewInt(1 << 6)
-	userAchievementResponseFieldAchievementIds  = big.NewInt(1 << 7)
-	userAchievementResponseFieldMetricId        = big.NewInt(1 << 8)
-	userAchievementResponseFieldMetricValue     = big.NewInt(1 << 9)
-	userAchievementResponseFieldMetricName      = big.NewInt(1 << 10)
-	userAchievementResponseFieldUserAttributes  = big.NewInt(1 << 11)
-	userAchievementResponseFieldEventAttribute  = big.NewInt(1 << 12)
-	userAchievementResponseFieldEventAttributes = big.NewInt(1 << 13)
-	userAchievementResponseFieldAchievedAt      = big.NewInt(1 << 14)
+	userAchievementResponseFieldId               = big.NewInt(1 << 0)
+	userAchievementResponseFieldName             = big.NewInt(1 << 1)
+	userAchievementResponseFieldTrigger          = big.NewInt(1 << 2)
+	userAchievementResponseFieldDescription      = big.NewInt(1 << 3)
+	userAchievementResponseFieldBadgeUrl         = big.NewInt(1 << 4)
+	userAchievementResponseFieldKey              = big.NewInt(1 << 5)
+	userAchievementResponseFieldStreakLength     = big.NewInt(1 << 6)
+	userAchievementResponseFieldAnniversaryYears = big.NewInt(1 << 7)
+	userAchievementResponseFieldAchievementIds   = big.NewInt(1 << 8)
+	userAchievementResponseFieldMetricId         = big.NewInt(1 << 9)
+	userAchievementResponseFieldMetricValue      = big.NewInt(1 << 10)
+	userAchievementResponseFieldMetricName       = big.NewInt(1 << 11)
+	userAchievementResponseFieldUserAttributes   = big.NewInt(1 << 12)
+	userAchievementResponseFieldEventAttribute   = big.NewInt(1 << 13)
+	userAchievementResponseFieldEventAttributes  = big.NewInt(1 << 14)
+	userAchievementResponseFieldAchievedAt       = big.NewInt(1 << 15)
 )
 
 type UserAchievementResponse struct {
@@ -15622,6 +15694,8 @@ type UserAchievementResponse struct {
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
 	// The length of the streak required to complete the achievement (only applicable if trigger = 'streak')
 	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The number of years after sign-up required to complete the achievement (only applicable if trigger = 'anniversary')
+	AnniversaryYears *int `json:"anniversaryYears,omitempty" url:"anniversaryYears,omitempty"`
 	// The IDs of the prerequisite achievements that must be completed to earn this achievement (only applicable if trigger = 'achievement')
 	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
 	// The ID of the metric associated with this achievement (only applicable if trigger = 'metric')
@@ -15693,6 +15767,13 @@ func (u *UserAchievementResponse) GetStreakLength() *int {
 		return nil
 	}
 	return u.StreakLength
+}
+
+func (u *UserAchievementResponse) GetAnniversaryYears() *int {
+	if u == nil {
+		return nil
+	}
+	return u.AnniversaryYears
 }
 
 func (u *UserAchievementResponse) GetAchievementIds() []string {
@@ -15812,6 +15893,13 @@ func (u *UserAchievementResponse) SetKey(key *string) {
 func (u *UserAchievementResponse) SetStreakLength(streakLength *int) {
 	u.StreakLength = streakLength
 	u.require(userAchievementResponseFieldStreakLength)
+}
+
+// SetAnniversaryYears sets the AnniversaryYears field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserAchievementResponse) SetAnniversaryYears(anniversaryYears *int) {
+	u.AnniversaryYears = anniversaryYears
+	u.require(userAchievementResponseFieldAnniversaryYears)
 }
 
 // SetAchievementIds sets the AchievementIds field and marks it as non-optional;

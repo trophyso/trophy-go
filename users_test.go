@@ -4051,6 +4051,14 @@ func TestSettersUser(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetSignUpDate", func(t *testing.T) {
+		obj := &User{}
+		var fernTestValueSignUpDate *string
+		obj.SetSignUpDate(fernTestValueSignUpDate)
+		assert.Equal(t, fernTestValueSignUpDate, obj.SignUpDate)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetDeviceTokens", func(t *testing.T) {
 		obj := &User{}
 		var fernTestValueDeviceTokens []string
@@ -4222,6 +4230,39 @@ func TestGettersUser(t *testing.T) {
 			}
 		}()
 		_ = obj.GetTz() // Should return zero value
+	})
+
+	t.Run("GetSignUpDate", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &User{}
+		var expected *string
+		obj.SignUpDate = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetSignUpDate(), "getter should return the property value")
+	})
+
+	t.Run("GetSignUpDate_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &User{}
+		obj.SignUpDate = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetSignUpDate(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetSignUpDate_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *User
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetSignUpDate() // Should return zero value
 	})
 
 	t.Run("GetDeviceTokens", func(t *testing.T) {
@@ -4509,6 +4550,37 @@ func TestSettersMarkExplicitUser(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetSignUpDate_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &User{}
+		var fernTestValueSignUpDate *string
+
+		// Act
+		obj.SetSignUpDate(fernTestValueSignUpDate)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetDeviceTokens_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -4751,6 +4823,14 @@ func TestSettersUserAchievementWithStatsResponse(t *testing.T) {
 		var fernTestValueStreakLength *int
 		obj.SetStreakLength(fernTestValueStreakLength)
 		assert.Equal(t, fernTestValueStreakLength, obj.StreakLength)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetAnniversaryYears", func(t *testing.T) {
+		obj := &UserAchievementWithStatsResponse{}
+		var fernTestValueAnniversaryYears *int
+		obj.SetAnniversaryYears(fernTestValueAnniversaryYears)
+		assert.Equal(t, fernTestValueAnniversaryYears, obj.AnniversaryYears)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -5036,6 +5116,39 @@ func TestGettersUserAchievementWithStatsResponse(t *testing.T) {
 			}
 		}()
 		_ = obj.GetStreakLength() // Should return zero value
+	})
+
+	t.Run("GetAnniversaryYears", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserAchievementWithStatsResponse{}
+		var expected *int
+		obj.AnniversaryYears = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAnniversaryYears(), "getter should return the property value")
+	})
+
+	t.Run("GetAnniversaryYears_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserAchievementWithStatsResponse{}
+		obj.AnniversaryYears = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAnniversaryYears(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAnniversaryYears_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UserAchievementWithStatsResponse
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAnniversaryYears() // Should return zero value
 	})
 
 	t.Run("GetAchievementIds", func(t *testing.T) {
@@ -5545,6 +5658,37 @@ func TestSettersMarkExplicitUserAchievementWithStatsResponse(t *testing.T) {
 
 		// Act
 		obj.SetStreakLength(fernTestValueStreakLength)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetAnniversaryYears_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserAchievementWithStatsResponse{}
+		var fernTestValueAnniversaryYears *int
+
+		// Act
+		obj.SetAnniversaryYears(fernTestValueAnniversaryYears)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

@@ -57,7 +57,7 @@ func (r *RequestOptions) ToHeader() http.Header {
 	if r.ApiKey != "" {
 		header.Set("X-API-KEY", fmt.Sprintf("%v", r.ApiKey))
 	}
-	sdkVersion := fmt.Sprintf("%v", "1.22.0")
+	sdkVersion := fmt.Sprintf("%v", "1.23.0")
 	if r.SdkVersion != "" {
 		sdkVersion = fmt.Sprintf("%v", r.SdkVersion)
 	}

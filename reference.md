@@ -410,6 +410,9 @@ request := &trophygo.UpdatedUser{
         Tz: trophygo.String(
             "Europe/London",
         ),
+        SignUpDate: trophygo.String(
+            "2020-08-20",
+        ),
         Attributes: map[string]string{
             "department": "engineering",
             "role": "developer",
