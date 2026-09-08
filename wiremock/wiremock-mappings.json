@@ -1987,6 +1987,38 @@
       }
     },
     {
+      "id": "99cc5a0d-a5ec-4016-90a2-a241b20a10ff",
+      "name": "List environments - Environments list",
+      "request": {
+        "urlPathTemplate": "/environments",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "[\n  {\n    \"name\": \"Production\",\n    \"key\": \"production\",\n    \"priority\": 1\n  },\n  {\n    \"name\": \"Staging\",\n    \"key\": \"staging\",\n    \"priority\": 2\n  }\n]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "99cc5a0d-a5ec-4016-90a2-a241b20a10ff",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      },
+      "postServeActions": []
+    },
+    {
       "id": "acfb3efa-8040-4745-b51c-50c3987aefc4",
       "name": "List tenants - Tenants list",
       "request": {
@@ -3115,6 +3147,6 @@
     }
   ],
   "meta": {
-    "total": 83
+    "total": 84
   }
 }

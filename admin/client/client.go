@@ -6,6 +6,7 @@ import (
     achievements "github.com/trophyso/trophy-go/admin/achievements"
     applicationapikeys "github.com/trophyso/trophy-go/admin/applicationapikeys"
     attributes "github.com/trophyso/trophy-go/admin/attributes"
+    environments "github.com/trophyso/trophy-go/admin/environments"
     leaderboards "github.com/trophyso/trophy-go/admin/leaderboards"
     metrics "github.com/trophyso/trophy-go/admin/metrics"
     pointsclient "github.com/trophyso/trophy-go/admin/points/client"
@@ -25,6 +26,7 @@ type Client struct {
     Streaks *client.Client
     Settings *settings.Client
     ApplicationApiKeys *applicationapikeys.Client
+    Environments *environments.Client
     Tenants *tenants.Client
     Points *pointsclient.Client
 
@@ -35,7 +37,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.24.0"
+        options.SdkVersion = "1.25.0"
     }
     return &Client{
         Attributes: attributes.NewClient(options),
@@ -45,6 +47,7 @@ func NewClient(options *core.RequestOptions) *Client {
         Streaks: client.NewClient(options),
         Settings: settings.NewClient(options),
         ApplicationApiKeys: applicationapikeys.NewClient(options),
+        Environments: environments.NewClient(options),
         Tenants: tenants.NewClient(options),
         Points: pointsclient.NewClient(options),
         options: options,

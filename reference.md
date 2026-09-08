@@ -3834,6 +3834,49 @@ client.Admin.ApplicationApiKeys.Delete(
 </dl>
 </details>
 
+## Admin Environments
+<details><summary><code>client.Admin.Environments.List() -> trophygo.ListEnvironmentsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List active environments.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Admin.Environments.List(
+        context.TODO(),
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Admin Tenants
 <details><summary><code>client.Admin.Tenants.List() -> trophygo.ListTenantsResponse</code></summary>
 <dl>

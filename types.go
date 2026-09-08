@@ -1862,6 +1862,126 @@ func (a AdminAttributeType) Ptr() *AdminAttributeType {
 	return &a
 }
 
+// An active environment in the organisation.
+var (
+	adminEnvironmentFieldName     = big.NewInt(1 << 0)
+	adminEnvironmentFieldKey      = big.NewInt(1 << 1)
+	adminEnvironmentFieldPriority = big.NewInt(1 << 2)
+)
+
+type AdminEnvironment struct {
+	// Human-readable name for the environment.
+	Name string `json:"name" url:"name"`
+	// Machine-readable identifier for the environment.
+	Key string `json:"key" url:"key"`
+	// Environment precedence. Lower numbers take priority. Production is always 1.
+	Priority int `json:"priority" url:"priority"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminEnvironment) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminEnvironment) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AdminEnvironment) GetPriority() int {
+	if a == nil {
+		return 0
+	}
+	return a.Priority
+}
+
+func (a *AdminEnvironment) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminEnvironment) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminEnvironment) SetName(name string) {
+	a.Name = name
+	a.require(adminEnvironmentFieldName)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminEnvironment) SetKey(key string) {
+	a.Key = key
+	a.require(adminEnvironmentFieldKey)
+}
+
+// SetPriority sets the Priority field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminEnvironment) SetPriority(priority int) {
+	a.Priority = priority
+	a.require(adminEnvironmentFieldPriority)
+}
+
+func (a *AdminEnvironment) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminEnvironment
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminEnvironment(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminEnvironment) MarshalJSON() ([]byte, error) {
+	type embed AdminEnvironment
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminEnvironment) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 var (
 	adminErrorBodyFieldError = big.NewInt(1 << 0)
 )
@@ -12228,6 +12348,9 @@ type ListAchievementsResponse = []*AdminAchievement
 
 // A paginated list of attributes.
 type ListAttributesResponse = []*AdminAttribute
+
+// Array of active environments ordered by priority.
+type ListEnvironmentsResponse = []*AdminEnvironment
 
 // A paginated list of leaderboards.
 type ListLeaderboardsResponse = []*AdminLeaderboard
