@@ -9,6 +9,7 @@ import (
     admin "github.com/trophyso/trophy-go/admin"
     freezes "github.com/trophyso/trophy-go/admin/streaks/freezes"
     pauses "github.com/trophyso/trophy-go/admin/streaks/pauses"
+    settings "github.com/trophyso/trophy-go/admin/streaks/settings"
     core "github.com/trophyso/trophy-go/core"
     internal "github.com/trophyso/trophy-go/internal"
     option "github.com/trophyso/trophy-go/option"
@@ -19,6 +20,7 @@ type Client struct {
     WithRawResponse *RawClient
     Freezes *freezes.Client
     Pauses *pauses.Client
+    Settings *settings.Client
 
     options *core.RequestOptions
     baseURL string
@@ -27,11 +29,12 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.23.0"
+        options.SdkVersion = "1.24.0"
     }
     return &Client{
         Freezes: freezes.NewClient(options),
         Pauses: pauses.NewClient(options),
+        Settings: settings.NewClient(options),
         WithRawResponse: NewRawClient(options),
         options: options,
         baseURL: options.BaseURL,

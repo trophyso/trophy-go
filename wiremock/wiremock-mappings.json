@@ -1251,6 +1251,187 @@
       }
     },
     {
+      "id": "04b21fd9-22c5-4b85-8cb7-2983fcb61e51",
+      "name": "List achievements - Achievements list",
+      "request": {
+        "urlPathTemplate": "/achievements",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "queryParameters": {
+          "limit": {
+            "equalTo": "1"
+          },
+          "skip": {
+            "equalTo": "1"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "[\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"First Workout\",\n    \"description\": \"Complete your first workout\",\n    \"trigger\": \"metric\",\n    \"status\": \"active\",\n    \"badge\": null,\n    \"userAttributes\": [\n      {\n        \"attributeId\": \"attributeId\",\n        \"attributeValue\": \"attributeValue\"\n      }\n    ],\n    \"key\": \"key\",\n    \"metricId\": \"660f9500-f30c-42e5-b827-557766550001\",\n    \"metricValue\": 1,\n    \"eventAttributes\": [\n      {\n        \"attributeId\": \"attributeId\",\n        \"attributeValue\": \"attributeValue\"\n      }\n    ],\n    \"streakLength\": 1,\n    \"anniversaryYears\": 1,\n    \"achievementIds\": [\n      \"achievementIds\"\n    ]\n  },\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"name\": \"Week Warrior\",\n    \"description\": \"Maintain a 7-day streak\",\n    \"trigger\": \"streak\",\n    \"status\": \"inactive\",\n    \"badge\": null,\n    \"userAttributes\": [\n      {\n        \"attributeId\": \"attributeId\",\n        \"attributeValue\": \"attributeValue\"\n      }\n    ],\n    \"key\": \"key\",\n    \"metricId\": \"metricId\",\n    \"metricValue\": 1.1,\n    \"eventAttributes\": [\n      {\n        \"attributeId\": \"attributeId\",\n        \"attributeValue\": \"attributeValue\"\n      }\n    ],\n    \"streakLength\": 7,\n    \"anniversaryYears\": 1,\n    \"achievementIds\": [\n      \"achievementIds\"\n    ]\n  }\n]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "04b21fd9-22c5-4b85-8cb7-2983fcb61e51",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      },
+      "postServeActions": []
+    },
+    {
+      "id": "a5bf978b-bcd0-44af-9fab-6aeda4ee962d",
+      "name": "Create achievements - All requests had errors",
+      "request": {
+        "urlPathTemplate": "/achievements",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"description\": \"description\",\n      \"trigger\": \"metric\",\n      \"status\": \"active\",\n      \"badge\": {\n        \"url\": \"url\"\n      },\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"key\": \"key\",\n      \"metricId\": \"metricId\",\n      \"metricValue\": 1.1,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"streakLength\": 1,\n      \"anniversaryYears\": 1,\n      \"achievementIds\": [\n        \"achievementIds\"\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Name not a string\"\n    },\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 1,\n      \"severity\": \"error\",\n      \"message\": \"metricId is required for metric achievements\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "a5bf978b-bcd0-44af-9fab-6aeda4ee962d",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "34e69848-7ce2-48bf-abb4-0636806ce4bd",
+      "name": "Delete achievements - Success with no issues",
+      "request": {
+        "urlPathTemplate": "/achievements",
+        "method": "DELETE",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "queryParameters": {
+          "ids": {
+            "hasExactly": [
+              {
+                "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+              },
+              {
+                "equalTo": "550e8400-e29b-41d4-a716-446655440001"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "34e69848-7ce2-48bf-abb4-0636806ce4bd",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "6d25599f-c31c-4b2e-b812-00235dbf8507",
+      "name": "Update achievements - Success with no issues",
+      "request": {
+        "urlPathTemplate": "/achievements",
+        "method": "PATCH",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"First Workout Completed\",\n      \"description\": null,\n      \"trigger\": \"metric\",\n      \"status\": \"active\",\n      \"badge\": null,\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"key\": \"key\",\n      \"metricId\": \"660f9500-f30c-42e5-b827-557766550001\",\n      \"metricValue\": 1,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"streakLength\": 1,\n      \"anniversaryYears\": 1,\n      \"achievementIds\": [\n        \"achievementIds\"\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "6d25599f-c31c-4b2e-b812-00235dbf8507",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "07a69ac8-82b6-43e0-9e05-6c2602e84fd0",
+      "name": "Get an achievement by ID - Metric achievement",
+      "request": {
+        "urlPathTemplate": "/achievements/{id}",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"name\": \"First Workout\",\n  \"description\": \"Complete your first workout\",\n  \"trigger\": \"metric\",\n  \"status\": \"active\",\n  \"badge\": null,\n  \"userAttributes\": [\n    {\n      \"attributeId\": \"attributeId\",\n      \"attributeValue\": \"attributeValue\"\n    }\n  ],\n  \"key\": \"key\",\n  \"metricId\": \"660f9500-f30c-42e5-b827-557766550001\",\n  \"metricValue\": 1,\n  \"eventAttributes\": [\n    {\n      \"attributeId\": \"attributeId\",\n      \"attributeValue\": \"attributeValue\"\n    }\n  ],\n  \"streakLength\": 1,\n  \"anniversaryYears\": 1,\n  \"achievementIds\": [\n    \"achievementIds\"\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "07a69ac8-82b6-43e0-9e05-6c2602e84fd0",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
       "id": "c0191872-4f15-4b40-8591-c285a6e21bf1",
       "name": "List metrics - Metrics list",
       "request": {
@@ -1660,6 +1841,69 @@
         }
       },
       "uuid": "2c5b783e-c4be-45f0-9546-543660822b91",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "cb43fe14-d89c-4788-a4e5-8a63e42732d2",
+      "name": "Get organization settings - Default settings",
+      "request": {
+        "urlPathTemplate": "/settings",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"branding\": {\n    \"appName\": \"Trophy\",\n    \"appUrl\": \"https://app.example.com\",\n    \"brandColor\": \"#1a2b3c\",\n    \"font\": \"MODERN_SANS\",\n    \"logo\": {\n      \"url\": \"https://cdn.example.com/logo.png\"\n    },\n    \"appIcon\": null\n  },\n  \"experimentation\": {\n    \"controlRatio\": 10,\n    \"userActivationWindow\": 14\n  },\n  \"aggregationPeriod\": \"weekly\"\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "cb43fe14-d89c-4788-a4e5-8a63e42732d2",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      },
+      "postServeActions": []
+    },
+    {
+      "id": "b5b819a5-9181-4256-b0f3-aa962688b7c0",
+      "name": "Update organization settings - Update branding and experimentation",
+      "request": {
+        "urlPathTemplate": "/settings",
+        "method": "PATCH",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"branding\": {\n    \"appName\": \"Trophy\",\n    \"appUrl\": \"https://app.example.com\",\n    \"brandColor\": \"#1a2b3c\",\n    \"font\": \"MODERN_SANS\",\n    \"logo\": {\n      \"url\": \"https://cdn.example.com/logo.png\"\n    },\n    \"appIcon\": null\n  },\n  \"experimentation\": {\n    \"controlRatio\": 10,\n    \"userActivationWindow\": 14\n  },\n  \"aggregationPeriod\": \"weekly\"\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "b5b819a5-9181-4256-b0f3-aa962688b7c0",
       "persistent": true,
       "priority": 3,
       "metadata": {
@@ -2805,9 +3049,72 @@
           }
         }
       }
+    },
+    {
+      "id": "8bd2d750-d32f-4d47-940e-894453f78eb8",
+      "name": "Get streak settings - Daily streaks with freezes",
+      "request": {
+        "urlPathTemplate": "/streaks/settings",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"frequency\": \"daily\",\n  \"evaluationMode\": \"OR\",\n  \"customizationEnabled\": true,\n  \"daysOff\": [\n    0,\n    6\n  ],\n  \"metrics\": [\n    {\n      \"key\": \"words-written\",\n      \"threshold\": 500\n    }\n  ],\n  \"freezes\": {\n    \"startCount\": 1,\n    \"maxCount\": 2,\n    \"autoEarnInterval\": 7,\n    \"autoEarnAmount\": 1\n  }\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "8bd2d750-d32f-4d47-940e-894453f78eb8",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      },
+      "postServeActions": []
+    },
+    {
+      "id": "1225fa95-e2ea-4efa-adeb-4c897601b64e",
+      "name": "Update streak settings - Update daily streak settings",
+      "request": {
+        "urlPathTemplate": "/streaks/settings",
+        "method": "PATCH",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"frequency\": \"daily\",\n  \"evaluationMode\": \"OR\",\n  \"customizationEnabled\": true,\n  \"daysOff\": [\n    0,\n    6\n  ],\n  \"metrics\": [\n    {\n      \"key\": \"words-written\",\n      \"threshold\": 500\n    }\n  ],\n  \"freezes\": {\n    \"startCount\": 1,\n    \"maxCount\": 2,\n    \"autoEarnInterval\": 7,\n    \"autoEarnAmount\": 1\n  }\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "1225fa95-e2ea-4efa-adeb-4c897601b64e",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
     }
   ],
   "meta": {
-    "total": 74
+    "total": 83
   }
 }

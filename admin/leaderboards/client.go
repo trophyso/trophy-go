@@ -23,7 +23,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.23.0"
+        options.SdkVersion = "1.24.0"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -56,7 +56,7 @@ func (c *Client) List(
     return response.Body, nil
 }
 
-// Create leaderboards. Maximum 100 leaderboards per request.
+// Create leaderboards.
 func (c *Client) Create(
     ctx context.Context,
     request trophygo.CreateLeaderboardsRequest,

@@ -1029,6 +1029,679 @@ func (a *AchievementWithStatsResponse) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+// An achievement as returned from admin endpoints. Trigger-specific fields are only present for the matching trigger type.
+var (
+	adminAchievementFieldId               = big.NewInt(1 << 0)
+	adminAchievementFieldName             = big.NewInt(1 << 1)
+	adminAchievementFieldDescription      = big.NewInt(1 << 2)
+	adminAchievementFieldTrigger          = big.NewInt(1 << 3)
+	adminAchievementFieldStatus           = big.NewInt(1 << 4)
+	adminAchievementFieldBadge            = big.NewInt(1 << 5)
+	adminAchievementFieldUserAttributes   = big.NewInt(1 << 6)
+	adminAchievementFieldKey              = big.NewInt(1 << 7)
+	adminAchievementFieldMetricId         = big.NewInt(1 << 8)
+	adminAchievementFieldMetricValue      = big.NewInt(1 << 9)
+	adminAchievementFieldEventAttributes  = big.NewInt(1 << 10)
+	adminAchievementFieldStreakLength     = big.NewInt(1 << 11)
+	adminAchievementFieldAnniversaryYears = big.NewInt(1 << 12)
+	adminAchievementFieldAchievementIds   = big.NewInt(1 << 13)
+)
+
+type AdminAchievement struct {
+	// The UUID of the achievement.
+	Id string `json:"id" url:"id"`
+	// The achievement name.
+	Name string `json:"name" url:"name"`
+	// A short description of the achievement.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The achievement trigger type.
+	Trigger AdminAchievementTrigger `json:"trigger" url:"trigger"`
+	// The achievement status.
+	Status AdminAchievementStatus `json:"status" url:"status"`
+	// The badge for the achievement, or null if no badge is set.
+	Badge *AdminAchievementBadge `json:"badge,omitempty" url:"badge,omitempty"`
+	// User attribute filters applied to the achievement.
+	UserAttributes []*AdminAchievementUserAttributesItem `json:"userAttributes" url:"userAttributes"`
+	// The achievement key. Only present for API achievements.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// The UUID of the metric. Only present for metric achievements.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The metric threshold. Only present for metric achievements.
+	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
+	// Event attribute filters. Only present for metric achievements.
+	EventAttributes []*AdminAchievementEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// The streak length. Only present for streak achievements.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The anniversary years. Only present for anniversary achievements.
+	AnniversaryYears *int `json:"anniversaryYears,omitempty" url:"anniversaryYears,omitempty"`
+	// Prerequisite achievement UUIDs. Only present for achievement achievements.
+	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminAchievement) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminAchievement) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminAchievement) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *AdminAchievement) GetTrigger() AdminAchievementTrigger {
+	if a == nil {
+		return ""
+	}
+	return a.Trigger
+}
+
+func (a *AdminAchievement) GetStatus() AdminAchievementStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminAchievement) GetBadge() *AdminAchievementBadge {
+	if a == nil {
+		return nil
+	}
+	return a.Badge
+}
+
+func (a *AdminAchievement) GetUserAttributes() []*AdminAchievementUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
+}
+
+func (a *AdminAchievement) GetKey() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Key
+}
+
+func (a *AdminAchievement) GetMetricId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricId
+}
+
+func (a *AdminAchievement) GetMetricValue() *float64 {
+	if a == nil {
+		return nil
+	}
+	return a.MetricValue
+}
+
+func (a *AdminAchievement) GetEventAttributes() []*AdminAchievementEventAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.EventAttributes
+}
+
+func (a *AdminAchievement) GetStreakLength() *int {
+	if a == nil {
+		return nil
+	}
+	return a.StreakLength
+}
+
+func (a *AdminAchievement) GetAnniversaryYears() *int {
+	if a == nil {
+		return nil
+	}
+	return a.AnniversaryYears
+}
+
+func (a *AdminAchievement) GetAchievementIds() []string {
+	if a == nil {
+		return nil
+	}
+	return a.AchievementIds
+}
+
+func (a *AdminAchievement) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminAchievement) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetId(id string) {
+	a.Id = id
+	a.require(adminAchievementFieldId)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetName(name string) {
+	a.Name = name
+	a.require(adminAchievementFieldName)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetDescription(description *string) {
+	a.Description = description
+	a.require(adminAchievementFieldDescription)
+}
+
+// SetTrigger sets the Trigger field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetTrigger(trigger AdminAchievementTrigger) {
+	a.Trigger = trigger
+	a.require(adminAchievementFieldTrigger)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetStatus(status AdminAchievementStatus) {
+	a.Status = status
+	a.require(adminAchievementFieldStatus)
+}
+
+// SetBadge sets the Badge field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetBadge(badge *AdminAchievementBadge) {
+	a.Badge = badge
+	a.require(adminAchievementFieldBadge)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetUserAttributes(userAttributes []*AdminAchievementUserAttributesItem) {
+	a.UserAttributes = userAttributes
+	a.require(adminAchievementFieldUserAttributes)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetKey(key *string) {
+	a.Key = key
+	a.require(adminAchievementFieldKey)
+}
+
+// SetMetricId sets the MetricId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetMetricId(metricId *string) {
+	a.MetricId = metricId
+	a.require(adminAchievementFieldMetricId)
+}
+
+// SetMetricValue sets the MetricValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetMetricValue(metricValue *float64) {
+	a.MetricValue = metricValue
+	a.require(adminAchievementFieldMetricValue)
+}
+
+// SetEventAttributes sets the EventAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetEventAttributes(eventAttributes []*AdminAchievementEventAttributesItem) {
+	a.EventAttributes = eventAttributes
+	a.require(adminAchievementFieldEventAttributes)
+}
+
+// SetStreakLength sets the StreakLength field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetStreakLength(streakLength *int) {
+	a.StreakLength = streakLength
+	a.require(adminAchievementFieldStreakLength)
+}
+
+// SetAnniversaryYears sets the AnniversaryYears field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetAnniversaryYears(anniversaryYears *int) {
+	a.AnniversaryYears = anniversaryYears
+	a.require(adminAchievementFieldAnniversaryYears)
+}
+
+// SetAchievementIds sets the AchievementIds field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievement) SetAchievementIds(achievementIds []string) {
+	a.AchievementIds = achievementIds
+	a.require(adminAchievementFieldAchievementIds)
+}
+
+func (a *AdminAchievement) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminAchievement
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminAchievement(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminAchievement) MarshalJSON() ([]byte, error) {
+	type embed AdminAchievement
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminAchievement) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
+	adminAchievementBadgeFieldUrl = big.NewInt(1 << 0)
+)
+
+type AdminAchievementBadge struct {
+	// The URL of the badge image.
+	Url string `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminAchievementBadge) GetUrl() string {
+	if a == nil {
+		return ""
+	}
+	return a.Url
+}
+
+func (a *AdminAchievementBadge) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminAchievementBadge) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetUrl sets the Url field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievementBadge) SetUrl(url string) {
+	a.Url = url
+	a.require(adminAchievementBadgeFieldUrl)
+}
+
+func (a *AdminAchievementBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminAchievementBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminAchievementBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminAchievementBadge) MarshalJSON() ([]byte, error) {
+	type embed AdminAchievementBadge
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminAchievementBadge) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
+	adminAchievementEventAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	adminAchievementEventAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type AdminAchievementEventAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminAchievementEventAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminAchievementEventAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminAchievementEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminAchievementEventAttributesItem) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievementEventAttributesItem) SetAttributeId(attributeId string) {
+	a.AttributeId = attributeId
+	a.require(adminAchievementEventAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievementEventAttributesItem) SetAttributeValue(attributeValue string) {
+	a.AttributeValue = attributeValue
+	a.require(adminAchievementEventAttributesItemFieldAttributeValue)
+}
+
+func (a *AdminAchievementEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminAchievementEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminAchievementEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminAchievementEventAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed AdminAchievementEventAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminAchievementEventAttributesItem) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The achievement status.
+type AdminAchievementStatus string
+
+const (
+	AdminAchievementStatusActive   AdminAchievementStatus = "active"
+	AdminAchievementStatusInactive AdminAchievementStatus = "inactive"
+	AdminAchievementStatusLocked   AdminAchievementStatus = "locked"
+)
+
+func NewAdminAchievementStatusFromString(s string) (AdminAchievementStatus, error) {
+	switch s {
+	case "active":
+		return AdminAchievementStatusActive, nil
+	case "inactive":
+		return AdminAchievementStatusInactive, nil
+	case "locked":
+		return AdminAchievementStatusLocked, nil
+	}
+	var t AdminAchievementStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminAchievementStatus) Ptr() *AdminAchievementStatus {
+	return &a
+}
+
+// The achievement trigger type.
+type AdminAchievementTrigger string
+
+const (
+	AdminAchievementTriggerMetric      AdminAchievementTrigger = "metric"
+	AdminAchievementTriggerStreak      AdminAchievementTrigger = "streak"
+	AdminAchievementTriggerApi         AdminAchievementTrigger = "api"
+	AdminAchievementTriggerAchievement AdminAchievementTrigger = "achievement"
+	AdminAchievementTriggerAnniversary AdminAchievementTrigger = "anniversary"
+)
+
+func NewAdminAchievementTriggerFromString(s string) (AdminAchievementTrigger, error) {
+	switch s {
+	case "metric":
+		return AdminAchievementTriggerMetric, nil
+	case "streak":
+		return AdminAchievementTriggerStreak, nil
+	case "api":
+		return AdminAchievementTriggerApi, nil
+	case "achievement":
+		return AdminAchievementTriggerAchievement, nil
+	case "anniversary":
+		return AdminAchievementTriggerAnniversary, nil
+	}
+	var t AdminAchievementTrigger
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminAchievementTrigger) Ptr() *AdminAchievementTrigger {
+	return &a
+}
+
+var (
+	adminAchievementUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	adminAchievementUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type AdminAchievementUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminAchievementUserAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminAchievementUserAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminAchievementUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminAchievementUserAttributesItem) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievementUserAttributesItem) SetAttributeId(attributeId string) {
+	a.AttributeId = attributeId
+	a.require(adminAchievementUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminAchievementUserAttributesItem) SetAttributeValue(attributeValue string) {
+	a.AttributeValue = attributeValue
+	a.require(adminAchievementUserAttributesItemFieldAttributeValue)
+}
+
+func (a *AdminAchievementUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminAchievementUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminAchievementUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminAchievementUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed AdminAchievementUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminAchievementUserAttributesItem) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// How progress is displayed in email chart blocks and how often recap messages send.
+type AdminAggregationPeriod string
+
+const (
+	AdminAggregationPeriodWeekly  AdminAggregationPeriod = "weekly"
+	AdminAggregationPeriodMonthly AdminAggregationPeriod = "monthly"
+)
+
+func NewAdminAggregationPeriodFromString(s string) (AdminAggregationPeriod, error) {
+	switch s {
+	case "weekly":
+		return AdminAggregationPeriodWeekly, nil
+	case "monthly":
+		return AdminAggregationPeriodMonthly, nil
+	}
+	var t AdminAggregationPeriod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminAggregationPeriod) Ptr() *AdminAggregationPeriod {
+	return &a
+}
+
 // An attribute returned from the admin attributes endpoints.
 var (
 	adminAttributeFieldId   = big.NewInt(1 << 0)
@@ -1271,6 +1944,50 @@ func (a *AdminErrorBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", a)
+}
+
+// The email brand font. Configured on the email settings form in the dashboard.
+type AdminFontFamily string
+
+const (
+	AdminFontFamilyModernSans    AdminFontFamily = "MODERN_SANS"
+	AdminFontFamilyBookSans      AdminFontFamily = "BOOK_SANS"
+	AdminFontFamilyOrganicSans   AdminFontFamily = "ORGANIC_SANS"
+	AdminFontFamilyGeometricSans AdminFontFamily = "GEOMETRIC_SANS"
+	AdminFontFamilyHeavySans     AdminFontFamily = "HEAVY_SANS"
+	AdminFontFamilyRoundedSans   AdminFontFamily = "ROUNDED_SANS"
+	AdminFontFamilyModernSerif   AdminFontFamily = "MODERN_SERIF"
+	AdminFontFamilyBookSerif     AdminFontFamily = "BOOK_SERIF"
+	AdminFontFamilyMonospace     AdminFontFamily = "MONOSPACE"
+)
+
+func NewAdminFontFamilyFromString(s string) (AdminFontFamily, error) {
+	switch s {
+	case "MODERN_SANS":
+		return AdminFontFamilyModernSans, nil
+	case "BOOK_SANS":
+		return AdminFontFamilyBookSans, nil
+	case "ORGANIC_SANS":
+		return AdminFontFamilyOrganicSans, nil
+	case "GEOMETRIC_SANS":
+		return AdminFontFamilyGeometricSans, nil
+	case "HEAVY_SANS":
+		return AdminFontFamilyHeavySans, nil
+	case "ROUNDED_SANS":
+		return AdminFontFamilyRoundedSans, nil
+	case "MODERN_SERIF":
+		return AdminFontFamilyModernSerif, nil
+	case "BOOK_SERIF":
+		return AdminFontFamilyBookSerif, nil
+	case "MONOSPACE":
+		return AdminFontFamilyMonospace, nil
+	}
+	var t AdminFontFamily
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminFontFamily) Ptr() *AdminFontFamily {
+	return &a
 }
 
 // An issue encountered while processing an item in an admin API request.
@@ -3384,6 +4101,615 @@ func (a *AdminPointsTriggerUserAttributesItem) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+// The organization's branding, experimentation, and aggregation settings.
+var (
+	adminSettingsFieldBranding          = big.NewInt(1 << 0)
+	adminSettingsFieldExperimentation   = big.NewInt(1 << 1)
+	adminSettingsFieldAggregationPeriod = big.NewInt(1 << 2)
+)
+
+type AdminSettings struct {
+	Branding          *AdminSettingsBranding        `json:"branding" url:"branding"`
+	Experimentation   *AdminSettingsExperimentation `json:"experimentation" url:"experimentation"`
+	AggregationPeriod AdminAggregationPeriod        `json:"aggregationPeriod" url:"aggregationPeriod"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminSettings) GetBranding() *AdminSettingsBranding {
+	if a == nil {
+		return nil
+	}
+	return a.Branding
+}
+
+func (a *AdminSettings) GetExperimentation() *AdminSettingsExperimentation {
+	if a == nil {
+		return nil
+	}
+	return a.Experimentation
+}
+
+func (a *AdminSettings) GetAggregationPeriod() AdminAggregationPeriod {
+	if a == nil {
+		return ""
+	}
+	return a.AggregationPeriod
+}
+
+func (a *AdminSettings) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminSettings) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetBranding sets the Branding field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettings) SetBranding(branding *AdminSettingsBranding) {
+	a.Branding = branding
+	a.require(adminSettingsFieldBranding)
+}
+
+// SetExperimentation sets the Experimentation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettings) SetExperimentation(experimentation *AdminSettingsExperimentation) {
+	a.Experimentation = experimentation
+	a.require(adminSettingsFieldExperimentation)
+}
+
+// SetAggregationPeriod sets the AggregationPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettings) SetAggregationPeriod(aggregationPeriod AdminAggregationPeriod) {
+	a.AggregationPeriod = aggregationPeriod
+	a.require(adminSettingsFieldAggregationPeriod)
+}
+
+func (a *AdminSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminSettings) MarshalJSON() ([]byte, error) {
+	type embed AdminSettings
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminSettings) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Organization branding settings.
+var (
+	adminSettingsBrandingFieldAppName    = big.NewInt(1 << 0)
+	adminSettingsBrandingFieldAppUrl     = big.NewInt(1 << 1)
+	adminSettingsBrandingFieldBrandColor = big.NewInt(1 << 2)
+	adminSettingsBrandingFieldFont       = big.NewInt(1 << 3)
+	adminSettingsBrandingFieldLogo       = big.NewInt(1 << 4)
+	adminSettingsBrandingFieldAppIcon    = big.NewInt(1 << 5)
+)
+
+type AdminSettingsBranding struct {
+	// The name of the app or platform.
+	AppName string `json:"appName" url:"appName"`
+	// The URL of the app or platform.
+	AppUrl string `json:"appUrl" url:"appUrl"`
+	// Primary brand color as hex (`#RGB` or `#RRGGBB`), `rgb(r,g,b)`, or `rgba(r,g,b,a)`.
+	BrandColor string          `json:"brandColor" url:"brandColor"`
+	Font       AdminFontFamily `json:"font" url:"font"`
+	// Company logo used in emails, or `null` if none is set.
+	Logo *AdminSettingsBrandingLogo `json:"logo,omitempty" url:"logo,omitempty"`
+	// App icon used in push notification previews, or `null` if none is set.
+	AppIcon *AdminSettingsBrandingAppIcon `json:"appIcon,omitempty" url:"appIcon,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminSettingsBranding) GetAppName() string {
+	if a == nil {
+		return ""
+	}
+	return a.AppName
+}
+
+func (a *AdminSettingsBranding) GetAppUrl() string {
+	if a == nil {
+		return ""
+	}
+	return a.AppUrl
+}
+
+func (a *AdminSettingsBranding) GetBrandColor() string {
+	if a == nil {
+		return ""
+	}
+	return a.BrandColor
+}
+
+func (a *AdminSettingsBranding) GetFont() AdminFontFamily {
+	if a == nil {
+		return ""
+	}
+	return a.Font
+}
+
+func (a *AdminSettingsBranding) GetLogo() *AdminSettingsBrandingLogo {
+	if a == nil {
+		return nil
+	}
+	return a.Logo
+}
+
+func (a *AdminSettingsBranding) GetAppIcon() *AdminSettingsBrandingAppIcon {
+	if a == nil {
+		return nil
+	}
+	return a.AppIcon
+}
+
+func (a *AdminSettingsBranding) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminSettingsBranding) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAppName sets the AppName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBranding) SetAppName(appName string) {
+	a.AppName = appName
+	a.require(adminSettingsBrandingFieldAppName)
+}
+
+// SetAppUrl sets the AppUrl field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBranding) SetAppUrl(appUrl string) {
+	a.AppUrl = appUrl
+	a.require(adminSettingsBrandingFieldAppUrl)
+}
+
+// SetBrandColor sets the BrandColor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBranding) SetBrandColor(brandColor string) {
+	a.BrandColor = brandColor
+	a.require(adminSettingsBrandingFieldBrandColor)
+}
+
+// SetFont sets the Font field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBranding) SetFont(font AdminFontFamily) {
+	a.Font = font
+	a.require(adminSettingsBrandingFieldFont)
+}
+
+// SetLogo sets the Logo field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBranding) SetLogo(logo *AdminSettingsBrandingLogo) {
+	a.Logo = logo
+	a.require(adminSettingsBrandingFieldLogo)
+}
+
+// SetAppIcon sets the AppIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBranding) SetAppIcon(appIcon *AdminSettingsBrandingAppIcon) {
+	a.AppIcon = appIcon
+	a.require(adminSettingsBrandingFieldAppIcon)
+}
+
+func (a *AdminSettingsBranding) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminSettingsBranding
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminSettingsBranding(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminSettingsBranding) MarshalJSON() ([]byte, error) {
+	type embed AdminSettingsBranding
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminSettingsBranding) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
+	adminSettingsBrandingAppIconFieldUrl = big.NewInt(1 << 0)
+)
+
+type AdminSettingsBrandingAppIcon struct {
+	// The URL of the app icon image.
+	Url string `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminSettingsBrandingAppIcon) GetUrl() string {
+	if a == nil {
+		return ""
+	}
+	return a.Url
+}
+
+func (a *AdminSettingsBrandingAppIcon) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminSettingsBrandingAppIcon) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetUrl sets the Url field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBrandingAppIcon) SetUrl(url string) {
+	a.Url = url
+	a.require(adminSettingsBrandingAppIconFieldUrl)
+}
+
+func (a *AdminSettingsBrandingAppIcon) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminSettingsBrandingAppIcon
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminSettingsBrandingAppIcon(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminSettingsBrandingAppIcon) MarshalJSON() ([]byte, error) {
+	type embed AdminSettingsBrandingAppIcon
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminSettingsBrandingAppIcon) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
+	adminSettingsBrandingLogoFieldUrl = big.NewInt(1 << 0)
+)
+
+type AdminSettingsBrandingLogo struct {
+	// The URL of the logo image.
+	Url string `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminSettingsBrandingLogo) GetUrl() string {
+	if a == nil {
+		return ""
+	}
+	return a.Url
+}
+
+func (a *AdminSettingsBrandingLogo) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminSettingsBrandingLogo) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetUrl sets the Url field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsBrandingLogo) SetUrl(url string) {
+	a.Url = url
+	a.require(adminSettingsBrandingLogoFieldUrl)
+}
+
+func (a *AdminSettingsBrandingLogo) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminSettingsBrandingLogo
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminSettingsBrandingLogo(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminSettingsBrandingLogo) MarshalJSON() ([]byte, error) {
+	type embed AdminSettingsBrandingLogo
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminSettingsBrandingLogo) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Experimentation settings.
+var (
+	adminSettingsExperimentationFieldControlRatio         = big.NewInt(1 << 0)
+	adminSettingsExperimentationFieldUserActivationWindow = big.NewInt(1 << 1)
+)
+
+type AdminSettingsExperimentation struct {
+	// Percentage of new users assigned to the control group.
+	ControlRatio int `json:"controlRatio" url:"controlRatio"`
+	// Number of days after a user's first event used to measure retention and early engagement.
+	UserActivationWindow int `json:"userActivationWindow" url:"userActivationWindow"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminSettingsExperimentation) GetControlRatio() int {
+	if a == nil {
+		return 0
+	}
+	return a.ControlRatio
+}
+
+func (a *AdminSettingsExperimentation) GetUserActivationWindow() int {
+	if a == nil {
+		return 0
+	}
+	return a.UserActivationWindow
+}
+
+func (a *AdminSettingsExperimentation) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminSettingsExperimentation) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetControlRatio sets the ControlRatio field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsExperimentation) SetControlRatio(controlRatio int) {
+	a.ControlRatio = controlRatio
+	a.require(adminSettingsExperimentationFieldControlRatio)
+}
+
+// SetUserActivationWindow sets the UserActivationWindow field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminSettingsExperimentation) SetUserActivationWindow(userActivationWindow int) {
+	a.UserActivationWindow = userActivationWindow
+	a.require(adminSettingsExperimentationFieldUserActivationWindow)
+}
+
+func (a *AdminSettingsExperimentation) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminSettingsExperimentation
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminSettingsExperimentation(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminSettingsExperimentation) MarshalJSON() ([]byte, error) {
+	type embed AdminSettingsExperimentation
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminSettingsExperimentation) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Whether meeting any single metric threshold (`OR`) or all configured metric thresholds (`AND`) extends the user's streak.
+type AdminStreakEvaluationMode string
+
+const (
+	AdminStreakEvaluationModeOr  AdminStreakEvaluationMode = "OR"
+	AdminStreakEvaluationModeAnd AdminStreakEvaluationMode = "AND"
+)
+
+func NewAdminStreakEvaluationModeFromString(s string) (AdminStreakEvaluationMode, error) {
+	switch s {
+	case "OR":
+		return AdminStreakEvaluationModeOr, nil
+	case "AND":
+		return AdminStreakEvaluationModeAnd, nil
+	}
+	var t AdminStreakEvaluationMode
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminStreakEvaluationMode) Ptr() *AdminStreakEvaluationMode {
+	return &a
+}
+
+// The frequency at which streaks are calculated.
+type AdminStreakFrequency string
+
+const (
+	AdminStreakFrequencyDaily   AdminStreakFrequency = "daily"
+	AdminStreakFrequencyWeekly  AdminStreakFrequency = "weekly"
+	AdminStreakFrequencyMonthly AdminStreakFrequency = "monthly"
+)
+
+func NewAdminStreakFrequencyFromString(s string) (AdminStreakFrequency, error) {
+	switch s {
+	case "daily":
+		return AdminStreakFrequencyDaily, nil
+	case "weekly":
+		return AdminStreakFrequencyWeekly, nil
+	case "monthly":
+		return AdminStreakFrequencyMonthly, nil
+	}
+	var t AdminStreakFrequency
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminStreakFrequency) Ptr() *AdminStreakFrequency {
+	return &a
+}
+
 // A streak pause returned from the admin pauses endpoints.
 var (
 	adminStreakPauseFieldId     = big.NewInt(1 << 0)
@@ -4431,6 +5757,746 @@ func (b *BatchMetricEventUser) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", b)
+}
+
+// An achievement to create. Trigger-specific fields are required based on `trigger`. `status` defaults to `inactive`.
+var (
+	createAchievementRequestItemFieldName             = big.NewInt(1 << 0)
+	createAchievementRequestItemFieldTrigger          = big.NewInt(1 << 1)
+	createAchievementRequestItemFieldDescription      = big.NewInt(1 << 2)
+	createAchievementRequestItemFieldStatus           = big.NewInt(1 << 3)
+	createAchievementRequestItemFieldBadge            = big.NewInt(1 << 4)
+	createAchievementRequestItemFieldUserAttributes   = big.NewInt(1 << 5)
+	createAchievementRequestItemFieldKey              = big.NewInt(1 << 6)
+	createAchievementRequestItemFieldMetricId         = big.NewInt(1 << 7)
+	createAchievementRequestItemFieldMetricValue      = big.NewInt(1 << 8)
+	createAchievementRequestItemFieldEventAttributes  = big.NewInt(1 << 9)
+	createAchievementRequestItemFieldStreakLength     = big.NewInt(1 << 10)
+	createAchievementRequestItemFieldAnniversaryYears = big.NewInt(1 << 11)
+	createAchievementRequestItemFieldAchievementIds   = big.NewInt(1 << 12)
+)
+
+type CreateAchievementRequestItem struct {
+	// The achievement name.
+	Name string `json:"name" url:"name"`
+	// The achievement trigger type.
+	Trigger CreateAchievementRequestItemTrigger `json:"trigger" url:"trigger"`
+	// A short description of the achievement.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The achievement status. Defaults to `inactive`.
+	Status *CreateAchievementRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// An optional badge for the achievement.
+	Badge *CreateAchievementRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+	// User attribute filters applied to the achievement. Each `attributeId` must be an active user attribute.
+	UserAttributes []*CreateAchievementRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Required if trigger is `api`. Only alphanumeric characters, hyphens, and underscores are permitted.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// Required if trigger is `metric`. The UUID of the metric.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// Required if trigger is `metric`. The metric threshold users must reach. Must be at least 1.
+	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
+	// Event attribute filters. Only permitted for metric achievements. Each `attributeId` must be an active event attribute.
+	EventAttributes []*CreateAchievementRequestItemEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// Required if trigger is `streak`. The streak length users must reach. Must be at least 1.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// Required if trigger is `anniversary`. The number of years since sign-up. Must be at least 1.
+	AnniversaryYears *int `json:"anniversaryYears,omitempty" url:"anniversaryYears,omitempty"`
+	// Required if trigger is `achievement`. UUIDs of prerequisite achievements.
+	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAchievementRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreateAchievementRequestItem) GetTrigger() CreateAchievementRequestItemTrigger {
+	if c == nil {
+		return ""
+	}
+	return c.Trigger
+}
+
+func (c *CreateAchievementRequestItem) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
+}
+
+func (c *CreateAchievementRequestItem) GetStatus() *CreateAchievementRequestItemStatus {
+	if c == nil {
+		return nil
+	}
+	return c.Status
+}
+
+func (c *CreateAchievementRequestItem) GetBadge() *CreateAchievementRequestItemBadge {
+	if c == nil {
+		return nil
+	}
+	return c.Badge
+}
+
+func (c *CreateAchievementRequestItem) GetUserAttributes() []*CreateAchievementRequestItemUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
+}
+
+func (c *CreateAchievementRequestItem) GetKey() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Key
+}
+
+func (c *CreateAchievementRequestItem) GetMetricId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricId
+}
+
+func (c *CreateAchievementRequestItem) GetMetricValue() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.MetricValue
+}
+
+func (c *CreateAchievementRequestItem) GetEventAttributes() []*CreateAchievementRequestItemEventAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.EventAttributes
+}
+
+func (c *CreateAchievementRequestItem) GetStreakLength() *int {
+	if c == nil {
+		return nil
+	}
+	return c.StreakLength
+}
+
+func (c *CreateAchievementRequestItem) GetAnniversaryYears() *int {
+	if c == nil {
+		return nil
+	}
+	return c.AnniversaryYears
+}
+
+func (c *CreateAchievementRequestItem) GetAchievementIds() []string {
+	if c == nil {
+		return nil
+	}
+	return c.AchievementIds
+}
+
+func (c *CreateAchievementRequestItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateAchievementRequestItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetName(name string) {
+	c.Name = name
+	c.require(createAchievementRequestItemFieldName)
+}
+
+// SetTrigger sets the Trigger field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetTrigger(trigger CreateAchievementRequestItemTrigger) {
+	c.Trigger = trigger
+	c.require(createAchievementRequestItemFieldTrigger)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetDescription(description *string) {
+	c.Description = description
+	c.require(createAchievementRequestItemFieldDescription)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetStatus(status *CreateAchievementRequestItemStatus) {
+	c.Status = status
+	c.require(createAchievementRequestItemFieldStatus)
+}
+
+// SetBadge sets the Badge field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetBadge(badge *CreateAchievementRequestItemBadge) {
+	c.Badge = badge
+	c.require(createAchievementRequestItemFieldBadge)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetUserAttributes(userAttributes []*CreateAchievementRequestItemUserAttributesItem) {
+	c.UserAttributes = userAttributes
+	c.require(createAchievementRequestItemFieldUserAttributes)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetKey(key *string) {
+	c.Key = key
+	c.require(createAchievementRequestItemFieldKey)
+}
+
+// SetMetricId sets the MetricId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetMetricId(metricId *string) {
+	c.MetricId = metricId
+	c.require(createAchievementRequestItemFieldMetricId)
+}
+
+// SetMetricValue sets the MetricValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetMetricValue(metricValue *float64) {
+	c.MetricValue = metricValue
+	c.require(createAchievementRequestItemFieldMetricValue)
+}
+
+// SetEventAttributes sets the EventAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetEventAttributes(eventAttributes []*CreateAchievementRequestItemEventAttributesItem) {
+	c.EventAttributes = eventAttributes
+	c.require(createAchievementRequestItemFieldEventAttributes)
+}
+
+// SetStreakLength sets the StreakLength field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetStreakLength(streakLength *int) {
+	c.StreakLength = streakLength
+	c.require(createAchievementRequestItemFieldStreakLength)
+}
+
+// SetAnniversaryYears sets the AnniversaryYears field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetAnniversaryYears(anniversaryYears *int) {
+	c.AnniversaryYears = anniversaryYears
+	c.require(createAchievementRequestItemFieldAnniversaryYears)
+}
+
+// SetAchievementIds sets the AchievementIds field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItem) SetAchievementIds(achievementIds []string) {
+	c.AchievementIds = achievementIds
+	c.require(createAchievementRequestItemFieldAchievementIds)
+}
+
+func (c *CreateAchievementRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAchievementRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateAchievementRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateAchievementRequestItem) MarshalJSON() ([]byte, error) {
+	type embed CreateAchievementRequestItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateAchievementRequestItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// An optional badge for the achievement.
+var (
+	createAchievementRequestItemBadgeFieldUrl = big.NewInt(1 << 0)
+)
+
+type CreateAchievementRequestItemBadge struct {
+	// The URL of the badge image.
+	Url string `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAchievementRequestItemBadge) GetUrl() string {
+	if c == nil {
+		return ""
+	}
+	return c.Url
+}
+
+func (c *CreateAchievementRequestItemBadge) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateAchievementRequestItemBadge) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetUrl sets the Url field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItemBadge) SetUrl(url string) {
+	c.Url = url
+	c.require(createAchievementRequestItemBadgeFieldUrl)
+}
+
+func (c *CreateAchievementRequestItemBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAchievementRequestItemBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateAchievementRequestItemBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateAchievementRequestItemBadge) MarshalJSON() ([]byte, error) {
+	type embed CreateAchievementRequestItemBadge
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateAchievementRequestItemBadge) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	createAchievementRequestItemEventAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	createAchievementRequestItemEventAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type CreateAchievementRequestItemEventAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAchievementRequestItemEventAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreateAchievementRequestItemEventAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreateAchievementRequestItemEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateAchievementRequestItemEventAttributesItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItemEventAttributesItem) SetAttributeId(attributeId string) {
+	c.AttributeId = attributeId
+	c.require(createAchievementRequestItemEventAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItemEventAttributesItem) SetAttributeValue(attributeValue string) {
+	c.AttributeValue = attributeValue
+	c.require(createAchievementRequestItemEventAttributesItemFieldAttributeValue)
+}
+
+func (c *CreateAchievementRequestItemEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAchievementRequestItemEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateAchievementRequestItemEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateAchievementRequestItemEventAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed CreateAchievementRequestItemEventAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateAchievementRequestItemEventAttributesItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The achievement status. Defaults to `inactive`.
+type CreateAchievementRequestItemStatus string
+
+const (
+	CreateAchievementRequestItemStatusActive   CreateAchievementRequestItemStatus = "active"
+	CreateAchievementRequestItemStatusInactive CreateAchievementRequestItemStatus = "inactive"
+	CreateAchievementRequestItemStatusLocked   CreateAchievementRequestItemStatus = "locked"
+)
+
+func NewCreateAchievementRequestItemStatusFromString(s string) (CreateAchievementRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return CreateAchievementRequestItemStatusActive, nil
+	case "inactive":
+		return CreateAchievementRequestItemStatusInactive, nil
+	case "locked":
+		return CreateAchievementRequestItemStatusLocked, nil
+	}
+	var t CreateAchievementRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateAchievementRequestItemStatus) Ptr() *CreateAchievementRequestItemStatus {
+	return &c
+}
+
+// The achievement trigger type.
+type CreateAchievementRequestItemTrigger string
+
+const (
+	CreateAchievementRequestItemTriggerMetric      CreateAchievementRequestItemTrigger = "metric"
+	CreateAchievementRequestItemTriggerStreak      CreateAchievementRequestItemTrigger = "streak"
+	CreateAchievementRequestItemTriggerApi         CreateAchievementRequestItemTrigger = "api"
+	CreateAchievementRequestItemTriggerAchievement CreateAchievementRequestItemTrigger = "achievement"
+	CreateAchievementRequestItemTriggerAnniversary CreateAchievementRequestItemTrigger = "anniversary"
+)
+
+func NewCreateAchievementRequestItemTriggerFromString(s string) (CreateAchievementRequestItemTrigger, error) {
+	switch s {
+	case "metric":
+		return CreateAchievementRequestItemTriggerMetric, nil
+	case "streak":
+		return CreateAchievementRequestItemTriggerStreak, nil
+	case "api":
+		return CreateAchievementRequestItemTriggerApi, nil
+	case "achievement":
+		return CreateAchievementRequestItemTriggerAchievement, nil
+	case "anniversary":
+		return CreateAchievementRequestItemTriggerAnniversary, nil
+	}
+	var t CreateAchievementRequestItemTrigger
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateAchievementRequestItemTrigger) Ptr() *CreateAchievementRequestItemTrigger {
+	return &c
+}
+
+var (
+	createAchievementRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	createAchievementRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type CreateAchievementRequestItemUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAchievementRequestItemUserAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreateAchievementRequestItemUserAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreateAchievementRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateAchievementRequestItemUserAttributesItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	c.AttributeId = attributeId
+	c.require(createAchievementRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	c.AttributeValue = attributeValue
+	c.require(createAchievementRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (c *CreateAchievementRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAchievementRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateAchievementRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateAchievementRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed CreateAchievementRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateAchievementRequestItemUserAttributesItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Request body for creating achievements.
+type CreateAchievementsRequest = []*CreateAchievementRequestItem
+
+// Response containing created achievements and any per-item issues.
+var (
+	createAchievementsResponseFieldCreated = big.NewInt(1 << 0)
+	createAchievementsResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type CreateAchievementsResponse struct {
+	// Array of successfully created achievements.
+	Created []*AdminAchievement `json:"created" url:"created"`
+	// Array of issues encountered during achievement creation.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateAchievementsResponse) GetCreated() []*AdminAchievement {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateAchievementsResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateAchievementsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateAchievementsResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreated sets the Created field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementsResponse) SetCreated(created []*AdminAchievement) {
+	c.Created = created
+	c.require(createAchievementsResponseFieldCreated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateAchievementsResponse) SetIssues(issues []*AdminIssue) {
+	c.Issues = issues
+	c.require(createAchievementsResponseFieldIssues)
+}
+
+func (c *CreateAchievementsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateAchievementsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateAchievementsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateAchievementsResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateAchievementsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateAchievementsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 // A user to create an application API key for.
@@ -8427,6 +10493,109 @@ func (c CreatedMetricUnitType) Ptr() *CreatedMetricUnitType {
 	return &c
 }
 
+// Response containing deleted achievements represented by ID and any per-item issues, including invalid or missing achievement IDs.
+var (
+	deleteAchievementsResponseFieldDeleted = big.NewInt(1 << 0)
+	deleteAchievementsResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type DeleteAchievementsResponse struct {
+	// Array of deleted achievements represented by ID.
+	Deleted []*DeletedResource `json:"deleted" url:"deleted"`
+	// Array of issues encountered during achievement deletion.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteAchievementsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteAchievementsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteAchievementsResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteAchievementsResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetDeleted sets the Deleted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteAchievementsResponse) SetDeleted(deleted []*DeletedResource) {
+	d.Deleted = deleted
+	d.require(deleteAchievementsResponseFieldDeleted)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteAchievementsResponse) SetIssues(issues []*AdminIssue) {
+	d.Issues = issues
+	d.require(deleteAchievementsResponseFieldIssues)
+}
+
+func (d *DeleteAchievementsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteAchievementsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteAchievementsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteAchievementsResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteAchievementsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteAchievementsResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
 // Response containing deleted application API key IDs and any issues.
 var (
 	deleteApplicationKeysResponseFieldDeleted = big.NewInt(1 << 0)
@@ -10053,6 +12222,9 @@ func NewLeaderboardResponseRunUnitFromString(s string) (LeaderboardResponseRunUn
 func (l LeaderboardResponseRunUnit) Ptr() *LeaderboardResponseRunUnit {
 	return &l
 }
+
+// A paginated list of achievements.
+type ListAchievementsResponse = []*AdminAchievement
 
 // A paginated list of attributes.
 type ListAttributesResponse = []*AdminAttribute
@@ -13695,6 +15867,1614 @@ func (s StreakFrequency) Ptr() *StreakFrequency {
 	return &s
 }
 
+// The organization's streak configuration.
+var (
+	streakSettingsFieldFrequency            = big.NewInt(1 << 0)
+	streakSettingsFieldEvaluationMode       = big.NewInt(1 << 1)
+	streakSettingsFieldCustomizationEnabled = big.NewInt(1 << 2)
+	streakSettingsFieldDaysOff              = big.NewInt(1 << 3)
+	streakSettingsFieldMetrics              = big.NewInt(1 << 4)
+	streakSettingsFieldFreezes              = big.NewInt(1 << 5)
+)
+
+type StreakSettings struct {
+	Frequency      AdminStreakFrequency      `json:"frequency" url:"frequency"`
+	EvaluationMode AdminStreakEvaluationMode `json:"evaluationMode" url:"evaluationMode"`
+	// Whether users can override streak evaluation mode, metric thresholds, and days off via preferences.
+	CustomizationEnabled bool `json:"customizationEnabled" url:"customizationEnabled"`
+	// Days of the week that do not count toward the daily streak. Represented as zero-based integers matching JavaScript `Date.getDay()` (0 = Sunday, 6 = Saturday).
+	DaysOff []int `json:"daysOff" url:"daysOff"`
+	// Metrics with a streak threshold greater than zero.
+	Metrics []*StreakSettingsMetric `json:"metrics" url:"metrics"`
+	// Freeze configuration, or `null` when streak freezes are disabled.
+	Freezes *StreakSettingsFreezes `json:"freezes,omitempty" url:"freezes,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakSettings) GetFrequency() AdminStreakFrequency {
+	if s == nil {
+		return ""
+	}
+	return s.Frequency
+}
+
+func (s *StreakSettings) GetEvaluationMode() AdminStreakEvaluationMode {
+	if s == nil {
+		return ""
+	}
+	return s.EvaluationMode
+}
+
+func (s *StreakSettings) GetCustomizationEnabled() bool {
+	if s == nil {
+		return false
+	}
+	return s.CustomizationEnabled
+}
+
+func (s *StreakSettings) GetDaysOff() []int {
+	if s == nil {
+		return nil
+	}
+	return s.DaysOff
+}
+
+func (s *StreakSettings) GetMetrics() []*StreakSettingsMetric {
+	if s == nil {
+		return nil
+	}
+	return s.Metrics
+}
+
+func (s *StreakSettings) GetFreezes() *StreakSettingsFreezes {
+	if s == nil {
+		return nil
+	}
+	return s.Freezes
+}
+
+func (s *StreakSettings) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StreakSettings) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetFrequency sets the Frequency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettings) SetFrequency(frequency AdminStreakFrequency) {
+	s.Frequency = frequency
+	s.require(streakSettingsFieldFrequency)
+}
+
+// SetEvaluationMode sets the EvaluationMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettings) SetEvaluationMode(evaluationMode AdminStreakEvaluationMode) {
+	s.EvaluationMode = evaluationMode
+	s.require(streakSettingsFieldEvaluationMode)
+}
+
+// SetCustomizationEnabled sets the CustomizationEnabled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettings) SetCustomizationEnabled(customizationEnabled bool) {
+	s.CustomizationEnabled = customizationEnabled
+	s.require(streakSettingsFieldCustomizationEnabled)
+}
+
+// SetDaysOff sets the DaysOff field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettings) SetDaysOff(daysOff []int) {
+	s.DaysOff = daysOff
+	s.require(streakSettingsFieldDaysOff)
+}
+
+// SetMetrics sets the Metrics field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettings) SetMetrics(metrics []*StreakSettingsMetric) {
+	s.Metrics = metrics
+	s.require(streakSettingsFieldMetrics)
+}
+
+// SetFreezes sets the Freezes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettings) SetFreezes(freezes *StreakSettingsFreezes) {
+	s.Freezes = freezes
+	s.require(streakSettingsFieldFreezes)
+}
+
+func (s *StreakSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakSettings) MarshalJSON() ([]byte, error) {
+	type embed StreakSettings
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StreakSettings) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+// Organization streak freeze configuration. `null` on the parent object means freezes are disabled.
+var (
+	streakSettingsFreezesFieldStartCount       = big.NewInt(1 << 0)
+	streakSettingsFreezesFieldMaxCount         = big.NewInt(1 << 1)
+	streakSettingsFreezesFieldAutoEarnInterval = big.NewInt(1 << 2)
+	streakSettingsFreezesFieldAutoEarnAmount   = big.NewInt(1 << 3)
+)
+
+type StreakSettingsFreezes struct {
+	// Number of freezes new users start with.
+	StartCount int `json:"startCount" url:"startCount"`
+	// Maximum number of freezes a user can have.
+	MaxCount int `json:"maxCount" url:"maxCount"`
+	// Days between auto-earned freezes. `null` when auto-earn is off.
+	AutoEarnInterval *int `json:"autoEarnInterval,omitempty" url:"autoEarnInterval,omitempty"`
+	// Freezes earned per interval. `null` when auto-earn is off.
+	AutoEarnAmount *int `json:"autoEarnAmount,omitempty" url:"autoEarnAmount,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakSettingsFreezes) GetStartCount() int {
+	if s == nil {
+		return 0
+	}
+	return s.StartCount
+}
+
+func (s *StreakSettingsFreezes) GetMaxCount() int {
+	if s == nil {
+		return 0
+	}
+	return s.MaxCount
+}
+
+func (s *StreakSettingsFreezes) GetAutoEarnInterval() *int {
+	if s == nil {
+		return nil
+	}
+	return s.AutoEarnInterval
+}
+
+func (s *StreakSettingsFreezes) GetAutoEarnAmount() *int {
+	if s == nil {
+		return nil
+	}
+	return s.AutoEarnAmount
+}
+
+func (s *StreakSettingsFreezes) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StreakSettingsFreezes) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetStartCount sets the StartCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettingsFreezes) SetStartCount(startCount int) {
+	s.StartCount = startCount
+	s.require(streakSettingsFreezesFieldStartCount)
+}
+
+// SetMaxCount sets the MaxCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettingsFreezes) SetMaxCount(maxCount int) {
+	s.MaxCount = maxCount
+	s.require(streakSettingsFreezesFieldMaxCount)
+}
+
+// SetAutoEarnInterval sets the AutoEarnInterval field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettingsFreezes) SetAutoEarnInterval(autoEarnInterval *int) {
+	s.AutoEarnInterval = autoEarnInterval
+	s.require(streakSettingsFreezesFieldAutoEarnInterval)
+}
+
+// SetAutoEarnAmount sets the AutoEarnAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettingsFreezes) SetAutoEarnAmount(autoEarnAmount *int) {
+	s.AutoEarnAmount = autoEarnAmount
+	s.require(streakSettingsFreezesFieldAutoEarnAmount)
+}
+
+func (s *StreakSettingsFreezes) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakSettingsFreezes
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakSettingsFreezes(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakSettingsFreezes) MarshalJSON() ([]byte, error) {
+	type embed StreakSettingsFreezes
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StreakSettingsFreezes) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+// A metric that counts toward the organization streak.
+var (
+	streakSettingsMetricFieldKey       = big.NewInt(1 << 0)
+	streakSettingsMetricFieldThreshold = big.NewInt(1 << 1)
+)
+
+type StreakSettingsMetric struct {
+	// The metric key.
+	Key string `json:"key" url:"key"`
+	// Minimum metric change in a streak period to count toward the streak.
+	Threshold int `json:"threshold" url:"threshold"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StreakSettingsMetric) GetKey() string {
+	if s == nil {
+		return ""
+	}
+	return s.Key
+}
+
+func (s *StreakSettingsMetric) GetThreshold() int {
+	if s == nil {
+		return 0
+	}
+	return s.Threshold
+}
+
+func (s *StreakSettingsMetric) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StreakSettingsMetric) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettingsMetric) SetKey(key string) {
+	s.Key = key
+	s.require(streakSettingsMetricFieldKey)
+}
+
+// SetThreshold sets the Threshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakSettingsMetric) SetThreshold(threshold int) {
+	s.Threshold = threshold
+	s.require(streakSettingsMetricFieldThreshold)
+}
+
+func (s *StreakSettingsMetric) UnmarshalJSON(data []byte) error {
+	type unmarshaler StreakSettingsMetric
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StreakSettingsMetric(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StreakSettingsMetric) MarshalJSON() ([]byte, error) {
+	type embed StreakSettingsMetric
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StreakSettingsMetric) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+// An achievement update object. `id` is required; all other fields are optional. Omitted fields are preserved. Send `null` for `description`, `badge`, or `userAttributes` to clear them.
+var (
+	updateAchievementRequestItemFieldId               = big.NewInt(1 << 0)
+	updateAchievementRequestItemFieldName             = big.NewInt(1 << 1)
+	updateAchievementRequestItemFieldTrigger          = big.NewInt(1 << 2)
+	updateAchievementRequestItemFieldDescription      = big.NewInt(1 << 3)
+	updateAchievementRequestItemFieldStatus           = big.NewInt(1 << 4)
+	updateAchievementRequestItemFieldBadge            = big.NewInt(1 << 5)
+	updateAchievementRequestItemFieldUserAttributes   = big.NewInt(1 << 6)
+	updateAchievementRequestItemFieldKey              = big.NewInt(1 << 7)
+	updateAchievementRequestItemFieldMetricId         = big.NewInt(1 << 8)
+	updateAchievementRequestItemFieldMetricValue      = big.NewInt(1 << 9)
+	updateAchievementRequestItemFieldEventAttributes  = big.NewInt(1 << 10)
+	updateAchievementRequestItemFieldStreakLength     = big.NewInt(1 << 11)
+	updateAchievementRequestItemFieldAnniversaryYears = big.NewInt(1 << 12)
+	updateAchievementRequestItemFieldAchievementIds   = big.NewInt(1 << 13)
+)
+
+type UpdateAchievementRequestItem struct {
+	// The UUID of the achievement to update.
+	Id string `json:"id" url:"id"`
+	// The updated achievement name.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// The updated trigger type. Changing trigger requires the new trigger's mandatory fields.
+	Trigger *UpdateAchievementRequestItemTrigger `json:"trigger,omitempty" url:"trigger,omitempty"`
+	// The updated description. Send `null` to clear.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The updated status.
+	Status *UpdateAchievementRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// The updated badge, or `null` to clear it.
+	Badge *UpdateAchievementRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
+	// Updated user attribute filters. Send `null` to clear. Each `attributeId` must be an active user attribute.
+	UserAttributes []*UpdateAchievementRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Updated key. Only permitted for API achievements.
+	Key *string `json:"key,omitempty" url:"key,omitempty"`
+	// Updated metric ID. Only permitted for metric achievements.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// Updated metric threshold. Only permitted for metric achievements.
+	MetricValue *float64 `json:"metricValue,omitempty" url:"metricValue,omitempty"`
+	// Updated event attribute filters. Only permitted for metric achievements. Send `null` to clear. Each `attributeId` must be an active event attribute.
+	EventAttributes []*UpdateAchievementRequestItemEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// Updated streak length. Only permitted for streak achievements.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// Updated anniversary years. Only permitted for anniversary achievements.
+	AnniversaryYears *int `json:"anniversaryYears,omitempty" url:"anniversaryYears,omitempty"`
+	// Updated prerequisite achievement UUIDs. Only permitted for achievement achievements.
+	AchievementIds []string `json:"achievementIds,omitempty" url:"achievementIds,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAchievementRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdateAchievementRequestItem) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdateAchievementRequestItem) GetTrigger() *UpdateAchievementRequestItemTrigger {
+	if u == nil {
+		return nil
+	}
+	return u.Trigger
+}
+
+func (u *UpdateAchievementRequestItem) GetDescription() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Description
+}
+
+func (u *UpdateAchievementRequestItem) GetStatus() *UpdateAchievementRequestItemStatus {
+	if u == nil {
+		return nil
+	}
+	return u.Status
+}
+
+func (u *UpdateAchievementRequestItem) GetBadge() *UpdateAchievementRequestItemBadge {
+	if u == nil {
+		return nil
+	}
+	return u.Badge
+}
+
+func (u *UpdateAchievementRequestItem) GetUserAttributes() []*UpdateAchievementRequestItemUserAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.UserAttributes
+}
+
+func (u *UpdateAchievementRequestItem) GetKey() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Key
+}
+
+func (u *UpdateAchievementRequestItem) GetMetricId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricId
+}
+
+func (u *UpdateAchievementRequestItem) GetMetricValue() *float64 {
+	if u == nil {
+		return nil
+	}
+	return u.MetricValue
+}
+
+func (u *UpdateAchievementRequestItem) GetEventAttributes() []*UpdateAchievementRequestItemEventAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.EventAttributes
+}
+
+func (u *UpdateAchievementRequestItem) GetStreakLength() *int {
+	if u == nil {
+		return nil
+	}
+	return u.StreakLength
+}
+
+func (u *UpdateAchievementRequestItem) GetAnniversaryYears() *int {
+	if u == nil {
+		return nil
+	}
+	return u.AnniversaryYears
+}
+
+func (u *UpdateAchievementRequestItem) GetAchievementIds() []string {
+	if u == nil {
+		return nil
+	}
+	return u.AchievementIds
+}
+
+func (u *UpdateAchievementRequestItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAchievementRequestItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetId(id string) {
+	u.Id = id
+	u.require(updateAchievementRequestItemFieldId)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetName(name *string) {
+	u.Name = name
+	u.require(updateAchievementRequestItemFieldName)
+}
+
+// SetTrigger sets the Trigger field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetTrigger(trigger *UpdateAchievementRequestItemTrigger) {
+	u.Trigger = trigger
+	u.require(updateAchievementRequestItemFieldTrigger)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetDescription(description *string) {
+	u.Description = description
+	u.require(updateAchievementRequestItemFieldDescription)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetStatus(status *UpdateAchievementRequestItemStatus) {
+	u.Status = status
+	u.require(updateAchievementRequestItemFieldStatus)
+}
+
+// SetBadge sets the Badge field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetBadge(badge *UpdateAchievementRequestItemBadge) {
+	u.Badge = badge
+	u.require(updateAchievementRequestItemFieldBadge)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetUserAttributes(userAttributes []*UpdateAchievementRequestItemUserAttributesItem) {
+	u.UserAttributes = userAttributes
+	u.require(updateAchievementRequestItemFieldUserAttributes)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetKey(key *string) {
+	u.Key = key
+	u.require(updateAchievementRequestItemFieldKey)
+}
+
+// SetMetricId sets the MetricId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetMetricId(metricId *string) {
+	u.MetricId = metricId
+	u.require(updateAchievementRequestItemFieldMetricId)
+}
+
+// SetMetricValue sets the MetricValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetMetricValue(metricValue *float64) {
+	u.MetricValue = metricValue
+	u.require(updateAchievementRequestItemFieldMetricValue)
+}
+
+// SetEventAttributes sets the EventAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetEventAttributes(eventAttributes []*UpdateAchievementRequestItemEventAttributesItem) {
+	u.EventAttributes = eventAttributes
+	u.require(updateAchievementRequestItemFieldEventAttributes)
+}
+
+// SetStreakLength sets the StreakLength field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetStreakLength(streakLength *int) {
+	u.StreakLength = streakLength
+	u.require(updateAchievementRequestItemFieldStreakLength)
+}
+
+// SetAnniversaryYears sets the AnniversaryYears field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetAnniversaryYears(anniversaryYears *int) {
+	u.AnniversaryYears = anniversaryYears
+	u.require(updateAchievementRequestItemFieldAnniversaryYears)
+}
+
+// SetAchievementIds sets the AchievementIds field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItem) SetAchievementIds(achievementIds []string) {
+	u.AchievementIds = achievementIds
+	u.require(updateAchievementRequestItemFieldAchievementIds)
+}
+
+func (u *UpdateAchievementRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAchievementRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAchievementRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAchievementRequestItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateAchievementRequestItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAchievementRequestItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateAchievementRequestItemBadgeFieldUrl = big.NewInt(1 << 0)
+)
+
+type UpdateAchievementRequestItemBadge struct {
+	// The URL of the badge image.
+	Url string `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAchievementRequestItemBadge) GetUrl() string {
+	if u == nil {
+		return ""
+	}
+	return u.Url
+}
+
+func (u *UpdateAchievementRequestItemBadge) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAchievementRequestItemBadge) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetUrl sets the Url field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItemBadge) SetUrl(url string) {
+	u.Url = url
+	u.require(updateAchievementRequestItemBadgeFieldUrl)
+}
+
+func (u *UpdateAchievementRequestItemBadge) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAchievementRequestItemBadge
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAchievementRequestItemBadge(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAchievementRequestItemBadge) MarshalJSON() ([]byte, error) {
+	type embed UpdateAchievementRequestItemBadge
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAchievementRequestItemBadge) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateAchievementRequestItemEventAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	updateAchievementRequestItemEventAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type UpdateAchievementRequestItemEventAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAchievementRequestItemEventAttributesItem) GetAttributeId() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeId
+}
+
+func (u *UpdateAchievementRequestItemEventAttributesItem) GetAttributeValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeValue
+}
+
+func (u *UpdateAchievementRequestItemEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAchievementRequestItemEventAttributesItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItemEventAttributesItem) SetAttributeId(attributeId string) {
+	u.AttributeId = attributeId
+	u.require(updateAchievementRequestItemEventAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItemEventAttributesItem) SetAttributeValue(attributeValue string) {
+	u.AttributeValue = attributeValue
+	u.require(updateAchievementRequestItemEventAttributesItemFieldAttributeValue)
+}
+
+func (u *UpdateAchievementRequestItemEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAchievementRequestItemEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAchievementRequestItemEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAchievementRequestItemEventAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateAchievementRequestItemEventAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAchievementRequestItemEventAttributesItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// The updated status.
+type UpdateAchievementRequestItemStatus string
+
+const (
+	UpdateAchievementRequestItemStatusActive   UpdateAchievementRequestItemStatus = "active"
+	UpdateAchievementRequestItemStatusInactive UpdateAchievementRequestItemStatus = "inactive"
+	UpdateAchievementRequestItemStatusLocked   UpdateAchievementRequestItemStatus = "locked"
+)
+
+func NewUpdateAchievementRequestItemStatusFromString(s string) (UpdateAchievementRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return UpdateAchievementRequestItemStatusActive, nil
+	case "inactive":
+		return UpdateAchievementRequestItemStatusInactive, nil
+	case "locked":
+		return UpdateAchievementRequestItemStatusLocked, nil
+	}
+	var t UpdateAchievementRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateAchievementRequestItemStatus) Ptr() *UpdateAchievementRequestItemStatus {
+	return &u
+}
+
+// The updated trigger type. Changing trigger requires the new trigger's mandatory fields.
+type UpdateAchievementRequestItemTrigger string
+
+const (
+	UpdateAchievementRequestItemTriggerMetric      UpdateAchievementRequestItemTrigger = "metric"
+	UpdateAchievementRequestItemTriggerStreak      UpdateAchievementRequestItemTrigger = "streak"
+	UpdateAchievementRequestItemTriggerApi         UpdateAchievementRequestItemTrigger = "api"
+	UpdateAchievementRequestItemTriggerAchievement UpdateAchievementRequestItemTrigger = "achievement"
+	UpdateAchievementRequestItemTriggerAnniversary UpdateAchievementRequestItemTrigger = "anniversary"
+)
+
+func NewUpdateAchievementRequestItemTriggerFromString(s string) (UpdateAchievementRequestItemTrigger, error) {
+	switch s {
+	case "metric":
+		return UpdateAchievementRequestItemTriggerMetric, nil
+	case "streak":
+		return UpdateAchievementRequestItemTriggerStreak, nil
+	case "api":
+		return UpdateAchievementRequestItemTriggerApi, nil
+	case "achievement":
+		return UpdateAchievementRequestItemTriggerAchievement, nil
+	case "anniversary":
+		return UpdateAchievementRequestItemTriggerAnniversary, nil
+	}
+	var t UpdateAchievementRequestItemTrigger
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateAchievementRequestItemTrigger) Ptr() *UpdateAchievementRequestItemTrigger {
+	return &u
+}
+
+var (
+	updateAchievementRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	updateAchievementRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type UpdateAchievementRequestItemUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAchievementRequestItemUserAttributesItem) GetAttributeId() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeId
+}
+
+func (u *UpdateAchievementRequestItemUserAttributesItem) GetAttributeValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeValue
+}
+
+func (u *UpdateAchievementRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAchievementRequestItemUserAttributesItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	u.AttributeId = attributeId
+	u.require(updateAchievementRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	u.AttributeValue = attributeValue
+	u.require(updateAchievementRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (u *UpdateAchievementRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAchievementRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAchievementRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAchievementRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateAchievementRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAchievementRequestItemUserAttributesItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Request body for updating achievements.
+type UpdateAchievementsRequest = []*UpdateAchievementRequestItem
+
+// Response containing updated achievements and any per-item issues identified by achievement ID.
+var (
+	updateAchievementsResponseFieldUpdated = big.NewInt(1 << 0)
+	updateAchievementsResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type UpdateAchievementsResponse struct {
+	// Array of successfully updated achievements.
+	Updated []*AdminAchievement `json:"updated" url:"updated"`
+	// Array of issues encountered during achievement update.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAchievementsResponse) GetUpdated() []*AdminAchievement {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdateAchievementsResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdateAchievementsResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAchievementsResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetUpdated sets the Updated field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementsResponse) SetUpdated(updated []*AdminAchievement) {
+	u.Updated = updated
+	u.require(updateAchievementsResponseFieldUpdated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAchievementsResponse) SetIssues(issues []*AdminIssue) {
+	u.Issues = issues
+	u.require(updateAchievementsResponseFieldIssues)
+}
+
+func (u *UpdateAchievementsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAchievementsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAchievementsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAchievementsResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateAchievementsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAchievementsResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Branding fields to update. Omitted fields stay as-is.
+var (
+	updateAdminSettingsBrandingFieldAppName    = big.NewInt(1 << 0)
+	updateAdminSettingsBrandingFieldAppUrl     = big.NewInt(1 << 1)
+	updateAdminSettingsBrandingFieldBrandColor = big.NewInt(1 << 2)
+	updateAdminSettingsBrandingFieldFont       = big.NewInt(1 << 3)
+	updateAdminSettingsBrandingFieldLogo       = big.NewInt(1 << 4)
+	updateAdminSettingsBrandingFieldAppIcon    = big.NewInt(1 << 5)
+)
+
+type UpdateAdminSettingsBranding struct {
+	// The name of the app or platform.
+	AppName *string `json:"appName,omitempty" url:"appName,omitempty"`
+	// The URL of the app or platform.
+	AppUrl *string `json:"appUrl,omitempty" url:"appUrl,omitempty"`
+	// Primary brand color as hex (`#RGB` or `#RRGGBB`), `rgb(r,g,b)`, or `rgba(r,g,b,a)`.
+	BrandColor *string          `json:"brandColor,omitempty" url:"brandColor,omitempty"`
+	Font       *AdminFontFamily `json:"font,omitempty" url:"font,omitempty"`
+	// Company logo, or `null` to clear it.
+	Logo *UpdateAdminSettingsBrandingLogo `json:"logo,omitempty" url:"logo,omitempty"`
+	// App icon, or `null` to clear it.
+	AppIcon *UpdateAdminSettingsBrandingAppIcon `json:"appIcon,omitempty" url:"appIcon,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAdminSettingsBranding) GetAppName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.AppName
+}
+
+func (u *UpdateAdminSettingsBranding) GetAppUrl() *string {
+	if u == nil {
+		return nil
+	}
+	return u.AppUrl
+}
+
+func (u *UpdateAdminSettingsBranding) GetBrandColor() *string {
+	if u == nil {
+		return nil
+	}
+	return u.BrandColor
+}
+
+func (u *UpdateAdminSettingsBranding) GetFont() *AdminFontFamily {
+	if u == nil {
+		return nil
+	}
+	return u.Font
+}
+
+func (u *UpdateAdminSettingsBranding) GetLogo() *UpdateAdminSettingsBrandingLogo {
+	if u == nil {
+		return nil
+	}
+	return u.Logo
+}
+
+func (u *UpdateAdminSettingsBranding) GetAppIcon() *UpdateAdminSettingsBrandingAppIcon {
+	if u == nil {
+		return nil
+	}
+	return u.AppIcon
+}
+
+func (u *UpdateAdminSettingsBranding) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAdminSettingsBranding) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAppName sets the AppName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBranding) SetAppName(appName *string) {
+	u.AppName = appName
+	u.require(updateAdminSettingsBrandingFieldAppName)
+}
+
+// SetAppUrl sets the AppUrl field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBranding) SetAppUrl(appUrl *string) {
+	u.AppUrl = appUrl
+	u.require(updateAdminSettingsBrandingFieldAppUrl)
+}
+
+// SetBrandColor sets the BrandColor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBranding) SetBrandColor(brandColor *string) {
+	u.BrandColor = brandColor
+	u.require(updateAdminSettingsBrandingFieldBrandColor)
+}
+
+// SetFont sets the Font field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBranding) SetFont(font *AdminFontFamily) {
+	u.Font = font
+	u.require(updateAdminSettingsBrandingFieldFont)
+}
+
+// SetLogo sets the Logo field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBranding) SetLogo(logo *UpdateAdminSettingsBrandingLogo) {
+	u.Logo = logo
+	u.require(updateAdminSettingsBrandingFieldLogo)
+}
+
+// SetAppIcon sets the AppIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBranding) SetAppIcon(appIcon *UpdateAdminSettingsBrandingAppIcon) {
+	u.AppIcon = appIcon
+	u.require(updateAdminSettingsBrandingFieldAppIcon)
+}
+
+func (u *UpdateAdminSettingsBranding) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAdminSettingsBranding
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAdminSettingsBranding(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAdminSettingsBranding) MarshalJSON() ([]byte, error) {
+	type embed UpdateAdminSettingsBranding
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAdminSettingsBranding) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateAdminSettingsBrandingAppIconFieldUrl = big.NewInt(1 << 0)
+)
+
+type UpdateAdminSettingsBrandingAppIcon struct {
+	// The URL of the app icon image.
+	Url string `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAdminSettingsBrandingAppIcon) GetUrl() string {
+	if u == nil {
+		return ""
+	}
+	return u.Url
+}
+
+func (u *UpdateAdminSettingsBrandingAppIcon) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAdminSettingsBrandingAppIcon) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetUrl sets the Url field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBrandingAppIcon) SetUrl(url string) {
+	u.Url = url
+	u.require(updateAdminSettingsBrandingAppIconFieldUrl)
+}
+
+func (u *UpdateAdminSettingsBrandingAppIcon) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAdminSettingsBrandingAppIcon
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAdminSettingsBrandingAppIcon(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAdminSettingsBrandingAppIcon) MarshalJSON() ([]byte, error) {
+	type embed UpdateAdminSettingsBrandingAppIcon
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAdminSettingsBrandingAppIcon) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateAdminSettingsBrandingLogoFieldUrl = big.NewInt(1 << 0)
+)
+
+type UpdateAdminSettingsBrandingLogo struct {
+	// The URL of the logo image.
+	Url string `json:"url" url:"url"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAdminSettingsBrandingLogo) GetUrl() string {
+	if u == nil {
+		return ""
+	}
+	return u.Url
+}
+
+func (u *UpdateAdminSettingsBrandingLogo) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAdminSettingsBrandingLogo) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetUrl sets the Url field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsBrandingLogo) SetUrl(url string) {
+	u.Url = url
+	u.require(updateAdminSettingsBrandingLogoFieldUrl)
+}
+
+func (u *UpdateAdminSettingsBrandingLogo) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAdminSettingsBrandingLogo
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAdminSettingsBrandingLogo(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAdminSettingsBrandingLogo) MarshalJSON() ([]byte, error) {
+	type embed UpdateAdminSettingsBrandingLogo
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAdminSettingsBrandingLogo) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Experimentation fields to update. Omitted fields stay as-is.
+var (
+	updateAdminSettingsExperimentationFieldControlRatio         = big.NewInt(1 << 0)
+	updateAdminSettingsExperimentationFieldUserActivationWindow = big.NewInt(1 << 1)
+)
+
+type UpdateAdminSettingsExperimentation struct {
+	// Percentage of new users assigned to the control group.
+	ControlRatio *int `json:"controlRatio,omitempty" url:"controlRatio,omitempty"`
+	// Number of days after a user's first event used to measure retention and early engagement.
+	UserActivationWindow *int `json:"userActivationWindow,omitempty" url:"userActivationWindow,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateAdminSettingsExperimentation) GetControlRatio() *int {
+	if u == nil {
+		return nil
+	}
+	return u.ControlRatio
+}
+
+func (u *UpdateAdminSettingsExperimentation) GetUserActivationWindow() *int {
+	if u == nil {
+		return nil
+	}
+	return u.UserActivationWindow
+}
+
+func (u *UpdateAdminSettingsExperimentation) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateAdminSettingsExperimentation) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetControlRatio sets the ControlRatio field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsExperimentation) SetControlRatio(controlRatio *int) {
+	u.ControlRatio = controlRatio
+	u.require(updateAdminSettingsExperimentationFieldControlRatio)
+}
+
+// SetUserActivationWindow sets the UserActivationWindow field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateAdminSettingsExperimentation) SetUserActivationWindow(userActivationWindow *int) {
+	u.UserActivationWindow = userActivationWindow
+	u.require(updateAdminSettingsExperimentationFieldUserActivationWindow)
+}
+
+func (u *UpdateAdminSettingsExperimentation) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateAdminSettingsExperimentation
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateAdminSettingsExperimentation(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateAdminSettingsExperimentation) MarshalJSON() ([]byte, error) {
+	type embed UpdateAdminSettingsExperimentation
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateAdminSettingsExperimentation) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
 // An attribute update object. `id` is required and `name` is optional. `key` and `type` cannot be changed through this endpoint.
 var (
 	updateAttributeRequestItemFieldId   = big.NewInt(1 << 0)
@@ -15027,6 +18807,143 @@ func (u *UpdatePointsSystemsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdatePointsSystemsResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Replacement freeze configuration. `startCount` and `maxCount` are required. Auto-earn is a pair: both `autoEarnInterval` and `autoEarnAmount` must be set to enable auto-earn, or both omitted/`null` to disable it.
+var (
+	updateStreakSettingsFreezesFieldStartCount       = big.NewInt(1 << 0)
+	updateStreakSettingsFreezesFieldMaxCount         = big.NewInt(1 << 1)
+	updateStreakSettingsFreezesFieldAutoEarnInterval = big.NewInt(1 << 2)
+	updateStreakSettingsFreezesFieldAutoEarnAmount   = big.NewInt(1 << 3)
+)
+
+type UpdateStreakSettingsFreezes struct {
+	// Number of freezes new users start with.
+	StartCount int `json:"startCount" url:"startCount"`
+	// Maximum number of freezes a user can have. Must be greater than or equal to `startCount`.
+	MaxCount int `json:"maxCount" url:"maxCount"`
+	// Days between auto-earned freezes.
+	AutoEarnInterval *int `json:"autoEarnInterval,omitempty" url:"autoEarnInterval,omitempty"`
+	// Freezes earned per interval.
+	AutoEarnAmount *int `json:"autoEarnAmount,omitempty" url:"autoEarnAmount,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateStreakSettingsFreezes) GetStartCount() int {
+	if u == nil {
+		return 0
+	}
+	return u.StartCount
+}
+
+func (u *UpdateStreakSettingsFreezes) GetMaxCount() int {
+	if u == nil {
+		return 0
+	}
+	return u.MaxCount
+}
+
+func (u *UpdateStreakSettingsFreezes) GetAutoEarnInterval() *int {
+	if u == nil {
+		return nil
+	}
+	return u.AutoEarnInterval
+}
+
+func (u *UpdateStreakSettingsFreezes) GetAutoEarnAmount() *int {
+	if u == nil {
+		return nil
+	}
+	return u.AutoEarnAmount
+}
+
+func (u *UpdateStreakSettingsFreezes) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateStreakSettingsFreezes) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetStartCount sets the StartCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateStreakSettingsFreezes) SetStartCount(startCount int) {
+	u.StartCount = startCount
+	u.require(updateStreakSettingsFreezesFieldStartCount)
+}
+
+// SetMaxCount sets the MaxCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateStreakSettingsFreezes) SetMaxCount(maxCount int) {
+	u.MaxCount = maxCount
+	u.require(updateStreakSettingsFreezesFieldMaxCount)
+}
+
+// SetAutoEarnInterval sets the AutoEarnInterval field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateStreakSettingsFreezes) SetAutoEarnInterval(autoEarnInterval *int) {
+	u.AutoEarnInterval = autoEarnInterval
+	u.require(updateStreakSettingsFreezesFieldAutoEarnInterval)
+}
+
+// SetAutoEarnAmount sets the AutoEarnAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateStreakSettingsFreezes) SetAutoEarnAmount(autoEarnAmount *int) {
+	u.AutoEarnAmount = autoEarnAmount
+	u.require(updateStreakSettingsFreezesFieldAutoEarnAmount)
+}
+
+func (u *UpdateStreakSettingsFreezes) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateStreakSettingsFreezes
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateStreakSettingsFreezes(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateStreakSettingsFreezes) MarshalJSON() ([]byte, error) {
+	type embed UpdateStreakSettingsFreezes
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateStreakSettingsFreezes) String() string {
 	if u == nil {
 		return "<nil>"
 	}

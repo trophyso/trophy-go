@@ -23,7 +23,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.23.0"
+        options.SdkVersion = "1.24.0"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -59,7 +59,7 @@ func (c *Client) List(
     return response.Body, nil
 }
 
-// Create points triggers in bulk. Maximum 100 triggers per request.
+// Create points triggers in bulk.
 func (c *Client) Create(
     ctx context.Context,
     // The UUID of the points system.

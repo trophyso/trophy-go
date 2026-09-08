@@ -2350,6 +2350,351 @@ client.Admin.Attributes.Get(
 </dl>
 </details>
 
+## Admin Achievements
+<details><summary><code>client.Admin.Achievements.List() -> trophygo.ListAchievementsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List achievements.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &admin.AchievementsListRequest{
+        Limit: trophygo.Int(
+            1,
+        ),
+        Skip: trophygo.Int(
+            1,
+        ),
+    }
+client.Admin.Achievements.List(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**limit:** `*int` — Number of records to return.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**skip:** `*int` — Number of records to skip from the start of the list.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Achievements.Create(request) -> *trophygo.CreateAchievementsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create achievements. Trigger-specific fields are required based on `trigger`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.CreateAchievementRequestItem{
+        &trophygo.CreateAchievementRequestItem{
+            Name: "First Workout",
+            Trigger: trophygo.CreateAchievementRequestItemTriggerMetric,
+            MetricId: trophygo.String(
+                "660f9500-f30c-42e5-b827-557766550001",
+            ),
+            MetricValue: trophygo.Float64(
+                1,
+            ),
+        },
+        &trophygo.CreateAchievementRequestItem{
+            Name: "Custom Unlock",
+            Trigger: trophygo.CreateAchievementRequestItemTriggerApi,
+            Key: trophygo.String(
+                "custom-unlock",
+            ),
+        },
+    }
+client.Admin.Achievements.Create(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `trophygo.CreateAchievementsRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Achievements.Delete() -> *trophygo.DeleteAchievementsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete achievements by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &admin.AchievementsDeleteRequest{
+        Ids: []*string{
+            trophygo.String(
+                "550e8400-e29b-41d4-a716-446655440000",
+            ),
+            trophygo.String(
+                "550e8400-e29b-41d4-a716-446655440001",
+            ),
+        },
+    }
+client.Admin.Achievements.Delete(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**ids:** `*string` — Achievement IDs to delete. Repeat the query param or provide a comma-separated list.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Achievements.Update(request) -> *trophygo.UpdateAchievementsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update achievements by ID. Maximum 100 achievements per request. Only provided fields are updated; omitted fields are preserved.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.UpdateAchievementRequestItem{
+        &trophygo.UpdateAchievementRequestItem{
+            Id: "550e8400-e29b-41d4-a716-446655440000",
+            Name: trophygo.String(
+                "First Workout Completed",
+            ),
+            Status: trophygo.UpdateAchievementRequestItemStatusActive.Ptr(),
+        },
+    }
+client.Admin.Achievements.Update(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `trophygo.UpdateAchievementsRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Achievements.Get(Id) -> *trophygo.AdminAchievement</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get an achievement by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Admin.Achievements.Get(
+        context.TODO(),
+        "550e8400-e29b-41d4-a716-446655440000",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The UUID of the achievement to retrieve.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Admin Metrics
 <details><summary><code>client.Admin.Metrics.List() -> trophygo.ListMetricsResponse</code></summary>
 <dl>
@@ -2870,7 +3215,7 @@ client.Admin.Leaderboards.List(
 <dl>
 <dd>
 
-Create leaderboards. Maximum 100 leaderboards per request.
+Create leaderboards.
 </dd>
 </dl>
 </dd>
@@ -3204,6 +3549,148 @@ client.Admin.Streaks.Restore(
 <dd>
 
 **users:** `[]*admin.RestoreStreaksRequestUsersItem` — Array of users to restore streaks for. Maximum 100 users per request.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Admin Settings
+<details><summary><code>client.Admin.Settings.Get() -> *trophygo.AdminSettings</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get branding, experimentation, and aggregation settings.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Admin.Settings.Get(
+        context.TODO(),
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Settings.Update(request) -> *trophygo.AdminSettings</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update branding, experimentation, and aggregation settings.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &admin.UpdateAdminSettingsRequest{
+        Branding: &trophygo.UpdateAdminSettingsBranding{
+            AppName: trophygo.String(
+                "Trophy",
+            ),
+            AppUrl: trophygo.String(
+                "https://app.example.com",
+            ),
+            BrandColor: trophygo.String(
+                "#1a2b3c",
+            ),
+            Logo: &trophygo.UpdateAdminSettingsBrandingLogo{
+                Url: "https://cdn.example.com/logo.png",
+            },
+        },
+        Experimentation: &trophygo.UpdateAdminSettingsExperimentation{
+            ControlRatio: trophygo.Int(
+                10,
+            ),
+            UserActivationWindow: trophygo.Int(
+                14,
+            ),
+        },
+        AggregationPeriod: trophygo.AdminAggregationPeriodWeekly.Ptr(),
+    }
+client.Admin.Settings.Update(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**branding:** `*trophygo.UpdateAdminSettingsBranding` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**experimentation:** `*trophygo.UpdateAdminSettingsExperimentation` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**aggregationPeriod:** `*trophygo.AdminAggregationPeriod` 
     
 </dd>
 </dl>
@@ -4504,7 +4991,7 @@ client.Admin.Points.Levels.List(
 <dl>
 <dd>
 
-Create points levels. Maximum 100 levels per request.
+Create points levels.
 </dd>
 </dl>
 </dd>
@@ -4875,7 +5362,7 @@ client.Admin.Points.Triggers.List(
 <dl>
 <dd>
 
-Create points triggers in bulk. Maximum 100 triggers per request.
+Create points triggers in bulk.
 </dd>
 </dl>
 </dd>
@@ -5351,6 +5838,174 @@ client.Admin.Streaks.Pauses.Delete(
 <dd>
 
 **ids:** `*string` — Streak pause IDs to delete. Repeat the query param or provide a comma-separated list.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Admin Streaks Settings
+<details><summary><code>client.Admin.Streaks.Settings.Get() -> *trophygo.StreakSettings</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get the organization's streak configuration.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Admin.Streaks.Settings.Get(
+        context.TODO(),
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Streaks.Settings.Update(request) -> *trophygo.StreakSettings</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update the organization's streak configuration.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &streaks.UpdateStreakSettingsRequest{
+        Frequency: trophygo.AdminStreakFrequencyDaily.Ptr(),
+        EvaluationMode: trophygo.AdminStreakEvaluationModeOr.Ptr(),
+        CustomizationEnabled: trophygo.Bool(
+            true,
+        ),
+        DaysOff: []int{
+            0,
+            6,
+        },
+        Metrics: []*trophygo.StreakSettingsMetric{
+            &trophygo.StreakSettingsMetric{
+                Key: "words-written",
+                Threshold: 500,
+            },
+        },
+        Freezes: &trophygo.UpdateStreakSettingsFreezes{
+            StartCount: 1,
+            MaxCount: 2,
+            AutoEarnInterval: trophygo.Int(
+                7,
+            ),
+            AutoEarnAmount: trophygo.Int(
+                1,
+            ),
+        },
+    }
+client.Admin.Streaks.Settings.Update(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**frequency:** `*trophygo.AdminStreakFrequency` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**evaluationMode:** `*trophygo.AdminStreakEvaluationMode` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customizationEnabled:** `*bool` — Whether users can override streak evaluation mode, metric thresholds, and days off via preferences.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**daysOff:** `[]int` — Days of the week that do not count toward the daily streak. A non-empty array is only allowed when the resulting frequency is `daily`. Changing frequency away from `daily` clears stored days off even when this field is omitted.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metrics:** `[]*trophygo.StreakSettingsMetric` — Replacement list of streak metrics. Keys must be unique and must exist on the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**freezes:** `*trophygo.UpdateStreakSettingsFreezes` — Replacement freeze configuration, or `null` to disable freezes.
     
 </dd>
 </dl>
