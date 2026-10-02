@@ -3730,6 +3730,14 @@ func TestSettersStreakResponseStreakHistoryItem(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetResetAt", func(t *testing.T) {
+		obj := &StreakResponseStreakHistoryItem{}
+		var fernTestValueResetAt *time.Time
+		obj.SetResetAt(fernTestValueResetAt)
+		assert.Equal(t, fernTestValueResetAt, obj.ResetAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestGettersStreakResponseStreakHistoryItem(t *testing.T) {
@@ -3856,6 +3864,39 @@ func TestGettersStreakResponseStreakHistoryItem(t *testing.T) {
 			}
 		}()
 		_ = obj.GetUsedPause() // Should return zero value
+	})
+
+	t.Run("GetResetAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &StreakResponseStreakHistoryItem{}
+		var expected *time.Time
+		obj.ResetAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetResetAt(), "getter should return the property value")
+	})
+
+	t.Run("GetResetAt_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &StreakResponseStreakHistoryItem{}
+		obj.ResetAt = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetResetAt(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetResetAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *StreakResponseStreakHistoryItem
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetResetAt() // Should return zero value
 	})
 
 }
@@ -3993,6 +4034,37 @@ func TestSettersMarkExplicitStreakResponseStreakHistoryItem(t *testing.T) {
 
 		// Act
 		obj.SetUsedPause(fernTestValueUsedPause)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetResetAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &StreakResponseStreakHistoryItem{}
+		var fernTestValueResetAt *time.Time
+
+		// Act
+		obj.SetResetAt(fernTestValueResetAt)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

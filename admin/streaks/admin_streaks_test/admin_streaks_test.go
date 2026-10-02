@@ -110,4 +110,37 @@ func TestAdminStreaksRestoreWithWireMock(
     VerifyRequestCount(t, "TestAdminStreaksRestoreWithWireMock", "POST", "/streaks/restore", nil, 1)
 }
 
+func TestAdminStreaksResetWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+        request := &admin.ResetStreaksRequest{
+            Users: []*admin.ResetStreaksRequestUsersItem{
+                &admin.ResetStreaksRequestUsersItem{
+                    Id: "user-123",
+                },
+                &admin.ResetStreaksRequestUsersItem{
+                    Id: "user-456",
+                },
+            },
+        }
+    _, invocationErr :=     client.Admin.Streaks.Reset(
+            context.TODO(),
+            request,
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestAdminStreaksResetWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestAdminStreaksResetWithWireMock", "POST", "/streaks/reset", nil, 1)
+}
+
 

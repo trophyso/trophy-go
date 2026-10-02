@@ -29,7 +29,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.25.0"
+        options.SdkVersion = "1.26.0"
     }
     return &Client{
         Freezes: freezes.NewClient(options),
@@ -55,6 +55,23 @@ func (c *Client) Restore(
     opts ...option.RequestOption,
 ) (*trophygo.RestoreStreaksResponse, error){
     response, err := c.WithRawResponse.Restore(
+        ctx,
+        request,
+        opts...,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return response.Body, nil
+}
+
+// Reset the current streak to zero for multiple users.
+func (c *Client) Reset(
+    ctx context.Context,
+    request *admin.ResetStreaksRequest,
+    opts ...option.RequestOption,
+) (*trophygo.ResetStreaksResponse, error){
+    response, err := c.WithRawResponse.Reset(
         ctx,
         request,
         opts...,

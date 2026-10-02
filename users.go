@@ -1616,6 +1616,7 @@ var (
 	streakResponseStreakHistoryItemFieldLength      = big.NewInt(1 << 2)
 	streakResponseStreakHistoryItemFieldUsedFreeze  = big.NewInt(1 << 3)
 	streakResponseStreakHistoryItemFieldUsedPause   = big.NewInt(1 << 4)
+	streakResponseStreakHistoryItemFieldResetAt     = big.NewInt(1 << 5)
 )
 
 type StreakResponseStreakHistoryItem struct {
@@ -1629,6 +1630,8 @@ type StreakResponseStreakHistoryItem struct {
 	UsedFreeze *bool `json:"usedFreeze,omitempty" url:"usedFreeze,omitempty"`
 	// Whether the user's streak was paused during this period.
 	UsedPause bool `json:"usedPause" url:"usedPause"`
+	// The timestamp the streak was reset to zero using the admin API.
+	ResetAt *time.Time `json:"resetAt,omitempty" url:"resetAt,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1670,6 +1673,13 @@ func (s *StreakResponseStreakHistoryItem) GetUsedPause() bool {
 		return false
 	}
 	return s.UsedPause
+}
+
+func (s *StreakResponseStreakHistoryItem) GetResetAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.ResetAt
 }
 
 func (s *StreakResponseStreakHistoryItem) GetExtraProperties() map[string]interface{} {
@@ -1721,13 +1731,26 @@ func (s *StreakResponseStreakHistoryItem) SetUsedPause(usedPause bool) {
 	s.require(streakResponseStreakHistoryItemFieldUsedPause)
 }
 
+// SetResetAt sets the ResetAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StreakResponseStreakHistoryItem) SetResetAt(resetAt *time.Time) {
+	s.ResetAt = resetAt
+	s.require(streakResponseStreakHistoryItemFieldResetAt)
+}
+
 func (s *StreakResponseStreakHistoryItem) UnmarshalJSON(data []byte) error {
-	type unmarshaler StreakResponseStreakHistoryItem
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed StreakResponseStreakHistoryItem
+	var unmarshaler = struct {
+		embed
+		ResetAt *internal.DateTime `json:"resetAt,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*s = StreakResponseStreakHistoryItem(value)
+	*s = StreakResponseStreakHistoryItem(unmarshaler.embed)
+	s.ResetAt = unmarshaler.ResetAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *s)
 	if err != nil {
 		return err
@@ -1741,8 +1764,10 @@ func (s *StreakResponseStreakHistoryItem) MarshalJSON() ([]byte, error) {
 	type embed StreakResponseStreakHistoryItem
 	var marshaler = struct {
 		embed
+		ResetAt *internal.DateTime `json:"resetAt,omitempty"`
 	}{
-		embed: embed(*s),
+		embed:   embed(*s),
+		ResetAt: internal.NewOptionalDateTime(s.ResetAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
 	return json.Marshal(explicitMarshaler)

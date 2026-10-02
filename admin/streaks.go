@@ -10,6 +10,53 @@ import (
 )
 
 var (
+	resetStreaksRequestFieldUsers = big.NewInt(1 << 0)
+)
+
+type ResetStreaksRequest struct {
+	// Array of users to reset streaks for. Maximum 100 users per request.
+	Users []*ResetStreaksRequestUsersItem `json:"users" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (r *ResetStreaksRequest) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetUsers sets the Users field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResetStreaksRequest) SetUsers(users []*ResetStreaksRequestUsersItem) {
+	r.Users = users
+	r.require(resetStreaksRequestFieldUsers)
+}
+
+func (r *ResetStreaksRequest) UnmarshalJSON(data []byte) error {
+	type unmarshaler ResetStreaksRequest
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*r = ResetStreaksRequest(body)
+	return nil
+}
+
+func (r *ResetStreaksRequest) MarshalJSON() ([]byte, error) {
+	type embed ResetStreaksRequest
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	restoreStreaksRequestFieldUsers = big.NewInt(1 << 0)
 )
 
@@ -54,6 +101,91 @@ func (r *RestoreStreaksRequest) MarshalJSON() ([]byte, error) {
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
 	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	resetStreaksRequestUsersItemFieldId = big.NewInt(1 << 0)
+)
+
+type ResetStreaksRequestUsersItem struct {
+	// The ID of the user to reset the streak for.
+	Id string `json:"id" url:"id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *ResetStreaksRequestUsersItem) GetId() string {
+	if r == nil {
+		return ""
+	}
+	return r.Id
+}
+
+func (r *ResetStreaksRequestUsersItem) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *ResetStreaksRequestUsersItem) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResetStreaksRequestUsersItem) SetId(id string) {
+	r.Id = id
+	r.require(resetStreaksRequestUsersItemFieldId)
+}
+
+func (r *ResetStreaksRequestUsersItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler ResetStreaksRequestUsersItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = ResetStreaksRequestUsersItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *ResetStreaksRequestUsersItem) MarshalJSON() ([]byte, error) {
+	type embed ResetStreaksRequestUsersItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *ResetStreaksRequestUsersItem) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
 }
 
 var (

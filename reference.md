@@ -3560,6 +3560,74 @@ client.Admin.Streaks.Restore(
 </dl>
 </details>
 
+<details><summary><code>client.Admin.Streaks.Reset(request) -> *trophygo.ResetStreaksResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Reset the current streak to zero for multiple users.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &admin.ResetStreaksRequest{
+        Users: []*admin.ResetStreaksRequestUsersItem{
+            &admin.ResetStreaksRequestUsersItem{
+                Id: "user-123",
+            },
+            &admin.ResetStreaksRequestUsersItem{
+                Id: "user-456",
+            },
+        },
+    }
+client.Admin.Streaks.Reset(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**users:** `[]*admin.ResetStreaksRequestUsersItem` — Array of users to reset streaks for. Maximum 100 users per request.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Admin Settings
 <details><summary><code>client.Admin.Settings.Get() -> *trophygo.AdminSettings</code></summary>
 <dl>

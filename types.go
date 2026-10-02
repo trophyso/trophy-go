@@ -15862,6 +15862,109 @@ func (p *PointsTriggerUserAttributesItem) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+// Response containing users whose streaks were reset and any issues encountered.
+var (
+	resetStreaksResponseFieldResetUsers = big.NewInt(1 << 0)
+	resetStreaksResponseFieldIssues     = big.NewInt(1 << 1)
+)
+
+type ResetStreaksResponse struct {
+	// Array of user IDs whose streaks were successfully reset to zero.
+	ResetUsers []string `json:"resetUsers" url:"resetUsers"`
+	// Array of issues encountered during streak reset.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *ResetStreaksResponse) GetResetUsers() []string {
+	if r == nil {
+		return nil
+	}
+	return r.ResetUsers
+}
+
+func (r *ResetStreaksResponse) GetIssues() []*AdminIssue {
+	if r == nil {
+		return nil
+	}
+	return r.Issues
+}
+
+func (r *ResetStreaksResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *ResetStreaksResponse) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetResetUsers sets the ResetUsers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResetStreaksResponse) SetResetUsers(resetUsers []string) {
+	r.ResetUsers = resetUsers
+	r.require(resetStreaksResponseFieldResetUsers)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResetStreaksResponse) SetIssues(issues []*AdminIssue) {
+	r.Issues = issues
+	r.require(resetStreaksResponseFieldIssues)
+}
+
+func (r *ResetStreaksResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ResetStreaksResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = ResetStreaksResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *ResetStreaksResponse) MarshalJSON() ([]byte, error) {
+	type embed ResetStreaksResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *ResetStreaksResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
 // Response containing restored users and any issues encountered.
 var (
 	restoreStreaksResponseFieldRestoredUsers = big.NewInt(1 << 0)

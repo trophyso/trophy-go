@@ -86,3 +86,55 @@ func (r *RawClient) Restore(
     }, nil
 }
 
+func (r *RawClient) Reset(
+    ctx context.Context,
+    request *admin.ResetStreaksRequest,
+    opts ...option.RequestOption,
+) (*core.Response[*trophygo.ResetStreaksResponse], error){
+    options := core.NewRequestOptions(opts...)
+    baseURL := internal.ResolveBaseURL(
+        options.BaseURL,
+        internal.ResolveEnvironmentBaseURL(
+            options.Environment,
+            "Admin",
+        ),
+        r.baseURL,
+        internal.ResolveEnvironmentBaseURL(
+            r.options.Environment,
+            "Admin",
+        ),
+        "https://admin.trophy.so/v1",
+    )
+    endpointURL := baseURL + "/streaks/reset"
+    headers := internal.MergeHeaders(
+        r.options.ToHeader(),
+        options.ToHeader(),
+    )
+    headers.Add("Content-Type", "application/json")
+    var response *trophygo.ResetStreaksResponse
+    raw, err := r.caller.Call(
+        ctx,
+        &internal.CallParams{
+            URL: endpointURL,
+            Method: http.MethodPost,
+            Headers: headers,
+            MaxAttempts: options.MaxAttempts,
+            DisableRetries: options.DisableRetries,
+            BodyProperties: options.BodyProperties,
+            QueryParameters: options.QueryParameters,
+            Client: options.HTTPClient,
+            Request: request,
+            Response: &response,
+            ErrorDecoder: internal.NewErrorDecoder(admin.ErrorCodes),
+        },
+    )
+    if err != nil {
+        return nil, err
+    }
+    return &core.Response[*trophygo.ResetStreaksResponse]{
+        StatusCode: raw.StatusCode,
+        Header: raw.Header,
+        Body: response,
+    }, nil
+}
+
