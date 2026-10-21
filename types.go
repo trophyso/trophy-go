@@ -2322,6 +2322,7 @@ var (
 	adminLeaderboardFieldBreakdownAttributes = big.NewInt(1 << 13)
 	adminLeaderboardFieldRunUnit             = big.NewInt(1 << 14)
 	adminLeaderboardFieldRunInterval         = big.NewInt(1 << 15)
+	adminLeaderboardFieldUserAttributes      = big.NewInt(1 << 16)
 )
 
 type AdminLeaderboard struct {
@@ -2357,6 +2358,8 @@ type AdminLeaderboard struct {
 	RunUnit *AdminLeaderboardRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The number of recurrence units between leaderboard runs.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters.
+	UserAttributes []*AdminLeaderboardUserAttributesItem `json:"userAttributes" url:"userAttributes"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2475,6 +2478,13 @@ func (a *AdminLeaderboard) GetRunInterval() *int {
 		return nil
 	}
 	return a.RunInterval
+}
+
+func (a *AdminLeaderboard) GetUserAttributes() []*AdminLeaderboardUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
 }
 
 func (a *AdminLeaderboard) GetExtraProperties() map[string]interface{} {
@@ -2603,6 +2613,13 @@ func (a *AdminLeaderboard) SetRunInterval(runInterval *int) {
 	a.require(adminLeaderboardFieldRunInterval)
 }
 
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminLeaderboard) SetUserAttributes(userAttributes []*AdminLeaderboardUserAttributesItem) {
+	a.UserAttributes = userAttributes
+	a.require(adminLeaderboardFieldUserAttributes)
+}
+
 func (a *AdminLeaderboard) UnmarshalJSON(data []byte) error {
 	type unmarshaler AdminLeaderboard
 	var value unmarshaler
@@ -2724,6 +2741,106 @@ func NewAdminLeaderboardStatusFromString(s string) (AdminLeaderboardStatus, erro
 
 func (a AdminLeaderboardStatus) Ptr() *AdminLeaderboardStatus {
 	return &a
+}
+
+var (
+	adminLeaderboardUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	adminLeaderboardUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type AdminLeaderboardUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminLeaderboardUserAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminLeaderboardUserAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminLeaderboardUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminLeaderboardUserAttributesItem) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminLeaderboardUserAttributesItem) SetAttributeId(attributeId string) {
+	a.AttributeId = attributeId
+	a.require(adminLeaderboardUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminLeaderboardUserAttributesItem) SetAttributeValue(attributeValue string) {
+	a.AttributeValue = attributeValue
+	a.require(adminLeaderboardUserAttributesItemFieldAttributeValue)
+}
+
+func (a *AdminLeaderboardUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminLeaderboardUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminLeaderboardUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminLeaderboardUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed AdminLeaderboardUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminLeaderboardUserAttributesItem) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
 }
 
 // A points boost as returned from admin endpoints.
@@ -5907,7 +6024,7 @@ type CreateAchievementRequestItem struct {
 	Status *CreateAchievementRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
 	// An optional badge for the achievement.
 	Badge *CreateAchievementRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
-	// User attribute filters applied to the achievement. Each `attributeId` must be an active user attribute.
+	// User attribute filters applied to the achievement.
 	UserAttributes []*CreateAchievementRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
 	// Required if trigger is `api`. Only alphanumeric characters, hyphens, and underscores are permitted.
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
@@ -7077,6 +7194,7 @@ var (
 	createLeaderboardRequestItemFieldBreakdownAttributes = big.NewInt(1 << 12)
 	createLeaderboardRequestItemFieldRunUnit             = big.NewInt(1 << 13)
 	createLeaderboardRequestItemFieldRunInterval         = big.NewInt(1 << 14)
+	createLeaderboardRequestItemFieldUserAttributes      = big.NewInt(1 << 15)
 )
 
 type CreateLeaderboardRequestItem struct {
@@ -7110,6 +7228,8 @@ type CreateLeaderboardRequestItem struct {
 	RunUnit *CreateLeaderboardRequestItemRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The number of `runUnit`s between repeats. Required when `runUnit` is set.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters. Omit to allow every user.
+	UserAttributes []*CreateLeaderboardRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7221,6 +7341,13 @@ func (c *CreateLeaderboardRequestItem) GetRunInterval() *int {
 		return nil
 	}
 	return c.RunInterval
+}
+
+func (c *CreateLeaderboardRequestItem) GetUserAttributes() []*CreateLeaderboardRequestItemUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
 }
 
 func (c *CreateLeaderboardRequestItem) GetExtraProperties() map[string]interface{} {
@@ -7340,6 +7467,13 @@ func (c *CreateLeaderboardRequestItem) SetRunUnit(runUnit *CreateLeaderboardRequ
 func (c *CreateLeaderboardRequestItem) SetRunInterval(runInterval *int) {
 	c.RunInterval = runInterval
 	c.require(createLeaderboardRequestItemFieldRunInterval)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateLeaderboardRequestItem) SetUserAttributes(userAttributes []*CreateLeaderboardRequestItemUserAttributesItem) {
+	c.UserAttributes = userAttributes
+	c.require(createLeaderboardRequestItemFieldUserAttributes)
 }
 
 func (c *CreateLeaderboardRequestItem) UnmarshalJSON(data []byte) error {
@@ -7463,6 +7597,106 @@ func NewCreateLeaderboardRequestItemStatusFromString(s string) (CreateLeaderboar
 
 func (c CreateLeaderboardRequestItemStatus) Ptr() *CreateLeaderboardRequestItemStatus {
 	return &c
+}
+
+var (
+	createLeaderboardRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	createLeaderboardRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type CreateLeaderboardRequestItemUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateLeaderboardRequestItemUserAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreateLeaderboardRequestItemUserAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreateLeaderboardRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateLeaderboardRequestItemUserAttributesItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateLeaderboardRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	c.AttributeId = attributeId
+	c.require(createLeaderboardRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateLeaderboardRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	c.AttributeValue = attributeValue
+	c.require(createLeaderboardRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (c *CreateLeaderboardRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateLeaderboardRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateLeaderboardRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateLeaderboardRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed CreateLeaderboardRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateLeaderboardRequestItemUserAttributesItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 // Request body for creating leaderboards.
@@ -11936,6 +12170,7 @@ var (
 	leaderboardResponseFieldMaxParticipants     = big.NewInt(1 << 15)
 	leaderboardResponseFieldRunUnit             = big.NewInt(1 << 16)
 	leaderboardResponseFieldRunInterval         = big.NewInt(1 << 17)
+	leaderboardResponseFieldUserAttributes      = big.NewInt(1 << 18)
 )
 
 type LeaderboardResponse struct {
@@ -11975,6 +12210,8 @@ type LeaderboardResponse struct {
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+	UserAttributes []*LeaderboardResponseUserAttributesItem `json:"userAttributes" url:"userAttributes"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -12107,6 +12344,13 @@ func (l *LeaderboardResponse) GetRunInterval() *int {
 		return nil
 	}
 	return l.RunInterval
+}
+
+func (l *LeaderboardResponse) GetUserAttributes() []*LeaderboardResponseUserAttributesItem {
+	if l == nil {
+		return nil
+	}
+	return l.UserAttributes
 }
 
 func (l *LeaderboardResponse) GetExtraProperties() map[string]interface{} {
@@ -12249,6 +12493,13 @@ func (l *LeaderboardResponse) SetRunInterval(runInterval *int) {
 	l.require(leaderboardResponseFieldRunInterval)
 }
 
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LeaderboardResponse) SetUserAttributes(userAttributes []*LeaderboardResponseUserAttributesItem) {
+	l.UserAttributes = userAttributes
+	l.require(leaderboardResponseFieldUserAttributes)
+}
+
 func (l *LeaderboardResponse) UnmarshalJSON(data []byte) error {
 	type unmarshaler LeaderboardResponse
 	var value unmarshaler
@@ -12341,6 +12592,108 @@ func NewLeaderboardResponseRunUnitFromString(s string) (LeaderboardResponseRunUn
 
 func (l LeaderboardResponseRunUnit) Ptr() *LeaderboardResponseRunUnit {
 	return &l
+}
+
+var (
+	leaderboardResponseUserAttributesItemFieldKey   = big.NewInt(1 << 0)
+	leaderboardResponseUserAttributesItemFieldValue = big.NewInt(1 << 1)
+)
+
+type LeaderboardResponseUserAttributesItem struct {
+	// The key of the user attribute.
+	Key string `json:"key" url:"key"`
+	// The required value of the user attribute.
+	Value string `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *LeaderboardResponseUserAttributesItem) GetKey() string {
+	if l == nil {
+		return ""
+	}
+	return l.Key
+}
+
+func (l *LeaderboardResponseUserAttributesItem) GetValue() string {
+	if l == nil {
+		return ""
+	}
+	return l.Value
+}
+
+func (l *LeaderboardResponseUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *LeaderboardResponseUserAttributesItem) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LeaderboardResponseUserAttributesItem) SetKey(key string) {
+	l.Key = key
+	l.require(leaderboardResponseUserAttributesItemFieldKey)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LeaderboardResponseUserAttributesItem) SetValue(value string) {
+	l.Value = value
+	l.require(leaderboardResponseUserAttributesItemFieldValue)
+}
+
+func (l *LeaderboardResponseUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler LeaderboardResponseUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = LeaderboardResponseUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *LeaderboardResponseUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed LeaderboardResponseUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *LeaderboardResponseUserAttributesItem) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 // A paginated list of achievements.
@@ -16533,7 +16886,7 @@ type UpdateAchievementRequestItem struct {
 	Status *UpdateAchievementRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
 	// The updated badge, or `null` to clear it.
 	Badge *UpdateAchievementRequestItemBadge `json:"badge,omitempty" url:"badge,omitempty"`
-	// Updated user attribute filters. Send `null` to clear. Each `attributeId` must be an active user attribute.
+	// Updated user attribute filters. Send `null` to clear.
 	UserAttributes []*UpdateAchievementRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
 	// Updated key. Only permitted for API achievements.
 	Key *string `json:"key,omitempty" url:"key,omitempty"`
@@ -17928,6 +18281,7 @@ var (
 	updateLeaderboardRequestItemFieldBreakdownAttributes = big.NewInt(1 << 13)
 	updateLeaderboardRequestItemFieldRunUnit             = big.NewInt(1 << 14)
 	updateLeaderboardRequestItemFieldRunInterval         = big.NewInt(1 << 15)
+	updateLeaderboardRequestItemFieldUserAttributes      = big.NewInt(1 << 16)
 )
 
 type UpdateLeaderboardRequestItem struct {
@@ -17963,6 +18317,8 @@ type UpdateLeaderboardRequestItem struct {
 	RunUnit *UpdateLeaderboardRequestItemRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The updated recurrence interval.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// Replacement user attribute filters, or `null` to clear them. Omit to leave the current filters unchanged. This can only be changed while the leaderboard is inactive.
+	UserAttributes []*UpdateLeaderboardRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -18081,6 +18437,13 @@ func (u *UpdateLeaderboardRequestItem) GetRunInterval() *int {
 		return nil
 	}
 	return u.RunInterval
+}
+
+func (u *UpdateLeaderboardRequestItem) GetUserAttributes() []*UpdateLeaderboardRequestItemUserAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.UserAttributes
 }
 
 func (u *UpdateLeaderboardRequestItem) GetExtraProperties() map[string]interface{} {
@@ -18209,6 +18572,13 @@ func (u *UpdateLeaderboardRequestItem) SetRunInterval(runInterval *int) {
 	u.require(updateLeaderboardRequestItemFieldRunInterval)
 }
 
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateLeaderboardRequestItem) SetUserAttributes(userAttributes []*UpdateLeaderboardRequestItemUserAttributesItem) {
+	u.UserAttributes = userAttributes
+	u.require(updateLeaderboardRequestItemFieldUserAttributes)
+}
+
 func (u *UpdateLeaderboardRequestItem) UnmarshalJSON(data []byte) error {
 	type unmarshaler UpdateLeaderboardRequestItem
 	var value unmarshaler
@@ -18329,6 +18699,106 @@ func NewUpdateLeaderboardRequestItemStatusFromString(s string) (UpdateLeaderboar
 
 func (u UpdateLeaderboardRequestItemStatus) Ptr() *UpdateLeaderboardRequestItemStatus {
 	return &u
+}
+
+var (
+	updateLeaderboardRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	updateLeaderboardRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type UpdateLeaderboardRequestItemUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) GetAttributeId() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeId
+}
+
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) GetAttributeValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeValue
+}
+
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	u.AttributeId = attributeId
+	u.require(updateLeaderboardRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	u.AttributeValue = attributeValue
+	u.require(updateLeaderboardRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateLeaderboardRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateLeaderboardRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateLeaderboardRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateLeaderboardRequestItemUserAttributesItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 // Request body for updating leaderboards.
@@ -20171,10 +20641,11 @@ var (
 	webhookUserLeaderboardResponseFieldMaxParticipants     = big.NewInt(1 << 15)
 	webhookUserLeaderboardResponseFieldRunUnit             = big.NewInt(1 << 16)
 	webhookUserLeaderboardResponseFieldRunInterval         = big.NewInt(1 << 17)
-	webhookUserLeaderboardResponseFieldRank                = big.NewInt(1 << 18)
-	webhookUserLeaderboardResponseFieldValue               = big.NewInt(1 << 19)
-	webhookUserLeaderboardResponseFieldPreviousRank        = big.NewInt(1 << 20)
-	webhookUserLeaderboardResponseFieldPreviousValue       = big.NewInt(1 << 21)
+	webhookUserLeaderboardResponseFieldUserAttributes      = big.NewInt(1 << 18)
+	webhookUserLeaderboardResponseFieldRank                = big.NewInt(1 << 19)
+	webhookUserLeaderboardResponseFieldValue               = big.NewInt(1 << 20)
+	webhookUserLeaderboardResponseFieldPreviousRank        = big.NewInt(1 << 21)
+	webhookUserLeaderboardResponseFieldPreviousValue       = big.NewInt(1 << 22)
 )
 
 type WebhookUserLeaderboardResponse struct {
@@ -20214,6 +20685,8 @@ type WebhookUserLeaderboardResponse struct {
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+	UserAttributes []*LeaderboardResponseUserAttributesItem `json:"userAttributes" url:"userAttributes"`
 	// The user's current rank in this leaderboard. Null if the user is not on the leaderboard.
 	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
 	// The user's current value in this leaderboard. Null if the user is not on the leaderboard.
@@ -20354,6 +20827,13 @@ func (w *WebhookUserLeaderboardResponse) GetRunInterval() *int {
 		return nil
 	}
 	return w.RunInterval
+}
+
+func (w *WebhookUserLeaderboardResponse) GetUserAttributes() []*LeaderboardResponseUserAttributesItem {
+	if w == nil {
+		return nil
+	}
+	return w.UserAttributes
 }
 
 func (w *WebhookUserLeaderboardResponse) GetRank() *int {
@@ -20522,6 +21002,13 @@ func (w *WebhookUserLeaderboardResponse) SetRunUnit(runUnit *LeaderboardResponse
 func (w *WebhookUserLeaderboardResponse) SetRunInterval(runInterval *int) {
 	w.RunInterval = runInterval
 	w.require(webhookUserLeaderboardResponseFieldRunInterval)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhookUserLeaderboardResponse) SetUserAttributes(userAttributes []*LeaderboardResponseUserAttributesItem) {
+	w.UserAttributes = userAttributes
+	w.require(webhookUserLeaderboardResponseFieldUserAttributes)
 }
 
 // SetRank sets the Rank field and marks it as non-optional;

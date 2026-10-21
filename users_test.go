@@ -6241,6 +6241,14 @@ func TestSettersUserLeaderboardResponse(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetUserAttributes", func(t *testing.T) {
+		obj := &UserLeaderboardResponse{}
+		var fernTestValueUserAttributes []*LeaderboardResponseUserAttributesItem
+		obj.SetUserAttributes(fernTestValueUserAttributes)
+		assert.Equal(t, fernTestValueUserAttributes, obj.UserAttributes)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetRank", func(t *testing.T) {
 		obj := &UserLeaderboardResponse{}
 		var fernTestValueRank *int
@@ -6802,6 +6810,39 @@ func TestGettersUserLeaderboardResponse(t *testing.T) {
 			}
 		}()
 		_ = obj.GetRunInterval() // Should return zero value
+	})
+
+	t.Run("GetUserAttributes", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserLeaderboardResponse{}
+		var expected []*LeaderboardResponseUserAttributesItem
+		obj.UserAttributes = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetUserAttributes(), "getter should return the property value")
+	})
+
+	t.Run("GetUserAttributes_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserLeaderboardResponse{}
+		obj.UserAttributes = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetUserAttributes(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetUserAttributes_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UserLeaderboardResponse
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetUserAttributes() // Should return zero value
 	})
 
 	t.Run("GetRank", func(t *testing.T) {
@@ -7431,6 +7472,37 @@ func TestSettersMarkExplicitUserLeaderboardResponse(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetUserAttributes_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserLeaderboardResponse{}
+		var fernTestValueUserAttributes []*LeaderboardResponseUserAttributesItem
+
+		// Act
+		obj.SetUserAttributes(fernTestValueUserAttributes)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetRank_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -7637,6 +7709,14 @@ func TestSettersUserLeaderboardResponseWithHistory(t *testing.T) {
 		var fernTestValueRunInterval *int
 		obj.SetRunInterval(fernTestValueRunInterval)
 		assert.Equal(t, fernTestValueRunInterval, obj.RunInterval)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetUserAttributes", func(t *testing.T) {
+		obj := &UserLeaderboardResponseWithHistory{}
+		var fernTestValueUserAttributes []*LeaderboardResponseUserAttributesItem
+		obj.SetUserAttributes(fernTestValueUserAttributes)
+		assert.Equal(t, fernTestValueUserAttributes, obj.UserAttributes)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -8209,6 +8289,39 @@ func TestGettersUserLeaderboardResponseWithHistory(t *testing.T) {
 			}
 		}()
 		_ = obj.GetRunInterval() // Should return zero value
+	})
+
+	t.Run("GetUserAttributes", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserLeaderboardResponseWithHistory{}
+		var expected []*LeaderboardResponseUserAttributesItem
+		obj.UserAttributes = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetUserAttributes(), "getter should return the property value")
+	})
+
+	t.Run("GetUserAttributes_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserLeaderboardResponseWithHistory{}
+		obj.UserAttributes = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetUserAttributes(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetUserAttributes_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *UserLeaderboardResponseWithHistory
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetUserAttributes() // Should return zero value
 	})
 
 	t.Run("GetRank", func(t *testing.T) {
@@ -8848,6 +8961,37 @@ func TestSettersMarkExplicitUserLeaderboardResponseWithHistory(t *testing.T) {
 
 		// Act
 		obj.SetRunInterval(fernTestValueRunInterval)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetUserAttributes_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UserLeaderboardResponseWithHistory{}
+		var fernTestValueUserAttributes []*LeaderboardResponseUserAttributesItem
+
+		// Act
+		obj.SetUserAttributes(fernTestValueUserAttributes)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

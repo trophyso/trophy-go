@@ -257,8 +257,9 @@ var (
 	leaderboardResponseWithRankingsFieldMaxParticipants     = big.NewInt(1 << 15)
 	leaderboardResponseWithRankingsFieldRunUnit             = big.NewInt(1 << 16)
 	leaderboardResponseWithRankingsFieldRunInterval         = big.NewInt(1 << 17)
-	leaderboardResponseWithRankingsFieldStatus              = big.NewInt(1 << 18)
-	leaderboardResponseWithRankingsFieldRankings            = big.NewInt(1 << 19)
+	leaderboardResponseWithRankingsFieldUserAttributes      = big.NewInt(1 << 18)
+	leaderboardResponseWithRankingsFieldStatus              = big.NewInt(1 << 19)
+	leaderboardResponseWithRankingsFieldRankings            = big.NewInt(1 << 20)
 )
 
 type LeaderboardResponseWithRankings struct {
@@ -298,6 +299,8 @@ type LeaderboardResponseWithRankings struct {
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+	UserAttributes []*LeaderboardResponseUserAttributesItem `json:"userAttributes" url:"userAttributes"`
 	// The status of the leaderboard.
 	Status LeaderboardResponseWithRankingsStatus `json:"status" url:"status"`
 	// Array of user rankings for the leaderboard.
@@ -434,6 +437,13 @@ func (l *LeaderboardResponseWithRankings) GetRunInterval() *int {
 		return nil
 	}
 	return l.RunInterval
+}
+
+func (l *LeaderboardResponseWithRankings) GetUserAttributes() []*LeaderboardResponseUserAttributesItem {
+	if l == nil {
+		return nil
+	}
+	return l.UserAttributes
 }
 
 func (l *LeaderboardResponseWithRankings) GetStatus() LeaderboardResponseWithRankingsStatus {
@@ -590,6 +600,13 @@ func (l *LeaderboardResponseWithRankings) SetRunInterval(runInterval *int) {
 	l.require(leaderboardResponseWithRankingsFieldRunInterval)
 }
 
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LeaderboardResponseWithRankings) SetUserAttributes(userAttributes []*LeaderboardResponseUserAttributesItem) {
+	l.UserAttributes = userAttributes
+	l.require(leaderboardResponseWithRankingsFieldUserAttributes)
+}
+
 // SetStatus sets the Status field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *LeaderboardResponseWithRankings) SetStatus(status LeaderboardResponseWithRankingsStatus) {
@@ -691,7 +708,8 @@ var (
 	leaderboardsAllResponseItemFieldMaxParticipants     = big.NewInt(1 << 15)
 	leaderboardsAllResponseItemFieldRunUnit             = big.NewInt(1 << 16)
 	leaderboardsAllResponseItemFieldRunInterval         = big.NewInt(1 << 17)
-	leaderboardsAllResponseItemFieldStatus              = big.NewInt(1 << 18)
+	leaderboardsAllResponseItemFieldUserAttributes      = big.NewInt(1 << 18)
+	leaderboardsAllResponseItemFieldStatus              = big.NewInt(1 << 19)
 )
 
 type LeaderboardsAllResponseItem struct {
@@ -731,6 +749,8 @@ type LeaderboardsAllResponseItem struct {
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+	UserAttributes []*LeaderboardResponseUserAttributesItem `json:"userAttributes" url:"userAttributes"`
 	// The status of the leaderboard.
 	Status LeaderboardsAllResponseItemStatus `json:"status" url:"status"`
 
@@ -865,6 +885,13 @@ func (l *LeaderboardsAllResponseItem) GetRunInterval() *int {
 		return nil
 	}
 	return l.RunInterval
+}
+
+func (l *LeaderboardsAllResponseItem) GetUserAttributes() []*LeaderboardResponseUserAttributesItem {
+	if l == nil {
+		return nil
+	}
+	return l.UserAttributes
 }
 
 func (l *LeaderboardsAllResponseItem) GetStatus() LeaderboardsAllResponseItemStatus {
@@ -1012,6 +1039,13 @@ func (l *LeaderboardsAllResponseItem) SetRunUnit(runUnit *LeaderboardResponseRun
 func (l *LeaderboardsAllResponseItem) SetRunInterval(runInterval *int) {
 	l.RunInterval = runInterval
 	l.require(leaderboardsAllResponseItemFieldRunInterval)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *LeaderboardsAllResponseItem) SetUserAttributes(userAttributes []*LeaderboardResponseUserAttributesItem) {
+	l.UserAttributes = userAttributes
+	l.require(leaderboardsAllResponseItemFieldUserAttributes)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;

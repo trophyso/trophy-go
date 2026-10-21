@@ -331,6 +331,7 @@ var (
 	metricEventLeaderboardResponseFieldMaxParticipants          = big.NewInt(1 << 20)
 	metricEventLeaderboardResponseFieldRunUnit                  = big.NewInt(1 << 21)
 	metricEventLeaderboardResponseFieldRunInterval              = big.NewInt(1 << 22)
+	metricEventLeaderboardResponseFieldUserAttributes           = big.NewInt(1 << 23)
 )
 
 type MetricEventLeaderboardResponse struct {
@@ -380,6 +381,8 @@ type MetricEventLeaderboardResponse struct {
 	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
 	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
 	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+	UserAttributes []*LeaderboardResponseUserAttributesItem `json:"userAttributes" url:"userAttributes"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -547,6 +550,13 @@ func (m *MetricEventLeaderboardResponse) GetRunInterval() *int {
 		return nil
 	}
 	return m.RunInterval
+}
+
+func (m *MetricEventLeaderboardResponse) GetUserAttributes() []*LeaderboardResponseUserAttributesItem {
+	if m == nil {
+		return nil
+	}
+	return m.UserAttributes
 }
 
 func (m *MetricEventLeaderboardResponse) GetExtraProperties() map[string]interface{} {
@@ -722,6 +732,13 @@ func (m *MetricEventLeaderboardResponse) SetRunUnit(runUnit *LeaderboardResponse
 func (m *MetricEventLeaderboardResponse) SetRunInterval(runInterval *int) {
 	m.RunInterval = runInterval
 	m.require(metricEventLeaderboardResponseFieldRunInterval)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetUserAttributes(userAttributes []*LeaderboardResponseUserAttributesItem) {
+	m.UserAttributes = userAttributes
+	m.require(metricEventLeaderboardResponseFieldUserAttributes)
 }
 
 func (m *MetricEventLeaderboardResponse) UnmarshalJSON(data []byte) error {
