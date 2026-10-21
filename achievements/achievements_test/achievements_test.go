@@ -124,6 +124,9 @@ func TestAchievementsCompleteWithWireMock(
                 Tz: trophygo.String(
                     "Europe/London",
                 ),
+                SubscribeToEmails: trophygo.Bool(
+                    true,
+                ),
                 Id: "user-id",
             },
         }
