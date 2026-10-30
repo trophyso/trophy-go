@@ -4338,6 +4338,899 @@ func (a *AdminPointsTriggerUserAttributesItem) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+// A reward returned from the admin rewards endpoints.
+var (
+	adminRewardFieldId             = big.NewInt(1 << 0)
+	adminRewardFieldName           = big.NewInt(1 << 1)
+	adminRewardFieldKey            = big.NewInt(1 << 2)
+	adminRewardFieldDescription    = big.NewInt(1 << 3)
+	adminRewardFieldStatus         = big.NewInt(1 << 4)
+	adminRewardFieldType           = big.NewInt(1 << 5)
+	adminRewardFieldPointsSystemId = big.NewInt(1 << 6)
+	adminRewardFieldPoints         = big.NewInt(1 << 7)
+	adminRewardFieldMaxRedemptions = big.NewInt(1 << 8)
+	adminRewardFieldUserAttributes = big.NewInt(1 << 9)
+)
+
+type AdminReward struct {
+	// The UUID of the reward.
+	Id string `json:"id" url:"id"`
+	// The reward name.
+	Name string `json:"name" url:"name"`
+	// The reward key.
+	Key string `json:"key" url:"key"`
+	// The reward description.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The reward status.
+	Status AdminRewardStatus `json:"status" url:"status"`
+	// The type of reward.
+	Type AdminRewardType `json:"type" url:"type"`
+	// The UUID of the points system. Only present for points rewards.
+	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	// The number of points granted. Only present for points rewards.
+	Points *int `json:"points,omitempty" url:"points,omitempty"`
+	// The maximum number of times a user can be awarded the reward. Null means unlimited.
+	MaxRedemptions *int `json:"maxRedemptions,omitempty" url:"maxRedemptions,omitempty"`
+	// User attribute filters applied to the reward.
+	UserAttributes []*AdminRewardUserAttributesItem `json:"userAttributes" url:"userAttributes"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminReward) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminReward) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AdminReward) GetKey() string {
+	if a == nil {
+		return ""
+	}
+	return a.Key
+}
+
+func (a *AdminReward) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *AdminReward) GetStatus() AdminRewardStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminReward) GetType() AdminRewardType {
+	if a == nil {
+		return ""
+	}
+	return a.Type
+}
+
+func (a *AdminReward) GetPointsSystemId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.PointsSystemId
+}
+
+func (a *AdminReward) GetPoints() *int {
+	if a == nil {
+		return nil
+	}
+	return a.Points
+}
+
+func (a *AdminReward) GetMaxRedemptions() *int {
+	if a == nil {
+		return nil
+	}
+	return a.MaxRedemptions
+}
+
+func (a *AdminReward) GetUserAttributes() []*AdminRewardUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
+}
+
+func (a *AdminReward) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminReward) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetId(id string) {
+	a.Id = id
+	a.require(adminRewardFieldId)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetName(name string) {
+	a.Name = name
+	a.require(adminRewardFieldName)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetKey(key string) {
+	a.Key = key
+	a.require(adminRewardFieldKey)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetDescription(description *string) {
+	a.Description = description
+	a.require(adminRewardFieldDescription)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetStatus(status AdminRewardStatus) {
+	a.Status = status
+	a.require(adminRewardFieldStatus)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetType(type_ AdminRewardType) {
+	a.Type = type_
+	a.require(adminRewardFieldType)
+}
+
+// SetPointsSystemId sets the PointsSystemId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetPointsSystemId(pointsSystemId *string) {
+	a.PointsSystemId = pointsSystemId
+	a.require(adminRewardFieldPointsSystemId)
+}
+
+// SetPoints sets the Points field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetPoints(points *int) {
+	a.Points = points
+	a.require(adminRewardFieldPoints)
+}
+
+// SetMaxRedemptions sets the MaxRedemptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetMaxRedemptions(maxRedemptions *int) {
+	a.MaxRedemptions = maxRedemptions
+	a.require(adminRewardFieldMaxRedemptions)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminReward) SetUserAttributes(userAttributes []*AdminRewardUserAttributesItem) {
+	a.UserAttributes = userAttributes
+	a.require(adminRewardFieldUserAttributes)
+}
+
+func (a *AdminReward) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminReward
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminReward(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminReward) MarshalJSON() ([]byte, error) {
+	type embed AdminReward
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminReward) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The reward status.
+type AdminRewardStatus string
+
+const (
+	AdminRewardStatusActive   AdminRewardStatus = "active"
+	AdminRewardStatusInactive AdminRewardStatus = "inactive"
+)
+
+func NewAdminRewardStatusFromString(s string) (AdminRewardStatus, error) {
+	switch s {
+	case "active":
+		return AdminRewardStatusActive, nil
+	case "inactive":
+		return AdminRewardStatusInactive, nil
+	}
+	var t AdminRewardStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminRewardStatus) Ptr() *AdminRewardStatus {
+	return &a
+}
+
+// A reward trigger as returned from admin endpoints.
+var (
+	adminRewardTriggerFieldId              = big.NewInt(1 << 0)
+	adminRewardTriggerFieldType            = big.NewInt(1 << 1)
+	adminRewardTriggerFieldStatus          = big.NewInt(1 << 2)
+	adminRewardTriggerFieldUserAttributes  = big.NewInt(1 << 3)
+	adminRewardTriggerFieldMetricId        = big.NewInt(1 << 4)
+	adminRewardTriggerFieldMetricThreshold = big.NewInt(1 << 5)
+	adminRewardTriggerFieldEventAttributes = big.NewInt(1 << 6)
+	adminRewardTriggerFieldAchievementId   = big.NewInt(1 << 7)
+	adminRewardTriggerFieldStreakLength    = big.NewInt(1 << 8)
+	adminRewardTriggerFieldLeaderboardId   = big.NewInt(1 << 9)
+	adminRewardTriggerFieldRank            = big.NewInt(1 << 10)
+)
+
+type AdminRewardTrigger struct {
+	// The UUID of the trigger.
+	Id string `json:"id" url:"id"`
+	// The type of trigger.
+	Type AdminRewardTriggerType `json:"type" url:"type"`
+	// The status of the trigger. Only active triggers award the reward.
+	Status AdminRewardTriggerStatus `json:"status" url:"status"`
+	// User attribute filters applied to the trigger.
+	UserAttributes []*AdminRewardTriggerUserAttributesItem `json:"userAttributes" url:"userAttributes"`
+	// The UUID of the metric. Only present for metric triggers.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// The metric threshold. Only present for metric triggers.
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// Event attribute filters applied to the trigger. Only present for metric triggers.
+	EventAttributes []*AdminRewardTriggerEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// The UUID of the achievement. Only present for achievement triggers.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// The streak length. Only present for streak triggers.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// The UUID of the leaderboard. Only present for leaderboard triggers.
+	LeaderboardId *string `json:"leaderboardId,omitempty" url:"leaderboardId,omitempty"`
+	// The rank. Only present for leaderboard triggers.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminRewardTrigger) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *AdminRewardTrigger) GetType() AdminRewardTriggerType {
+	if a == nil {
+		return ""
+	}
+	return a.Type
+}
+
+func (a *AdminRewardTrigger) GetStatus() AdminRewardTriggerStatus {
+	if a == nil {
+		return ""
+	}
+	return a.Status
+}
+
+func (a *AdminRewardTrigger) GetUserAttributes() []*AdminRewardTriggerUserAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.UserAttributes
+}
+
+func (a *AdminRewardTrigger) GetMetricId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.MetricId
+}
+
+func (a *AdminRewardTrigger) GetMetricThreshold() *int {
+	if a == nil {
+		return nil
+	}
+	return a.MetricThreshold
+}
+
+func (a *AdminRewardTrigger) GetEventAttributes() []*AdminRewardTriggerEventAttributesItem {
+	if a == nil {
+		return nil
+	}
+	return a.EventAttributes
+}
+
+func (a *AdminRewardTrigger) GetAchievementId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.AchievementId
+}
+
+func (a *AdminRewardTrigger) GetStreakLength() *int {
+	if a == nil {
+		return nil
+	}
+	return a.StreakLength
+}
+
+func (a *AdminRewardTrigger) GetLeaderboardId() *string {
+	if a == nil {
+		return nil
+	}
+	return a.LeaderboardId
+}
+
+func (a *AdminRewardTrigger) GetRank() *int {
+	if a == nil {
+		return nil
+	}
+	return a.Rank
+}
+
+func (a *AdminRewardTrigger) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminRewardTrigger) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetId(id string) {
+	a.Id = id
+	a.require(adminRewardTriggerFieldId)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetType(type_ AdminRewardTriggerType) {
+	a.Type = type_
+	a.require(adminRewardTriggerFieldType)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetStatus(status AdminRewardTriggerStatus) {
+	a.Status = status
+	a.require(adminRewardTriggerFieldStatus)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetUserAttributes(userAttributes []*AdminRewardTriggerUserAttributesItem) {
+	a.UserAttributes = userAttributes
+	a.require(adminRewardTriggerFieldUserAttributes)
+}
+
+// SetMetricId sets the MetricId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetMetricId(metricId *string) {
+	a.MetricId = metricId
+	a.require(adminRewardTriggerFieldMetricId)
+}
+
+// SetMetricThreshold sets the MetricThreshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetMetricThreshold(metricThreshold *int) {
+	a.MetricThreshold = metricThreshold
+	a.require(adminRewardTriggerFieldMetricThreshold)
+}
+
+// SetEventAttributes sets the EventAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetEventAttributes(eventAttributes []*AdminRewardTriggerEventAttributesItem) {
+	a.EventAttributes = eventAttributes
+	a.require(adminRewardTriggerFieldEventAttributes)
+}
+
+// SetAchievementId sets the AchievementId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetAchievementId(achievementId *string) {
+	a.AchievementId = achievementId
+	a.require(adminRewardTriggerFieldAchievementId)
+}
+
+// SetStreakLength sets the StreakLength field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetStreakLength(streakLength *int) {
+	a.StreakLength = streakLength
+	a.require(adminRewardTriggerFieldStreakLength)
+}
+
+// SetLeaderboardId sets the LeaderboardId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetLeaderboardId(leaderboardId *string) {
+	a.LeaderboardId = leaderboardId
+	a.require(adminRewardTriggerFieldLeaderboardId)
+}
+
+// SetRank sets the Rank field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTrigger) SetRank(rank *int) {
+	a.Rank = rank
+	a.require(adminRewardTriggerFieldRank)
+}
+
+func (a *AdminRewardTrigger) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminRewardTrigger
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminRewardTrigger(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminRewardTrigger) MarshalJSON() ([]byte, error) {
+	type embed AdminRewardTrigger
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminRewardTrigger) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
+	adminRewardTriggerEventAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	adminRewardTriggerEventAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type AdminRewardTriggerEventAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminRewardTriggerEventAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminRewardTriggerEventAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminRewardTriggerEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminRewardTriggerEventAttributesItem) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTriggerEventAttributesItem) SetAttributeId(attributeId string) {
+	a.AttributeId = attributeId
+	a.require(adminRewardTriggerEventAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTriggerEventAttributesItem) SetAttributeValue(attributeValue string) {
+	a.AttributeValue = attributeValue
+	a.require(adminRewardTriggerEventAttributesItemFieldAttributeValue)
+}
+
+func (a *AdminRewardTriggerEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminRewardTriggerEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminRewardTriggerEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminRewardTriggerEventAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed AdminRewardTriggerEventAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminRewardTriggerEventAttributesItem) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The status of the trigger. Only active triggers award the reward.
+type AdminRewardTriggerStatus string
+
+const (
+	AdminRewardTriggerStatusActive   AdminRewardTriggerStatus = "active"
+	AdminRewardTriggerStatusInactive AdminRewardTriggerStatus = "inactive"
+)
+
+func NewAdminRewardTriggerStatusFromString(s string) (AdminRewardTriggerStatus, error) {
+	switch s {
+	case "active":
+		return AdminRewardTriggerStatusActive, nil
+	case "inactive":
+		return AdminRewardTriggerStatusInactive, nil
+	}
+	var t AdminRewardTriggerStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminRewardTriggerStatus) Ptr() *AdminRewardTriggerStatus {
+	return &a
+}
+
+// The type of trigger.
+type AdminRewardTriggerType string
+
+const (
+	AdminRewardTriggerTypeMetric      AdminRewardTriggerType = "metric"
+	AdminRewardTriggerTypeAchievement AdminRewardTriggerType = "achievement"
+	AdminRewardTriggerTypeStreak      AdminRewardTriggerType = "streak"
+	AdminRewardTriggerTypeLeaderboard AdminRewardTriggerType = "leaderboard"
+)
+
+func NewAdminRewardTriggerTypeFromString(s string) (AdminRewardTriggerType, error) {
+	switch s {
+	case "metric":
+		return AdminRewardTriggerTypeMetric, nil
+	case "achievement":
+		return AdminRewardTriggerTypeAchievement, nil
+	case "streak":
+		return AdminRewardTriggerTypeStreak, nil
+	case "leaderboard":
+		return AdminRewardTriggerTypeLeaderboard, nil
+	}
+	var t AdminRewardTriggerType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminRewardTriggerType) Ptr() *AdminRewardTriggerType {
+	return &a
+}
+
+var (
+	adminRewardTriggerUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	adminRewardTriggerUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type AdminRewardTriggerUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminRewardTriggerUserAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminRewardTriggerUserAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminRewardTriggerUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminRewardTriggerUserAttributesItem) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTriggerUserAttributesItem) SetAttributeId(attributeId string) {
+	a.AttributeId = attributeId
+	a.require(adminRewardTriggerUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardTriggerUserAttributesItem) SetAttributeValue(attributeValue string) {
+	a.AttributeValue = attributeValue
+	a.require(adminRewardTriggerUserAttributesItemFieldAttributeValue)
+}
+
+func (a *AdminRewardTriggerUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminRewardTriggerUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminRewardTriggerUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminRewardTriggerUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed AdminRewardTriggerUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminRewardTriggerUserAttributesItem) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// The type of reward.
+type AdminRewardType string
+
+const (
+	AdminRewardTypePoints AdminRewardType = "points"
+	AdminRewardTypeCustom AdminRewardType = "custom"
+)
+
+func NewAdminRewardTypeFromString(s string) (AdminRewardType, error) {
+	switch s {
+	case "points":
+		return AdminRewardTypePoints, nil
+	case "custom":
+		return AdminRewardTypeCustom, nil
+	}
+	var t AdminRewardType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AdminRewardType) Ptr() *AdminRewardType {
+	return &a
+}
+
+var (
+	adminRewardUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	adminRewardUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type AdminRewardUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AdminRewardUserAttributesItem) GetAttributeId() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeId
+}
+
+func (a *AdminRewardUserAttributesItem) GetAttributeValue() string {
+	if a == nil {
+		return ""
+	}
+	return a.AttributeValue
+}
+
+func (a *AdminRewardUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AdminRewardUserAttributesItem) require(field *big.Int) {
+	if a.explicitFields == nil {
+		a.explicitFields = big.NewInt(0)
+	}
+	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardUserAttributesItem) SetAttributeId(attributeId string) {
+	a.AttributeId = attributeId
+	a.require(adminRewardUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AdminRewardUserAttributesItem) SetAttributeValue(attributeValue string) {
+	a.AttributeValue = attributeValue
+	a.require(adminRewardUserAttributesItemFieldAttributeValue)
+}
+
+func (a *AdminRewardUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AdminRewardUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AdminRewardUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AdminRewardUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed AdminRewardUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AdminRewardUserAttributesItem) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 // The organization's branding, experimentation, and aggregation settings.
 var (
 	adminSettingsFieldBranding          = big.NewInt(1 << 0)
@@ -9896,6 +10789,1100 @@ func (c *CreatePointsTriggersResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// A reward to create. Optionally include triggers.
+var (
+	createRewardRequestItemFieldName           = big.NewInt(1 << 0)
+	createRewardRequestItemFieldKey            = big.NewInt(1 << 1)
+	createRewardRequestItemFieldDescription    = big.NewInt(1 << 2)
+	createRewardRequestItemFieldStatus         = big.NewInt(1 << 3)
+	createRewardRequestItemFieldType           = big.NewInt(1 << 4)
+	createRewardRequestItemFieldPointsSystemId = big.NewInt(1 << 5)
+	createRewardRequestItemFieldPoints         = big.NewInt(1 << 6)
+	createRewardRequestItemFieldMaxRedemptions = big.NewInt(1 << 7)
+	createRewardRequestItemFieldUserAttributes = big.NewInt(1 << 8)
+	createRewardRequestItemFieldTriggers       = big.NewInt(1 << 9)
+)
+
+type CreateRewardRequestItem struct {
+	// The reward name.
+	Name string `json:"name" url:"name"`
+	// The reward key. Only alphanumeric characters, hyphens, and underscores are permitted.
+	Key string `json:"key" url:"key"`
+	// A short description of the reward.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The status of the reward. Defaults to 'inactive'.
+	Status *CreateRewardRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// The type of reward. `points` rewards grant points when redeemed. `custom` rewards are fulfilled by your own system.
+	Type CreateRewardRequestItemType `json:"type" url:"type"`
+	// Required if type is `points`. The UUID of the points system to grant points in.
+	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	// Required if type is `points`. The number of points to grant.
+	Points *int `json:"points,omitempty" url:"points,omitempty"`
+	// The maximum number of times a user can be awarded the reward. Null means unlimited.
+	MaxRedemptions *int `json:"maxRedemptions,omitempty" url:"maxRedemptions,omitempty"`
+	// Optional user attribute filters. Only users who match are awarded the reward.
+	UserAttributes []*CreateRewardRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Optional array of triggers to create alongside the reward.
+	Triggers []*CreateRewardTriggerRequestItem `json:"triggers,omitempty" url:"triggers,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateRewardRequestItem) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreateRewardRequestItem) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreateRewardRequestItem) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
+}
+
+func (c *CreateRewardRequestItem) GetStatus() *CreateRewardRequestItemStatus {
+	if c == nil {
+		return nil
+	}
+	return c.Status
+}
+
+func (c *CreateRewardRequestItem) GetType() CreateRewardRequestItemType {
+	if c == nil {
+		return ""
+	}
+	return c.Type
+}
+
+func (c *CreateRewardRequestItem) GetPointsSystemId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PointsSystemId
+}
+
+func (c *CreateRewardRequestItem) GetPoints() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Points
+}
+
+func (c *CreateRewardRequestItem) GetMaxRedemptions() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MaxRedemptions
+}
+
+func (c *CreateRewardRequestItem) GetUserAttributes() []*CreateRewardRequestItemUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
+}
+
+func (c *CreateRewardRequestItem) GetTriggers() []*CreateRewardTriggerRequestItem {
+	if c == nil {
+		return nil
+	}
+	return c.Triggers
+}
+
+func (c *CreateRewardRequestItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateRewardRequestItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetName(name string) {
+	c.Name = name
+	c.require(createRewardRequestItemFieldName)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetKey(key string) {
+	c.Key = key
+	c.require(createRewardRequestItemFieldKey)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetDescription(description *string) {
+	c.Description = description
+	c.require(createRewardRequestItemFieldDescription)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetStatus(status *CreateRewardRequestItemStatus) {
+	c.Status = status
+	c.require(createRewardRequestItemFieldStatus)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetType(type_ CreateRewardRequestItemType) {
+	c.Type = type_
+	c.require(createRewardRequestItemFieldType)
+}
+
+// SetPointsSystemId sets the PointsSystemId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetPointsSystemId(pointsSystemId *string) {
+	c.PointsSystemId = pointsSystemId
+	c.require(createRewardRequestItemFieldPointsSystemId)
+}
+
+// SetPoints sets the Points field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetPoints(points *int) {
+	c.Points = points
+	c.require(createRewardRequestItemFieldPoints)
+}
+
+// SetMaxRedemptions sets the MaxRedemptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetMaxRedemptions(maxRedemptions *int) {
+	c.MaxRedemptions = maxRedemptions
+	c.require(createRewardRequestItemFieldMaxRedemptions)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetUserAttributes(userAttributes []*CreateRewardRequestItemUserAttributesItem) {
+	c.UserAttributes = userAttributes
+	c.require(createRewardRequestItemFieldUserAttributes)
+}
+
+// SetTriggers sets the Triggers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItem) SetTriggers(triggers []*CreateRewardTriggerRequestItem) {
+	c.Triggers = triggers
+	c.require(createRewardRequestItemFieldTriggers)
+}
+
+func (c *CreateRewardRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateRewardRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateRewardRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateRewardRequestItem) MarshalJSON() ([]byte, error) {
+	type embed CreateRewardRequestItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateRewardRequestItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The status of the reward. Defaults to 'inactive'.
+type CreateRewardRequestItemStatus string
+
+const (
+	CreateRewardRequestItemStatusActive   CreateRewardRequestItemStatus = "active"
+	CreateRewardRequestItemStatusInactive CreateRewardRequestItemStatus = "inactive"
+)
+
+func NewCreateRewardRequestItemStatusFromString(s string) (CreateRewardRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return CreateRewardRequestItemStatusActive, nil
+	case "inactive":
+		return CreateRewardRequestItemStatusInactive, nil
+	}
+	var t CreateRewardRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateRewardRequestItemStatus) Ptr() *CreateRewardRequestItemStatus {
+	return &c
+}
+
+// The type of reward. `points` rewards grant points when redeemed. `custom` rewards are fulfilled by your own system.
+type CreateRewardRequestItemType string
+
+const (
+	CreateRewardRequestItemTypePoints CreateRewardRequestItemType = "points"
+	CreateRewardRequestItemTypeCustom CreateRewardRequestItemType = "custom"
+)
+
+func NewCreateRewardRequestItemTypeFromString(s string) (CreateRewardRequestItemType, error) {
+	switch s {
+	case "points":
+		return CreateRewardRequestItemTypePoints, nil
+	case "custom":
+		return CreateRewardRequestItemTypeCustom, nil
+	}
+	var t CreateRewardRequestItemType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateRewardRequestItemType) Ptr() *CreateRewardRequestItemType {
+	return &c
+}
+
+var (
+	createRewardRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	createRewardRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type CreateRewardRequestItemUserAttributesItem struct {
+	// The UUID of the user attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The value to match.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateRewardRequestItemUserAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreateRewardRequestItemUserAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreateRewardRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateRewardRequestItemUserAttributesItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	c.AttributeId = attributeId
+	c.require(createRewardRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	c.AttributeValue = attributeValue
+	c.require(createRewardRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (c *CreateRewardRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateRewardRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateRewardRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateRewardRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed CreateRewardRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateRewardRequestItemUserAttributesItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A reward trigger to create.
+var (
+	createRewardTriggerRequestItemFieldType            = big.NewInt(1 << 0)
+	createRewardTriggerRequestItemFieldStatus          = big.NewInt(1 << 1)
+	createRewardTriggerRequestItemFieldUserAttributes  = big.NewInt(1 << 2)
+	createRewardTriggerRequestItemFieldMetricId        = big.NewInt(1 << 3)
+	createRewardTriggerRequestItemFieldMetricThreshold = big.NewInt(1 << 4)
+	createRewardTriggerRequestItemFieldEventAttributes = big.NewInt(1 << 5)
+	createRewardTriggerRequestItemFieldAchievementId   = big.NewInt(1 << 6)
+	createRewardTriggerRequestItemFieldStreakLength    = big.NewInt(1 << 7)
+	createRewardTriggerRequestItemFieldLeaderboardId   = big.NewInt(1 << 8)
+	createRewardTriggerRequestItemFieldRank            = big.NewInt(1 << 9)
+)
+
+type CreateRewardTriggerRequestItem struct {
+	// The type of trigger.
+	Type CreateRewardTriggerRequestItemType `json:"type" url:"type"`
+	// The status of the trigger. Defaults to 'inactive'.
+	Status *CreateRewardTriggerRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// Optional user attribute filters for the trigger.
+	UserAttributes []*CreateRewardTriggerRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Required if type is `metric`. The UUID of the metric.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// Required if type is `metric`. The reward is awarded each time the user's metric total grows by this amount.
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// Optional event attribute filters. Only permitted if type is `metric`.
+	EventAttributes []*CreateRewardTriggerRequestItemEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// Required if type is `achievement`. The UUID of the achievement.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// Required if type is `streak`. The number of streak periods that awards the reward. It is awarded again each time the streak grows by this many periods.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// Required if type is `leaderboard`. The UUID of the leaderboard.
+	LeaderboardId *string `json:"leaderboardId,omitempty" url:"leaderboardId,omitempty"`
+	// Required if type is `leaderboard`. The final rank that awards the reward.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateRewardTriggerRequestItem) GetType() CreateRewardTriggerRequestItemType {
+	if c == nil {
+		return ""
+	}
+	return c.Type
+}
+
+func (c *CreateRewardTriggerRequestItem) GetStatus() *CreateRewardTriggerRequestItemStatus {
+	if c == nil {
+		return nil
+	}
+	return c.Status
+}
+
+func (c *CreateRewardTriggerRequestItem) GetUserAttributes() []*CreateRewardTriggerRequestItemUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
+}
+
+func (c *CreateRewardTriggerRequestItem) GetMetricId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MetricId
+}
+
+func (c *CreateRewardTriggerRequestItem) GetMetricThreshold() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MetricThreshold
+}
+
+func (c *CreateRewardTriggerRequestItem) GetEventAttributes() []*CreateRewardTriggerRequestItemEventAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.EventAttributes
+}
+
+func (c *CreateRewardTriggerRequestItem) GetAchievementId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.AchievementId
+}
+
+func (c *CreateRewardTriggerRequestItem) GetStreakLength() *int {
+	if c == nil {
+		return nil
+	}
+	return c.StreakLength
+}
+
+func (c *CreateRewardTriggerRequestItem) GetLeaderboardId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LeaderboardId
+}
+
+func (c *CreateRewardTriggerRequestItem) GetRank() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Rank
+}
+
+func (c *CreateRewardTriggerRequestItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateRewardTriggerRequestItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetType(type_ CreateRewardTriggerRequestItemType) {
+	c.Type = type_
+	c.require(createRewardTriggerRequestItemFieldType)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetStatus(status *CreateRewardTriggerRequestItemStatus) {
+	c.Status = status
+	c.require(createRewardTriggerRequestItemFieldStatus)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetUserAttributes(userAttributes []*CreateRewardTriggerRequestItemUserAttributesItem) {
+	c.UserAttributes = userAttributes
+	c.require(createRewardTriggerRequestItemFieldUserAttributes)
+}
+
+// SetMetricId sets the MetricId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetMetricId(metricId *string) {
+	c.MetricId = metricId
+	c.require(createRewardTriggerRequestItemFieldMetricId)
+}
+
+// SetMetricThreshold sets the MetricThreshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetMetricThreshold(metricThreshold *int) {
+	c.MetricThreshold = metricThreshold
+	c.require(createRewardTriggerRequestItemFieldMetricThreshold)
+}
+
+// SetEventAttributes sets the EventAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetEventAttributes(eventAttributes []*CreateRewardTriggerRequestItemEventAttributesItem) {
+	c.EventAttributes = eventAttributes
+	c.require(createRewardTriggerRequestItemFieldEventAttributes)
+}
+
+// SetAchievementId sets the AchievementId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetAchievementId(achievementId *string) {
+	c.AchievementId = achievementId
+	c.require(createRewardTriggerRequestItemFieldAchievementId)
+}
+
+// SetStreakLength sets the StreakLength field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetStreakLength(streakLength *int) {
+	c.StreakLength = streakLength
+	c.require(createRewardTriggerRequestItemFieldStreakLength)
+}
+
+// SetLeaderboardId sets the LeaderboardId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetLeaderboardId(leaderboardId *string) {
+	c.LeaderboardId = leaderboardId
+	c.require(createRewardTriggerRequestItemFieldLeaderboardId)
+}
+
+// SetRank sets the Rank field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItem) SetRank(rank *int) {
+	c.Rank = rank
+	c.require(createRewardTriggerRequestItemFieldRank)
+}
+
+func (c *CreateRewardTriggerRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateRewardTriggerRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateRewardTriggerRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateRewardTriggerRequestItem) MarshalJSON() ([]byte, error) {
+	type embed CreateRewardTriggerRequestItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateRewardTriggerRequestItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	createRewardTriggerRequestItemEventAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	createRewardTriggerRequestItemEventAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type CreateRewardTriggerRequestItemEventAttributesItem struct {
+	// The UUID of the event attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The value to match.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) SetAttributeId(attributeId string) {
+	c.AttributeId = attributeId
+	c.require(createRewardTriggerRequestItemEventAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) SetAttributeValue(attributeValue string) {
+	c.AttributeValue = attributeValue
+	c.require(createRewardTriggerRequestItemEventAttributesItemFieldAttributeValue)
+}
+
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateRewardTriggerRequestItemEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateRewardTriggerRequestItemEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed CreateRewardTriggerRequestItemEventAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateRewardTriggerRequestItemEventAttributesItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// The status of the trigger. Defaults to 'inactive'.
+type CreateRewardTriggerRequestItemStatus string
+
+const (
+	CreateRewardTriggerRequestItemStatusActive   CreateRewardTriggerRequestItemStatus = "active"
+	CreateRewardTriggerRequestItemStatusInactive CreateRewardTriggerRequestItemStatus = "inactive"
+)
+
+func NewCreateRewardTriggerRequestItemStatusFromString(s string) (CreateRewardTriggerRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return CreateRewardTriggerRequestItemStatusActive, nil
+	case "inactive":
+		return CreateRewardTriggerRequestItemStatusInactive, nil
+	}
+	var t CreateRewardTriggerRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateRewardTriggerRequestItemStatus) Ptr() *CreateRewardTriggerRequestItemStatus {
+	return &c
+}
+
+// The type of trigger.
+type CreateRewardTriggerRequestItemType string
+
+const (
+	CreateRewardTriggerRequestItemTypeMetric      CreateRewardTriggerRequestItemType = "metric"
+	CreateRewardTriggerRequestItemTypeAchievement CreateRewardTriggerRequestItemType = "achievement"
+	CreateRewardTriggerRequestItemTypeStreak      CreateRewardTriggerRequestItemType = "streak"
+	CreateRewardTriggerRequestItemTypeLeaderboard CreateRewardTriggerRequestItemType = "leaderboard"
+)
+
+func NewCreateRewardTriggerRequestItemTypeFromString(s string) (CreateRewardTriggerRequestItemType, error) {
+	switch s {
+	case "metric":
+		return CreateRewardTriggerRequestItemTypeMetric, nil
+	case "achievement":
+		return CreateRewardTriggerRequestItemTypeAchievement, nil
+	case "streak":
+		return CreateRewardTriggerRequestItemTypeStreak, nil
+	case "leaderboard":
+		return CreateRewardTriggerRequestItemTypeLeaderboard, nil
+	}
+	var t CreateRewardTriggerRequestItemType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreateRewardTriggerRequestItemType) Ptr() *CreateRewardTriggerRequestItemType {
+	return &c
+}
+
+var (
+	createRewardTriggerRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	createRewardTriggerRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type CreateRewardTriggerRequestItemUserAttributesItem struct {
+	// The UUID of the user attribute.
+	AttributeId string `json:"attributeId" url:"attributeId"`
+	// The value to match.
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) GetAttributeId() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeId
+}
+
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) GetAttributeValue() string {
+	if c == nil {
+		return ""
+	}
+	return c.AttributeValue
+}
+
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	c.AttributeId = attributeId
+	c.require(createRewardTriggerRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	c.AttributeValue = attributeValue
+	c.require(createRewardTriggerRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateRewardTriggerRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateRewardTriggerRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed CreateRewardTriggerRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateRewardTriggerRequestItemUserAttributesItem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Array of reward triggers to create. Maximum 100 triggers per request.
+type CreateRewardTriggersRequest = []*CreateRewardTriggerRequestItem
+
+// Response containing created triggers and any per-item issues.
+var (
+	createRewardTriggersResponseFieldCreated = big.NewInt(1 << 0)
+	createRewardTriggersResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type CreateRewardTriggersResponse struct {
+	// Array of successfully created triggers.
+	Created []*AdminRewardTrigger `json:"created" url:"created"`
+	// Array of issues encountered during trigger creation.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateRewardTriggersResponse) GetCreated() []*AdminRewardTrigger {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateRewardTriggersResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateRewardTriggersResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateRewardTriggersResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreated sets the Created field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggersResponse) SetCreated(created []*AdminRewardTrigger) {
+	c.Created = created
+	c.require(createRewardTriggersResponseFieldCreated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardTriggersResponse) SetIssues(issues []*AdminIssue) {
+	c.Issues = issues
+	c.require(createRewardTriggersResponseFieldIssues)
+}
+
+func (c *CreateRewardTriggersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateRewardTriggersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateRewardTriggersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateRewardTriggersResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateRewardTriggersResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateRewardTriggersResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Request body for creating rewards.
+type CreateRewardsRequest = []*CreateRewardRequestItem
+
+// Response containing created rewards and any per-item issues.
+var (
+	createRewardsResponseFieldCreated = big.NewInt(1 << 0)
+	createRewardsResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type CreateRewardsResponse struct {
+	// Array of successfully created rewards.
+	Created []*CreatedAdminReward `json:"created" url:"created"`
+	// Array of issues encountered during creation.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateRewardsResponse) GetCreated() []*CreatedAdminReward {
+	if c == nil {
+		return nil
+	}
+	return c.Created
+}
+
+func (c *CreateRewardsResponse) GetIssues() []*AdminIssue {
+	if c == nil {
+		return nil
+	}
+	return c.Issues
+}
+
+func (c *CreateRewardsResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateRewardsResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetCreated sets the Created field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardsResponse) SetCreated(created []*CreatedAdminReward) {
+	c.Created = created
+	c.require(createRewardsResponseFieldCreated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateRewardsResponse) SetIssues(issues []*AdminIssue) {
+	c.Issues = issues
+	c.require(createRewardsResponseFieldIssues)
+}
+
+func (c *CreateRewardsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateRewardsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateRewardsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateRewardsResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateRewardsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateRewardsResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // Response containing any issues encountered while creating streak freezes.
 var (
 	createStreakFreezesResponseFieldIssues = big.NewInt(1 << 0)
@@ -10519,6 +12506,262 @@ func (c *CreatedAdminPointsSystem) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreatedAdminPointsSystem) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// A reward returned from the creation endpoint. Extends AdminReward with the triggers created alongside it, present when triggers were included in the creation request.
+var (
+	createdAdminRewardFieldId             = big.NewInt(1 << 0)
+	createdAdminRewardFieldName           = big.NewInt(1 << 1)
+	createdAdminRewardFieldKey            = big.NewInt(1 << 2)
+	createdAdminRewardFieldDescription    = big.NewInt(1 << 3)
+	createdAdminRewardFieldStatus         = big.NewInt(1 << 4)
+	createdAdminRewardFieldType           = big.NewInt(1 << 5)
+	createdAdminRewardFieldPointsSystemId = big.NewInt(1 << 6)
+	createdAdminRewardFieldPoints         = big.NewInt(1 << 7)
+	createdAdminRewardFieldMaxRedemptions = big.NewInt(1 << 8)
+	createdAdminRewardFieldUserAttributes = big.NewInt(1 << 9)
+	createdAdminRewardFieldTriggers       = big.NewInt(1 << 10)
+)
+
+type CreatedAdminReward struct {
+	// The UUID of the reward.
+	Id string `json:"id" url:"id"`
+	// The reward name.
+	Name string `json:"name" url:"name"`
+	// The reward key.
+	Key string `json:"key" url:"key"`
+	// The reward description.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The reward status.
+	Status AdminRewardStatus `json:"status" url:"status"`
+	// The type of reward.
+	Type AdminRewardType `json:"type" url:"type"`
+	// The UUID of the points system. Only present for points rewards.
+	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	// The number of points granted. Only present for points rewards.
+	Points *int `json:"points,omitempty" url:"points,omitempty"`
+	// The maximum number of times a user can be awarded the reward. Null means unlimited.
+	MaxRedemptions *int `json:"maxRedemptions,omitempty" url:"maxRedemptions,omitempty"`
+	// User attribute filters applied to the reward.
+	UserAttributes []*AdminRewardUserAttributesItem `json:"userAttributes" url:"userAttributes"`
+	// Triggers created alongside the reward. Present when triggers were provided in the request.
+	Triggers []*AdminRewardTrigger `json:"triggers,omitempty" url:"triggers,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreatedAdminReward) GetId() string {
+	if c == nil {
+		return ""
+	}
+	return c.Id
+}
+
+func (c *CreatedAdminReward) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CreatedAdminReward) GetKey() string {
+	if c == nil {
+		return ""
+	}
+	return c.Key
+}
+
+func (c *CreatedAdminReward) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
+}
+
+func (c *CreatedAdminReward) GetStatus() AdminRewardStatus {
+	if c == nil {
+		return ""
+	}
+	return c.Status
+}
+
+func (c *CreatedAdminReward) GetType() AdminRewardType {
+	if c == nil {
+		return ""
+	}
+	return c.Type
+}
+
+func (c *CreatedAdminReward) GetPointsSystemId() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PointsSystemId
+}
+
+func (c *CreatedAdminReward) GetPoints() *int {
+	if c == nil {
+		return nil
+	}
+	return c.Points
+}
+
+func (c *CreatedAdminReward) GetMaxRedemptions() *int {
+	if c == nil {
+		return nil
+	}
+	return c.MaxRedemptions
+}
+
+func (c *CreatedAdminReward) GetUserAttributes() []*AdminRewardUserAttributesItem {
+	if c == nil {
+		return nil
+	}
+	return c.UserAttributes
+}
+
+func (c *CreatedAdminReward) GetTriggers() []*AdminRewardTrigger {
+	if c == nil {
+		return nil
+	}
+	return c.Triggers
+}
+
+func (c *CreatedAdminReward) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreatedAdminReward) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetId(id string) {
+	c.Id = id
+	c.require(createdAdminRewardFieldId)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetName(name string) {
+	c.Name = name
+	c.require(createdAdminRewardFieldName)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetKey(key string) {
+	c.Key = key
+	c.require(createdAdminRewardFieldKey)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetDescription(description *string) {
+	c.Description = description
+	c.require(createdAdminRewardFieldDescription)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetStatus(status AdminRewardStatus) {
+	c.Status = status
+	c.require(createdAdminRewardFieldStatus)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetType(type_ AdminRewardType) {
+	c.Type = type_
+	c.require(createdAdminRewardFieldType)
+}
+
+// SetPointsSystemId sets the PointsSystemId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetPointsSystemId(pointsSystemId *string) {
+	c.PointsSystemId = pointsSystemId
+	c.require(createdAdminRewardFieldPointsSystemId)
+}
+
+// SetPoints sets the Points field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetPoints(points *int) {
+	c.Points = points
+	c.require(createdAdminRewardFieldPoints)
+}
+
+// SetMaxRedemptions sets the MaxRedemptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetMaxRedemptions(maxRedemptions *int) {
+	c.MaxRedemptions = maxRedemptions
+	c.require(createdAdminRewardFieldMaxRedemptions)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetUserAttributes(userAttributes []*AdminRewardUserAttributesItem) {
+	c.UserAttributes = userAttributes
+	c.require(createdAdminRewardFieldUserAttributes)
+}
+
+// SetTriggers sets the Triggers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatedAdminReward) SetTriggers(triggers []*AdminRewardTrigger) {
+	c.Triggers = triggers
+	c.require(createdAdminRewardFieldTriggers)
+}
+
+func (c *CreatedAdminReward) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreatedAdminReward
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreatedAdminReward(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreatedAdminReward) MarshalJSON() ([]byte, error) {
+	type embed CreatedAdminReward
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreatedAdminReward) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -11774,6 +14017,212 @@ func (d *DeletePointsTriggersResponse) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
+// Response containing the reward triggers that were deleted and any per-item issues.
+var (
+	deleteRewardTriggersResponseFieldDeleted = big.NewInt(1 << 0)
+	deleteRewardTriggersResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type DeleteRewardTriggersResponse struct {
+	// Array of deleted reward triggers represented by ID.
+	Deleted []*DeletedResource `json:"deleted" url:"deleted"`
+	// Array of issues encountered during trigger deletion.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteRewardTriggersResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteRewardTriggersResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteRewardTriggersResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteRewardTriggersResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetDeleted sets the Deleted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteRewardTriggersResponse) SetDeleted(deleted []*DeletedResource) {
+	d.Deleted = deleted
+	d.require(deleteRewardTriggersResponseFieldDeleted)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteRewardTriggersResponse) SetIssues(issues []*AdminIssue) {
+	d.Issues = issues
+	d.require(deleteRewardTriggersResponseFieldIssues)
+}
+
+func (d *DeleteRewardTriggersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteRewardTriggersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteRewardTriggersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteRewardTriggersResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteRewardTriggersResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteRewardTriggersResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// Response containing deleted reward IDs and any per-item issues.
+var (
+	deleteRewardsResponseFieldDeleted = big.NewInt(1 << 0)
+	deleteRewardsResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type DeleteRewardsResponse struct {
+	// Array of deleted reward IDs.
+	Deleted []*DeletedResource `json:"deleted" url:"deleted"`
+	// Array of issues encountered during deletion.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteRewardsResponse) GetDeleted() []*DeletedResource {
+	if d == nil {
+		return nil
+	}
+	return d.Deleted
+}
+
+func (d *DeleteRewardsResponse) GetIssues() []*AdminIssue {
+	if d == nil {
+		return nil
+	}
+	return d.Issues
+}
+
+func (d *DeleteRewardsResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteRewardsResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetDeleted sets the Deleted field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteRewardsResponse) SetDeleted(deleted []*DeletedResource) {
+	d.Deleted = deleted
+	d.require(deleteRewardsResponseFieldDeleted)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteRewardsResponse) SetIssues(issues []*AdminIssue) {
+	d.Issues = issues
+	d.require(deleteRewardsResponseFieldIssues)
+}
+
+func (d *DeleteRewardsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteRewardsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteRewardsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteRewardsResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteRewardsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteRewardsResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
 // Response containing deleted streak pauses and any issues encountered.
 var (
 	deleteStreakPausesResponseFieldDeleted = big.NewInt(1 << 0)
@@ -12723,8 +15172,592 @@ type ListPointsSystemsResponse = []*AdminPointsSystem
 // A paginated list of points triggers.
 type ListPointsTriggersResponse = []*AdminPointsTrigger
 
+// A paginated list of reward triggers.
+type ListRewardTriggersResponse = []*AdminRewardTrigger
+
+// Response containing a list of rewards.
+type ListRewardsResponse = []*AdminReward
+
 // Array of tenants.
 type ListTenantsResponse = []*AdminTenant
+
+var (
+	metricEventLeaderboardResponseFieldEnd                      = big.NewInt(1 << 0)
+	metricEventLeaderboardResponseFieldRank                     = big.NewInt(1 << 1)
+	metricEventLeaderboardResponseFieldPreviousRank             = big.NewInt(1 << 2)
+	metricEventLeaderboardResponseFieldThreshold                = big.NewInt(1 << 3)
+	metricEventLeaderboardResponseFieldBreakdownAttributeValue  = big.NewInt(1 << 4)
+	metricEventLeaderboardResponseFieldBreakdownAttributeValues = big.NewInt(1 << 5)
+	metricEventLeaderboardResponseFieldId                       = big.NewInt(1 << 6)
+	metricEventLeaderboardResponseFieldName                     = big.NewInt(1 << 7)
+	metricEventLeaderboardResponseFieldKey                      = big.NewInt(1 << 8)
+	metricEventLeaderboardResponseFieldRankBy                   = big.NewInt(1 << 9)
+	metricEventLeaderboardResponseFieldBreakdownAttribute       = big.NewInt(1 << 10)
+	metricEventLeaderboardResponseFieldBreakdownAttributes      = big.NewInt(1 << 11)
+	metricEventLeaderboardResponseFieldMetricKey                = big.NewInt(1 << 12)
+	metricEventLeaderboardResponseFieldMetricName               = big.NewInt(1 << 13)
+	metricEventLeaderboardResponseFieldPointsSystemKey          = big.NewInt(1 << 14)
+	metricEventLeaderboardResponseFieldPointsSystemName         = big.NewInt(1 << 15)
+	metricEventLeaderboardResponseFieldDescription              = big.NewInt(1 << 16)
+	metricEventLeaderboardResponseFieldStart                    = big.NewInt(1 << 17)
+	metricEventLeaderboardResponseFieldStartTime                = big.NewInt(1 << 18)
+	metricEventLeaderboardResponseFieldEndTime                  = big.NewInt(1 << 19)
+	metricEventLeaderboardResponseFieldMaxParticipants          = big.NewInt(1 << 20)
+	metricEventLeaderboardResponseFieldRunUnit                  = big.NewInt(1 << 21)
+	metricEventLeaderboardResponseFieldRunInterval              = big.NewInt(1 << 22)
+	metricEventLeaderboardResponseFieldUserAttributes           = big.NewInt(1 << 23)
+)
+
+type MetricEventLeaderboardResponse struct {
+	// The end date of the current run of the leaderboard, or null if the run never ends.
+	End *string `json:"end,omitempty" url:"end,omitempty"`
+	// The user's rank in the leaderboard, or null if the user is not on the leaderboard.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+	// The user's rank in the leaderboard before the event, or null if the user was not on the leaderboard before the event.
+	PreviousRank *int `json:"previousRank,omitempty" url:"previousRank,omitempty"`
+	// The minimum value required to enter the leaderboard according to its current rankings.
+	Threshold int `json:"threshold" url:"threshold"`
+	// Deprecated. For leaderboards with a single breakdown attribute, the value of that attribute for the user.
+	BreakdownAttributeValue *string `json:"breakdownAttributeValue,omitempty" url:"breakdownAttributeValue,omitempty"`
+	// For leaderboards with breakdown attributes, the user's values for each breakdown attribute.
+	BreakdownAttributeValues []*MetricEventLeaderboardResponseBreakdownAttributeValuesItem `json:"breakdownAttributeValues,omitempty" url:"breakdownAttributeValues,omitempty"`
+	// The unique ID of the leaderboard.
+	Id string `json:"id" url:"id"`
+	// The user-facing name of the leaderboard.
+	Name string `json:"name" url:"name"`
+	// The unique key used to reference the leaderboard in APIs.
+	Key string `json:"key" url:"key"`
+	// What the leaderboard ranks by.
+	RankBy LeaderboardResponseRankBy `json:"rankBy" url:"rankBy"`
+	// Deprecated. The key of the attribute to break down this leaderboard by.
+	BreakdownAttribute *string `json:"breakdownAttribute,omitempty" url:"breakdownAttribute,omitempty"`
+	// The user attribute keys that this leaderboard is broken down by.
+	BreakdownAttributes []string `json:"breakdownAttributes" url:"breakdownAttributes"`
+	// The key of the metric to rank by, if rankBy is 'metric'.
+	MetricKey *string `json:"metricKey,omitempty" url:"metricKey,omitempty"`
+	// The name of the metric to rank by, if rankBy is 'metric'.
+	MetricName *string `json:"metricName,omitempty" url:"metricName,omitempty"`
+	// The key of the points system to rank by, if rankBy is 'points'.
+	PointsSystemKey *string `json:"pointsSystemKey,omitempty" url:"pointsSystemKey,omitempty"`
+	// The name of the points system to rank by, if rankBy is 'points'.
+	PointsSystemName *string `json:"pointsSystemName,omitempty" url:"pointsSystemName,omitempty"`
+	// The user-facing description of the leaderboard.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// The start date of the leaderboard in YYYY-MM-DD format.
+	Start string `json:"start" url:"start"`
+	// When set, ranking only counts activity at or after this time of day in the user's timezone (HH:mm format).
+	StartTime *string `json:"startTime,omitempty" url:"startTime,omitempty"`
+	// When set, ranking only counts activity before this time of day in the user's timezone (HH:mm format).
+	EndTime *string `json:"endTime,omitempty" url:"endTime,omitempty"`
+	// The maximum number of participants in the leaderboard.
+	MaxParticipants *int `json:"maxParticipants,omitempty" url:"maxParticipants,omitempty"`
+	// The repetition type for recurring leaderboards, or null for one-time leaderboards.
+	RunUnit *LeaderboardResponseRunUnit `json:"runUnit,omitempty" url:"runUnit,omitempty"`
+	// The interval between repetitions, relative to the start date and repetition type. Null for one-time leaderboards.
+	RunInterval *int `json:"runInterval,omitempty" url:"runInterval,omitempty"`
+	// User attribute filters that a user must match to participate in this leaderboard and appear in its rankings.
+	UserAttributes []*LeaderboardResponseUserAttributesItem `json:"userAttributes" url:"userAttributes"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventLeaderboardResponse) GetEnd() *string {
+	if m == nil {
+		return nil
+	}
+	return m.End
+}
+
+func (m *MetricEventLeaderboardResponse) GetRank() *int {
+	if m == nil {
+		return nil
+	}
+	return m.Rank
+}
+
+func (m *MetricEventLeaderboardResponse) GetPreviousRank() *int {
+	if m == nil {
+		return nil
+	}
+	return m.PreviousRank
+}
+
+func (m *MetricEventLeaderboardResponse) GetThreshold() int {
+	if m == nil {
+		return 0
+	}
+	return m.Threshold
+}
+
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttributeValue() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttributeValue
+}
+
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttributeValues() []*MetricEventLeaderboardResponseBreakdownAttributeValuesItem {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttributeValues
+}
+
+func (m *MetricEventLeaderboardResponse) GetId() string {
+	if m == nil {
+		return ""
+	}
+	return m.Id
+}
+
+func (m *MetricEventLeaderboardResponse) GetName() string {
+	if m == nil {
+		return ""
+	}
+	return m.Name
+}
+
+func (m *MetricEventLeaderboardResponse) GetKey() string {
+	if m == nil {
+		return ""
+	}
+	return m.Key
+}
+
+func (m *MetricEventLeaderboardResponse) GetRankBy() LeaderboardResponseRankBy {
+	if m == nil {
+		return ""
+	}
+	return m.RankBy
+}
+
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttribute() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttribute
+}
+
+func (m *MetricEventLeaderboardResponse) GetBreakdownAttributes() []string {
+	if m == nil {
+		return nil
+	}
+	return m.BreakdownAttributes
+}
+
+func (m *MetricEventLeaderboardResponse) GetMetricKey() *string {
+	if m == nil {
+		return nil
+	}
+	return m.MetricKey
+}
+
+func (m *MetricEventLeaderboardResponse) GetMetricName() *string {
+	if m == nil {
+		return nil
+	}
+	return m.MetricName
+}
+
+func (m *MetricEventLeaderboardResponse) GetPointsSystemKey() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PointsSystemKey
+}
+
+func (m *MetricEventLeaderboardResponse) GetPointsSystemName() *string {
+	if m == nil {
+		return nil
+	}
+	return m.PointsSystemName
+}
+
+func (m *MetricEventLeaderboardResponse) GetDescription() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Description
+}
+
+func (m *MetricEventLeaderboardResponse) GetStart() string {
+	if m == nil {
+		return ""
+	}
+	return m.Start
+}
+
+func (m *MetricEventLeaderboardResponse) GetStartTime() *string {
+	if m == nil {
+		return nil
+	}
+	return m.StartTime
+}
+
+func (m *MetricEventLeaderboardResponse) GetEndTime() *string {
+	if m == nil {
+		return nil
+	}
+	return m.EndTime
+}
+
+func (m *MetricEventLeaderboardResponse) GetMaxParticipants() *int {
+	if m == nil {
+		return nil
+	}
+	return m.MaxParticipants
+}
+
+func (m *MetricEventLeaderboardResponse) GetRunUnit() *LeaderboardResponseRunUnit {
+	if m == nil {
+		return nil
+	}
+	return m.RunUnit
+}
+
+func (m *MetricEventLeaderboardResponse) GetRunInterval() *int {
+	if m == nil {
+		return nil
+	}
+	return m.RunInterval
+}
+
+func (m *MetricEventLeaderboardResponse) GetUserAttributes() []*LeaderboardResponseUserAttributesItem {
+	if m == nil {
+		return nil
+	}
+	return m.UserAttributes
+}
+
+func (m *MetricEventLeaderboardResponse) GetExtraProperties() map[string]interface{} {
+	if m == nil {
+		return nil
+	}
+	return m.extraProperties
+}
+
+func (m *MetricEventLeaderboardResponse) require(field *big.Int) {
+	if m.explicitFields == nil {
+		m.explicitFields = big.NewInt(0)
+	}
+	m.explicitFields.Or(m.explicitFields, field)
+}
+
+// SetEnd sets the End field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetEnd(end *string) {
+	m.End = end
+	m.require(metricEventLeaderboardResponseFieldEnd)
+}
+
+// SetRank sets the Rank field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetRank(rank *int) {
+	m.Rank = rank
+	m.require(metricEventLeaderboardResponseFieldRank)
+}
+
+// SetPreviousRank sets the PreviousRank field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetPreviousRank(previousRank *int) {
+	m.PreviousRank = previousRank
+	m.require(metricEventLeaderboardResponseFieldPreviousRank)
+}
+
+// SetThreshold sets the Threshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetThreshold(threshold int) {
+	m.Threshold = threshold
+	m.require(metricEventLeaderboardResponseFieldThreshold)
+}
+
+// SetBreakdownAttributeValue sets the BreakdownAttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetBreakdownAttributeValue(breakdownAttributeValue *string) {
+	m.BreakdownAttributeValue = breakdownAttributeValue
+	m.require(metricEventLeaderboardResponseFieldBreakdownAttributeValue)
+}
+
+// SetBreakdownAttributeValues sets the BreakdownAttributeValues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetBreakdownAttributeValues(breakdownAttributeValues []*MetricEventLeaderboardResponseBreakdownAttributeValuesItem) {
+	m.BreakdownAttributeValues = breakdownAttributeValues
+	m.require(metricEventLeaderboardResponseFieldBreakdownAttributeValues)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetId(id string) {
+	m.Id = id
+	m.require(metricEventLeaderboardResponseFieldId)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetName(name string) {
+	m.Name = name
+	m.require(metricEventLeaderboardResponseFieldName)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetKey(key string) {
+	m.Key = key
+	m.require(metricEventLeaderboardResponseFieldKey)
+}
+
+// SetRankBy sets the RankBy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetRankBy(rankBy LeaderboardResponseRankBy) {
+	m.RankBy = rankBy
+	m.require(metricEventLeaderboardResponseFieldRankBy)
+}
+
+// SetBreakdownAttribute sets the BreakdownAttribute field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetBreakdownAttribute(breakdownAttribute *string) {
+	m.BreakdownAttribute = breakdownAttribute
+	m.require(metricEventLeaderboardResponseFieldBreakdownAttribute)
+}
+
+// SetBreakdownAttributes sets the BreakdownAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetBreakdownAttributes(breakdownAttributes []string) {
+	m.BreakdownAttributes = breakdownAttributes
+	m.require(metricEventLeaderboardResponseFieldBreakdownAttributes)
+}
+
+// SetMetricKey sets the MetricKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetMetricKey(metricKey *string) {
+	m.MetricKey = metricKey
+	m.require(metricEventLeaderboardResponseFieldMetricKey)
+}
+
+// SetMetricName sets the MetricName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetMetricName(metricName *string) {
+	m.MetricName = metricName
+	m.require(metricEventLeaderboardResponseFieldMetricName)
+}
+
+// SetPointsSystemKey sets the PointsSystemKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetPointsSystemKey(pointsSystemKey *string) {
+	m.PointsSystemKey = pointsSystemKey
+	m.require(metricEventLeaderboardResponseFieldPointsSystemKey)
+}
+
+// SetPointsSystemName sets the PointsSystemName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetPointsSystemName(pointsSystemName *string) {
+	m.PointsSystemName = pointsSystemName
+	m.require(metricEventLeaderboardResponseFieldPointsSystemName)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetDescription(description *string) {
+	m.Description = description
+	m.require(metricEventLeaderboardResponseFieldDescription)
+}
+
+// SetStart sets the Start field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetStart(start string) {
+	m.Start = start
+	m.require(metricEventLeaderboardResponseFieldStart)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetStartTime(startTime *string) {
+	m.StartTime = startTime
+	m.require(metricEventLeaderboardResponseFieldStartTime)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetEndTime(endTime *string) {
+	m.EndTime = endTime
+	m.require(metricEventLeaderboardResponseFieldEndTime)
+}
+
+// SetMaxParticipants sets the MaxParticipants field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetMaxParticipants(maxParticipants *int) {
+	m.MaxParticipants = maxParticipants
+	m.require(metricEventLeaderboardResponseFieldMaxParticipants)
+}
+
+// SetRunUnit sets the RunUnit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetRunUnit(runUnit *LeaderboardResponseRunUnit) {
+	m.RunUnit = runUnit
+	m.require(metricEventLeaderboardResponseFieldRunUnit)
+}
+
+// SetRunInterval sets the RunInterval field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetRunInterval(runInterval *int) {
+	m.RunInterval = runInterval
+	m.require(metricEventLeaderboardResponseFieldRunInterval)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponse) SetUserAttributes(userAttributes []*LeaderboardResponseUserAttributesItem) {
+	m.UserAttributes = userAttributes
+	m.require(metricEventLeaderboardResponseFieldUserAttributes)
+}
+
+func (m *MetricEventLeaderboardResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventLeaderboardResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventLeaderboardResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventLeaderboardResponse) MarshalJSON() ([]byte, error) {
+	type embed MetricEventLeaderboardResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*m),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, m.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (m *MetricEventLeaderboardResponse) String() string {
+	if m == nil {
+		return "<nil>"
+	}
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
+var (
+	metricEventLeaderboardResponseBreakdownAttributeValuesItemFieldKey   = big.NewInt(1 << 0)
+	metricEventLeaderboardResponseBreakdownAttributeValuesItemFieldValue = big.NewInt(1 << 1)
+)
+
+type MetricEventLeaderboardResponseBreakdownAttributeValuesItem struct {
+	// The key of the breakdown attribute.
+	Key string `json:"key" url:"key"`
+	// The user's value for the breakdown attribute.
+	Value string `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) GetKey() string {
+	if m == nil {
+		return ""
+	}
+	return m.Key
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) GetValue() string {
+	if m == nil {
+		return ""
+	}
+	return m.Value
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) GetExtraProperties() map[string]interface{} {
+	if m == nil {
+		return nil
+	}
+	return m.extraProperties
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) require(field *big.Int) {
+	if m.explicitFields == nil {
+		m.explicitFields = big.NewInt(0)
+	}
+	m.explicitFields.Or(m.explicitFields, field)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) SetKey(key string) {
+	m.Key = key
+	m.require(metricEventLeaderboardResponseBreakdownAttributeValuesItemFieldKey)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) SetValue(value string) {
+	m.Value = value
+	m.require(metricEventLeaderboardResponseBreakdownAttributeValuesItemFieldValue)
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler MetricEventLeaderboardResponseBreakdownAttributeValuesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MetricEventLeaderboardResponseBreakdownAttributeValuesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) MarshalJSON() ([]byte, error) {
+	type embed MetricEventLeaderboardResponseBreakdownAttributeValuesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*m),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, m.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (m *MetricEventLeaderboardResponseBreakdownAttributeValuesItem) String() string {
+	if m == nil {
+		return "<nil>"
+	}
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
 
 // Points system response for metric events and achievement completions.
 var (
@@ -15469,13 +18502,15 @@ var (
 	pointsTriggerFieldMetricThreshold       = big.NewInt(1 << 7)
 	pointsTriggerFieldStreakLengthThreshold = big.NewInt(1 << 8)
 	pointsTriggerFieldAchievementName       = big.NewInt(1 << 9)
-	pointsTriggerFieldTimeUnit              = big.NewInt(1 << 10)
-	pointsTriggerFieldTimeInterval          = big.NewInt(1 << 11)
-	pointsTriggerFieldUserAttributes        = big.NewInt(1 << 12)
-	pointsTriggerFieldEventAttribute        = big.NewInt(1 << 13)
-	pointsTriggerFieldEventAttributes       = big.NewInt(1 << 14)
-	pointsTriggerFieldCreated               = big.NewInt(1 << 15)
-	pointsTriggerFieldUpdated               = big.NewInt(1 << 16)
+	pointsTriggerFieldRewardKey             = big.NewInt(1 << 10)
+	pointsTriggerFieldRewardName            = big.NewInt(1 << 11)
+	pointsTriggerFieldTimeUnit              = big.NewInt(1 << 12)
+	pointsTriggerFieldTimeInterval          = big.NewInt(1 << 13)
+	pointsTriggerFieldUserAttributes        = big.NewInt(1 << 14)
+	pointsTriggerFieldEventAttribute        = big.NewInt(1 << 15)
+	pointsTriggerFieldEventAttributes       = big.NewInt(1 << 16)
+	pointsTriggerFieldCreated               = big.NewInt(1 << 17)
+	pointsTriggerFieldUpdated               = big.NewInt(1 << 18)
 )
 
 type PointsTrigger struct {
@@ -15499,6 +18534,10 @@ type PointsTrigger struct {
 	StreakLengthThreshold *int `json:"streakLengthThreshold,omitempty" url:"streakLengthThreshold,omitempty"`
 	// If the trigger has type 'achievement', the name of the achievement
 	AchievementName *string `json:"achievementName,omitempty" url:"achievementName,omitempty"`
+	// If the trigger has type 'reward', the key of the reward that granted these points.
+	RewardKey *string `json:"rewardKey,omitempty" url:"rewardKey,omitempty"`
+	// If the trigger has type 'reward', the name of the reward that granted these points.
+	RewardName *string `json:"rewardName,omitempty" url:"rewardName,omitempty"`
 	// If the trigger has type 'time', the unit of time after which to award points
 	TimeUnit *PointsTriggerTimeUnit `json:"timeUnit,omitempty" url:"timeUnit,omitempty"`
 	// If the trigger has type 'time', the numer of units of timeUnit after which to award points
@@ -15589,6 +18628,20 @@ func (p *PointsTrigger) GetAchievementName() *string {
 		return nil
 	}
 	return p.AchievementName
+}
+
+func (p *PointsTrigger) GetRewardKey() *string {
+	if p == nil {
+		return nil
+	}
+	return p.RewardKey
+}
+
+func (p *PointsTrigger) GetRewardName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.RewardName
 }
 
 func (p *PointsTrigger) GetTimeUnit() *PointsTriggerTimeUnit {
@@ -15722,6 +18775,20 @@ func (p *PointsTrigger) SetStreakLengthThreshold(streakLengthThreshold *int) {
 func (p *PointsTrigger) SetAchievementName(achievementName *string) {
 	p.AchievementName = achievementName
 	p.require(pointsTriggerFieldAchievementName)
+}
+
+// SetRewardKey sets the RewardKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PointsTrigger) SetRewardKey(rewardKey *string) {
+	p.RewardKey = rewardKey
+	p.require(pointsTriggerFieldRewardKey)
+}
+
+// SetRewardName sets the RewardName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PointsTrigger) SetRewardName(rewardName *string) {
+	p.RewardName = rewardName
+	p.require(pointsTriggerFieldRewardName)
 }
 
 // SetTimeUnit sets the TimeUnit field and marks it as non-optional;
@@ -16090,6 +19157,7 @@ const (
 	PointsTriggerTypeStreak       PointsTriggerType = "streak"
 	PointsTriggerTypeTime         PointsTriggerType = "time"
 	PointsTriggerTypeUserCreation PointsTriggerType = "user_creation"
+	PointsTriggerTypeReward       PointsTriggerType = "reward"
 )
 
 func NewPointsTriggerTypeFromString(s string) (PointsTriggerType, error) {
@@ -16104,6 +19172,8 @@ func NewPointsTriggerTypeFromString(s string) (PointsTriggerType, error) {
 		return PointsTriggerTypeTime, nil
 	case "user_creation":
 		return PointsTriggerTypeUserCreation, nil
+	case "reward":
+		return PointsTriggerTypeReward, nil
 	}
 	var t PointsTriggerType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -16419,6 +19489,562 @@ func (r *RestoreStreaksResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", r)
+}
+
+var (
+	rewardSummaryFieldId              = big.NewInt(1 << 0)
+	rewardSummaryFieldKey             = big.NewInt(1 << 1)
+	rewardSummaryFieldName            = big.NewInt(1 << 2)
+	rewardSummaryFieldDescription     = big.NewInt(1 << 3)
+	rewardSummaryFieldType            = big.NewInt(1 << 4)
+	rewardSummaryFieldPoints          = big.NewInt(1 << 5)
+	rewardSummaryFieldPointsSystemId  = big.NewInt(1 << 6)
+	rewardSummaryFieldPointsSystemKey = big.NewInt(1 << 7)
+)
+
+type RewardSummary struct {
+	Id              string            `json:"id" url:"id"`
+	Key             string            `json:"key" url:"key"`
+	Name            string            `json:"name" url:"name"`
+	Description     *string           `json:"description,omitempty" url:"description,omitempty"`
+	Type            RewardSummaryType `json:"type" url:"type"`
+	Points          *int              `json:"points,omitempty" url:"points,omitempty"`
+	PointsSystemId  *string           `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	PointsSystemKey *string           `json:"pointsSystemKey,omitempty" url:"pointsSystemKey,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RewardSummary) GetId() string {
+	if r == nil {
+		return ""
+	}
+	return r.Id
+}
+
+func (r *RewardSummary) GetKey() string {
+	if r == nil {
+		return ""
+	}
+	return r.Key
+}
+
+func (r *RewardSummary) GetName() string {
+	if r == nil {
+		return ""
+	}
+	return r.Name
+}
+
+func (r *RewardSummary) GetDescription() *string {
+	if r == nil {
+		return nil
+	}
+	return r.Description
+}
+
+func (r *RewardSummary) GetType() RewardSummaryType {
+	if r == nil {
+		return ""
+	}
+	return r.Type
+}
+
+func (r *RewardSummary) GetPoints() *int {
+	if r == nil {
+		return nil
+	}
+	return r.Points
+}
+
+func (r *RewardSummary) GetPointsSystemId() *string {
+	if r == nil {
+		return nil
+	}
+	return r.PointsSystemId
+}
+
+func (r *RewardSummary) GetPointsSystemKey() *string {
+	if r == nil {
+		return nil
+	}
+	return r.PointsSystemKey
+}
+
+func (r *RewardSummary) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RewardSummary) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetId(id string) {
+	r.Id = id
+	r.require(rewardSummaryFieldId)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetKey(key string) {
+	r.Key = key
+	r.require(rewardSummaryFieldKey)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetName(name string) {
+	r.Name = name
+	r.require(rewardSummaryFieldName)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetDescription(description *string) {
+	r.Description = description
+	r.require(rewardSummaryFieldDescription)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetType(type_ RewardSummaryType) {
+	r.Type = type_
+	r.require(rewardSummaryFieldType)
+}
+
+// SetPoints sets the Points field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetPoints(points *int) {
+	r.Points = points
+	r.require(rewardSummaryFieldPoints)
+}
+
+// SetPointsSystemId sets the PointsSystemId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetPointsSystemId(pointsSystemId *string) {
+	r.PointsSystemId = pointsSystemId
+	r.require(rewardSummaryFieldPointsSystemId)
+}
+
+// SetPointsSystemKey sets the PointsSystemKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardSummary) SetPointsSystemKey(pointsSystemKey *string) {
+	r.PointsSystemKey = pointsSystemKey
+	r.require(rewardSummaryFieldPointsSystemKey)
+}
+
+func (r *RewardSummary) UnmarshalJSON(data []byte) error {
+	type unmarshaler RewardSummary
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RewardSummary(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RewardSummary) MarshalJSON() ([]byte, error) {
+	type embed RewardSummary
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RewardSummary) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type RewardSummaryType string
+
+const (
+	RewardSummaryTypePoints RewardSummaryType = "points"
+	RewardSummaryTypeCustom RewardSummaryType = "custom"
+)
+
+func NewRewardSummaryTypeFromString(s string) (RewardSummaryType, error) {
+	switch s {
+	case "points":
+		return RewardSummaryTypePoints, nil
+	case "custom":
+		return RewardSummaryTypeCustom, nil
+	}
+	var t RewardSummaryType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RewardSummaryType) Ptr() *RewardSummaryType {
+	return &r
+}
+
+var (
+	rewardWebhookEventFieldType       = big.NewInt(1 << 0)
+	rewardWebhookEventFieldTimestamp  = big.NewInt(1 << 1)
+	rewardWebhookEventFieldUser       = big.NewInt(1 << 2)
+	rewardWebhookEventFieldReward     = big.NewInt(1 << 3)
+	rewardWebhookEventFieldRedemption = big.NewInt(1 << 4)
+)
+
+type RewardWebhookEvent struct {
+	Type       RewardWebhookEventType        `json:"type" url:"type"`
+	Timestamp  time.Time                     `json:"timestamp" url:"timestamp"`
+	User       *User                         `json:"user" url:"user"`
+	Reward     *RewardSummary                `json:"reward" url:"reward"`
+	Redemption *RewardWebhookEventRedemption `json:"redemption" url:"redemption"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RewardWebhookEvent) GetType() RewardWebhookEventType {
+	if r == nil {
+		return ""
+	}
+	return r.Type
+}
+
+func (r *RewardWebhookEvent) GetTimestamp() time.Time {
+	if r == nil {
+		return time.Time{}
+	}
+	return r.Timestamp
+}
+
+func (r *RewardWebhookEvent) GetUser() *User {
+	if r == nil {
+		return nil
+	}
+	return r.User
+}
+
+func (r *RewardWebhookEvent) GetReward() *RewardSummary {
+	if r == nil {
+		return nil
+	}
+	return r.Reward
+}
+
+func (r *RewardWebhookEvent) GetRedemption() *RewardWebhookEventRedemption {
+	if r == nil {
+		return nil
+	}
+	return r.Redemption
+}
+
+func (r *RewardWebhookEvent) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RewardWebhookEvent) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEvent) SetType(type_ RewardWebhookEventType) {
+	r.Type = type_
+	r.require(rewardWebhookEventFieldType)
+}
+
+// SetTimestamp sets the Timestamp field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEvent) SetTimestamp(timestamp time.Time) {
+	r.Timestamp = timestamp
+	r.require(rewardWebhookEventFieldTimestamp)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEvent) SetUser(user *User) {
+	r.User = user
+	r.require(rewardWebhookEventFieldUser)
+}
+
+// SetReward sets the Reward field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEvent) SetReward(reward *RewardSummary) {
+	r.Reward = reward
+	r.require(rewardWebhookEventFieldReward)
+}
+
+// SetRedemption sets the Redemption field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEvent) SetRedemption(redemption *RewardWebhookEventRedemption) {
+	r.Redemption = redemption
+	r.require(rewardWebhookEventFieldRedemption)
+}
+
+func (r *RewardWebhookEvent) UnmarshalJSON(data []byte) error {
+	type embed RewardWebhookEvent
+	var unmarshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+	}{
+		embed: embed(*r),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*r = RewardWebhookEvent(unmarshaler.embed)
+	r.Timestamp = unmarshaler.Timestamp.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RewardWebhookEvent) MarshalJSON() ([]byte, error) {
+	type embed RewardWebhookEvent
+	var marshaler = struct {
+		embed
+		Timestamp *internal.DateTime `json:"timestamp"`
+	}{
+		embed:     embed(*r),
+		Timestamp: internal.NewDateTime(r.Timestamp),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RewardWebhookEvent) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
+	rewardWebhookEventRedemptionFieldId         = big.NewInt(1 << 0)
+	rewardWebhookEventRedemptionFieldRedeemed   = big.NewInt(1 << 1)
+	rewardWebhookEventRedemptionFieldAwardedAt  = big.NewInt(1 << 2)
+	rewardWebhookEventRedemptionFieldRedeemedAt = big.NewInt(1 << 3)
+	rewardWebhookEventRedemptionFieldTrigger    = big.NewInt(1 << 4)
+)
+
+type RewardWebhookEventRedemption struct {
+	Id         string             `json:"id" url:"id"`
+	Redeemed   bool               `json:"redeemed" url:"redeemed"`
+	AwardedAt  time.Time          `json:"awardedAt" url:"awardedAt"`
+	RedeemedAt *time.Time         `json:"redeemedAt,omitempty" url:"redeemedAt,omitempty"`
+	Trigger    *UserRewardTrigger `json:"trigger,omitempty" url:"trigger,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RewardWebhookEventRedemption) GetId() string {
+	if r == nil {
+		return ""
+	}
+	return r.Id
+}
+
+func (r *RewardWebhookEventRedemption) GetRedeemed() bool {
+	if r == nil {
+		return false
+	}
+	return r.Redeemed
+}
+
+func (r *RewardWebhookEventRedemption) GetAwardedAt() time.Time {
+	if r == nil {
+		return time.Time{}
+	}
+	return r.AwardedAt
+}
+
+func (r *RewardWebhookEventRedemption) GetRedeemedAt() *time.Time {
+	if r == nil {
+		return nil
+	}
+	return r.RedeemedAt
+}
+
+func (r *RewardWebhookEventRedemption) GetTrigger() *UserRewardTrigger {
+	if r == nil {
+		return nil
+	}
+	return r.Trigger
+}
+
+func (r *RewardWebhookEventRedemption) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RewardWebhookEventRedemption) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEventRedemption) SetId(id string) {
+	r.Id = id
+	r.require(rewardWebhookEventRedemptionFieldId)
+}
+
+// SetRedeemed sets the Redeemed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEventRedemption) SetRedeemed(redeemed bool) {
+	r.Redeemed = redeemed
+	r.require(rewardWebhookEventRedemptionFieldRedeemed)
+}
+
+// SetAwardedAt sets the AwardedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEventRedemption) SetAwardedAt(awardedAt time.Time) {
+	r.AwardedAt = awardedAt
+	r.require(rewardWebhookEventRedemptionFieldAwardedAt)
+}
+
+// SetRedeemedAt sets the RedeemedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEventRedemption) SetRedeemedAt(redeemedAt *time.Time) {
+	r.RedeemedAt = redeemedAt
+	r.require(rewardWebhookEventRedemptionFieldRedeemedAt)
+}
+
+// SetTrigger sets the Trigger field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RewardWebhookEventRedemption) SetTrigger(trigger *UserRewardTrigger) {
+	r.Trigger = trigger
+	r.require(rewardWebhookEventRedemptionFieldTrigger)
+}
+
+func (r *RewardWebhookEventRedemption) UnmarshalJSON(data []byte) error {
+	type embed RewardWebhookEventRedemption
+	var unmarshaler = struct {
+		embed
+		AwardedAt  *internal.DateTime `json:"awardedAt"`
+		RedeemedAt *internal.DateTime `json:"redeemedAt,omitempty"`
+	}{
+		embed: embed(*r),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*r = RewardWebhookEventRedemption(unmarshaler.embed)
+	r.AwardedAt = unmarshaler.AwardedAt.Time()
+	r.RedeemedAt = unmarshaler.RedeemedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RewardWebhookEventRedemption) MarshalJSON() ([]byte, error) {
+	type embed RewardWebhookEventRedemption
+	var marshaler = struct {
+		embed
+		AwardedAt  *internal.DateTime `json:"awardedAt"`
+		RedeemedAt *internal.DateTime `json:"redeemedAt,omitempty"`
+	}{
+		embed:      embed(*r),
+		AwardedAt:  internal.NewDateTime(r.AwardedAt),
+		RedeemedAt: internal.NewOptionalDateTime(r.RedeemedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RewardWebhookEventRedemption) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type RewardWebhookEventType string
+
+const (
+	RewardWebhookEventTypeRewardAwarded  RewardWebhookEventType = "reward.awarded"
+	RewardWebhookEventTypeRewardRedeemed RewardWebhookEventType = "reward.redeemed"
+)
+
+func NewRewardWebhookEventTypeFromString(s string) (RewardWebhookEventType, error) {
+	switch s {
+	case "reward.awarded":
+		return RewardWebhookEventTypeRewardAwarded, nil
+	case "reward.redeemed":
+		return RewardWebhookEventTypeRewardRedeemed, nil
+	}
+	var t RewardWebhookEventType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RewardWebhookEventType) Ptr() *RewardWebhookEventType {
+	return &r
 }
 
 type StreakFrequency string
@@ -19517,6 +23143,1093 @@ func (u *UpdatePointsSystemsResponse) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+// A reward update object. Only id is required; all other fields are optional. Triggers are updated through the reward triggers endpoints.
+var (
+	updateRewardRequestItemFieldId             = big.NewInt(1 << 0)
+	updateRewardRequestItemFieldName           = big.NewInt(1 << 1)
+	updateRewardRequestItemFieldDescription    = big.NewInt(1 << 2)
+	updateRewardRequestItemFieldStatus         = big.NewInt(1 << 3)
+	updateRewardRequestItemFieldType           = big.NewInt(1 << 4)
+	updateRewardRequestItemFieldPointsSystemId = big.NewInt(1 << 5)
+	updateRewardRequestItemFieldPoints         = big.NewInt(1 << 6)
+	updateRewardRequestItemFieldMaxRedemptions = big.NewInt(1 << 7)
+	updateRewardRequestItemFieldUserAttributes = big.NewInt(1 << 8)
+)
+
+type UpdateRewardRequestItem struct {
+	// The UUID of the reward to update.
+	Id string `json:"id" url:"id"`
+	// Updated name.
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	// Updated description. Set to null to clear.
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	// Updated status.
+	Status *UpdateRewardRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// Updated type. Changing to `points` requires pointsSystemId and points if the reward has none.
+	Type *UpdateRewardRequestItemType `json:"type,omitempty" url:"type,omitempty"`
+	// Updated points system ID. Only permitted for points rewards.
+	PointsSystemId *string `json:"pointsSystemId,omitempty" url:"pointsSystemId,omitempty"`
+	// Updated number of points. Only permitted for points rewards.
+	Points *int `json:"points,omitempty" url:"points,omitempty"`
+	// Updated maximum awards per user. Set to null for unlimited.
+	MaxRedemptions *int `json:"maxRedemptions,omitempty" url:"maxRedemptions,omitempty"`
+	// Updated user attribute filters. Set to null to clear.
+	UserAttributes []*UpdateRewardRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateRewardRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdateRewardRequestItem) GetName() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Name
+}
+
+func (u *UpdateRewardRequestItem) GetDescription() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Description
+}
+
+func (u *UpdateRewardRequestItem) GetStatus() *UpdateRewardRequestItemStatus {
+	if u == nil {
+		return nil
+	}
+	return u.Status
+}
+
+func (u *UpdateRewardRequestItem) GetType() *UpdateRewardRequestItemType {
+	if u == nil {
+		return nil
+	}
+	return u.Type
+}
+
+func (u *UpdateRewardRequestItem) GetPointsSystemId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.PointsSystemId
+}
+
+func (u *UpdateRewardRequestItem) GetPoints() *int {
+	if u == nil {
+		return nil
+	}
+	return u.Points
+}
+
+func (u *UpdateRewardRequestItem) GetMaxRedemptions() *int {
+	if u == nil {
+		return nil
+	}
+	return u.MaxRedemptions
+}
+
+func (u *UpdateRewardRequestItem) GetUserAttributes() []*UpdateRewardRequestItemUserAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.UserAttributes
+}
+
+func (u *UpdateRewardRequestItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateRewardRequestItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetId(id string) {
+	u.Id = id
+	u.require(updateRewardRequestItemFieldId)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetName(name *string) {
+	u.Name = name
+	u.require(updateRewardRequestItemFieldName)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetDescription(description *string) {
+	u.Description = description
+	u.require(updateRewardRequestItemFieldDescription)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetStatus(status *UpdateRewardRequestItemStatus) {
+	u.Status = status
+	u.require(updateRewardRequestItemFieldStatus)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetType(type_ *UpdateRewardRequestItemType) {
+	u.Type = type_
+	u.require(updateRewardRequestItemFieldType)
+}
+
+// SetPointsSystemId sets the PointsSystemId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetPointsSystemId(pointsSystemId *string) {
+	u.PointsSystemId = pointsSystemId
+	u.require(updateRewardRequestItemFieldPointsSystemId)
+}
+
+// SetPoints sets the Points field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetPoints(points *int) {
+	u.Points = points
+	u.require(updateRewardRequestItemFieldPoints)
+}
+
+// SetMaxRedemptions sets the MaxRedemptions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetMaxRedemptions(maxRedemptions *int) {
+	u.MaxRedemptions = maxRedemptions
+	u.require(updateRewardRequestItemFieldMaxRedemptions)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItem) SetUserAttributes(userAttributes []*UpdateRewardRequestItemUserAttributesItem) {
+	u.UserAttributes = userAttributes
+	u.require(updateRewardRequestItemFieldUserAttributes)
+}
+
+func (u *UpdateRewardRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateRewardRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateRewardRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateRewardRequestItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateRewardRequestItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateRewardRequestItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Updated status.
+type UpdateRewardRequestItemStatus string
+
+const (
+	UpdateRewardRequestItemStatusActive   UpdateRewardRequestItemStatus = "active"
+	UpdateRewardRequestItemStatusInactive UpdateRewardRequestItemStatus = "inactive"
+)
+
+func NewUpdateRewardRequestItemStatusFromString(s string) (UpdateRewardRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return UpdateRewardRequestItemStatusActive, nil
+	case "inactive":
+		return UpdateRewardRequestItemStatusInactive, nil
+	}
+	var t UpdateRewardRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateRewardRequestItemStatus) Ptr() *UpdateRewardRequestItemStatus {
+	return &u
+}
+
+// Updated type. Changing to `points` requires pointsSystemId and points if the reward has none.
+type UpdateRewardRequestItemType string
+
+const (
+	UpdateRewardRequestItemTypePoints UpdateRewardRequestItemType = "points"
+	UpdateRewardRequestItemTypeCustom UpdateRewardRequestItemType = "custom"
+)
+
+func NewUpdateRewardRequestItemTypeFromString(s string) (UpdateRewardRequestItemType, error) {
+	switch s {
+	case "points":
+		return UpdateRewardRequestItemTypePoints, nil
+	case "custom":
+		return UpdateRewardRequestItemTypeCustom, nil
+	}
+	var t UpdateRewardRequestItemType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateRewardRequestItemType) Ptr() *UpdateRewardRequestItemType {
+	return &u
+}
+
+var (
+	updateRewardRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	updateRewardRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type UpdateRewardRequestItemUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateRewardRequestItemUserAttributesItem) GetAttributeId() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeId
+}
+
+func (u *UpdateRewardRequestItemUserAttributesItem) GetAttributeValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeValue
+}
+
+func (u *UpdateRewardRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateRewardRequestItemUserAttributesItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	u.AttributeId = attributeId
+	u.require(updateRewardRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	u.AttributeValue = attributeValue
+	u.require(updateRewardRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (u *UpdateRewardRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateRewardRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateRewardRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateRewardRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateRewardRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateRewardRequestItemUserAttributesItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Array of reward trigger updates. Maximum 100 per request.
+type UpdateRewardTriggersRequest = []*UpdateRewardTriggersRequestItem
+
+var (
+	updateRewardTriggersRequestItemFieldId              = big.NewInt(1 << 0)
+	updateRewardTriggersRequestItemFieldType            = big.NewInt(1 << 1)
+	updateRewardTriggersRequestItemFieldStatus          = big.NewInt(1 << 2)
+	updateRewardTriggersRequestItemFieldUserAttributes  = big.NewInt(1 << 3)
+	updateRewardTriggersRequestItemFieldMetricId        = big.NewInt(1 << 4)
+	updateRewardTriggersRequestItemFieldMetricThreshold = big.NewInt(1 << 5)
+	updateRewardTriggersRequestItemFieldEventAttributes = big.NewInt(1 << 6)
+	updateRewardTriggersRequestItemFieldAchievementId   = big.NewInt(1 << 7)
+	updateRewardTriggersRequestItemFieldStreakLength    = big.NewInt(1 << 8)
+	updateRewardTriggersRequestItemFieldLeaderboardId   = big.NewInt(1 << 9)
+	updateRewardTriggersRequestItemFieldRank            = big.NewInt(1 << 10)
+)
+
+type UpdateRewardTriggersRequestItem struct {
+	// The UUID of the trigger to update.
+	Id string `json:"id" url:"id"`
+	// Updated trigger type. Can only be changed when the trigger is inactive. Required fields for the new type must be provided.
+	Type *UpdateRewardTriggersRequestItemType `json:"type,omitempty" url:"type,omitempty"`
+	// Updated status.
+	Status *UpdateRewardTriggersRequestItemStatus `json:"status,omitempty" url:"status,omitempty"`
+	// Updated user attribute filters. Set to null to clear.
+	UserAttributes []*UpdateRewardTriggersRequestItemUserAttributesItem `json:"userAttributes,omitempty" url:"userAttributes,omitempty"`
+	// Updated metric ID. Only permitted for metric triggers.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// Updated metric threshold. Only permitted for metric triggers.
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// Updated event attribute filters. Only permitted for metric triggers. Set to null to clear.
+	EventAttributes []*UpdateRewardTriggersRequestItemEventAttributesItem `json:"eventAttributes,omitempty" url:"eventAttributes,omitempty"`
+	// Updated achievement ID. Only permitted for achievement triggers.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// Updated streak length. Only permitted for streak triggers.
+	StreakLength *int `json:"streakLength,omitempty" url:"streakLength,omitempty"`
+	// Updated leaderboard ID. Only permitted for leaderboard triggers.
+	LeaderboardId *string `json:"leaderboardId,omitempty" url:"leaderboardId,omitempty"`
+	// Updated rank. Only permitted for leaderboard triggers.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetType() *UpdateRewardTriggersRequestItemType {
+	if u == nil {
+		return nil
+	}
+	return u.Type
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetStatus() *UpdateRewardTriggersRequestItemStatus {
+	if u == nil {
+		return nil
+	}
+	return u.Status
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetUserAttributes() []*UpdateRewardTriggersRequestItemUserAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.UserAttributes
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetMetricId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricId
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetMetricThreshold() *int {
+	if u == nil {
+		return nil
+	}
+	return u.MetricThreshold
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetEventAttributes() []*UpdateRewardTriggersRequestItemEventAttributesItem {
+	if u == nil {
+		return nil
+	}
+	return u.EventAttributes
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetAchievementId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.AchievementId
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetStreakLength() *int {
+	if u == nil {
+		return nil
+	}
+	return u.StreakLength
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetLeaderboardId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.LeaderboardId
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetRank() *int {
+	if u == nil {
+		return nil
+	}
+	return u.Rank
+}
+
+func (u *UpdateRewardTriggersRequestItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateRewardTriggersRequestItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetId(id string) {
+	u.Id = id
+	u.require(updateRewardTriggersRequestItemFieldId)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetType(type_ *UpdateRewardTriggersRequestItemType) {
+	u.Type = type_
+	u.require(updateRewardTriggersRequestItemFieldType)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetStatus(status *UpdateRewardTriggersRequestItemStatus) {
+	u.Status = status
+	u.require(updateRewardTriggersRequestItemFieldStatus)
+}
+
+// SetUserAttributes sets the UserAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetUserAttributes(userAttributes []*UpdateRewardTriggersRequestItemUserAttributesItem) {
+	u.UserAttributes = userAttributes
+	u.require(updateRewardTriggersRequestItemFieldUserAttributes)
+}
+
+// SetMetricId sets the MetricId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetMetricId(metricId *string) {
+	u.MetricId = metricId
+	u.require(updateRewardTriggersRequestItemFieldMetricId)
+}
+
+// SetMetricThreshold sets the MetricThreshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetMetricThreshold(metricThreshold *int) {
+	u.MetricThreshold = metricThreshold
+	u.require(updateRewardTriggersRequestItemFieldMetricThreshold)
+}
+
+// SetEventAttributes sets the EventAttributes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetEventAttributes(eventAttributes []*UpdateRewardTriggersRequestItemEventAttributesItem) {
+	u.EventAttributes = eventAttributes
+	u.require(updateRewardTriggersRequestItemFieldEventAttributes)
+}
+
+// SetAchievementId sets the AchievementId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetAchievementId(achievementId *string) {
+	u.AchievementId = achievementId
+	u.require(updateRewardTriggersRequestItemFieldAchievementId)
+}
+
+// SetStreakLength sets the StreakLength field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetStreakLength(streakLength *int) {
+	u.StreakLength = streakLength
+	u.require(updateRewardTriggersRequestItemFieldStreakLength)
+}
+
+// SetLeaderboardId sets the LeaderboardId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetLeaderboardId(leaderboardId *string) {
+	u.LeaderboardId = leaderboardId
+	u.require(updateRewardTriggersRequestItemFieldLeaderboardId)
+}
+
+// SetRank sets the Rank field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItem) SetRank(rank *int) {
+	u.Rank = rank
+	u.require(updateRewardTriggersRequestItemFieldRank)
+}
+
+func (u *UpdateRewardTriggersRequestItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateRewardTriggersRequestItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateRewardTriggersRequestItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateRewardTriggersRequestItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateRewardTriggersRequestItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateRewardTriggersRequestItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateRewardTriggersRequestItemEventAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	updateRewardTriggersRequestItemEventAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type UpdateRewardTriggersRequestItemEventAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) GetAttributeId() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeId
+}
+
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) GetAttributeValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeValue
+}
+
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) SetAttributeId(attributeId string) {
+	u.AttributeId = attributeId
+	u.require(updateRewardTriggersRequestItemEventAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) SetAttributeValue(attributeValue string) {
+	u.AttributeValue = attributeValue
+	u.require(updateRewardTriggersRequestItemEventAttributesItemFieldAttributeValue)
+}
+
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateRewardTriggersRequestItemEventAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateRewardTriggersRequestItemEventAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateRewardTriggersRequestItemEventAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateRewardTriggersRequestItemEventAttributesItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Updated status.
+type UpdateRewardTriggersRequestItemStatus string
+
+const (
+	UpdateRewardTriggersRequestItemStatusActive   UpdateRewardTriggersRequestItemStatus = "active"
+	UpdateRewardTriggersRequestItemStatusInactive UpdateRewardTriggersRequestItemStatus = "inactive"
+)
+
+func NewUpdateRewardTriggersRequestItemStatusFromString(s string) (UpdateRewardTriggersRequestItemStatus, error) {
+	switch s {
+	case "active":
+		return UpdateRewardTriggersRequestItemStatusActive, nil
+	case "inactive":
+		return UpdateRewardTriggersRequestItemStatusInactive, nil
+	}
+	var t UpdateRewardTriggersRequestItemStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateRewardTriggersRequestItemStatus) Ptr() *UpdateRewardTriggersRequestItemStatus {
+	return &u
+}
+
+// Updated trigger type. Can only be changed when the trigger is inactive. Required fields for the new type must be provided.
+type UpdateRewardTriggersRequestItemType string
+
+const (
+	UpdateRewardTriggersRequestItemTypeMetric      UpdateRewardTriggersRequestItemType = "metric"
+	UpdateRewardTriggersRequestItemTypeAchievement UpdateRewardTriggersRequestItemType = "achievement"
+	UpdateRewardTriggersRequestItemTypeStreak      UpdateRewardTriggersRequestItemType = "streak"
+	UpdateRewardTriggersRequestItemTypeLeaderboard UpdateRewardTriggersRequestItemType = "leaderboard"
+)
+
+func NewUpdateRewardTriggersRequestItemTypeFromString(s string) (UpdateRewardTriggersRequestItemType, error) {
+	switch s {
+	case "metric":
+		return UpdateRewardTriggersRequestItemTypeMetric, nil
+	case "achievement":
+		return UpdateRewardTriggersRequestItemTypeAchievement, nil
+	case "streak":
+		return UpdateRewardTriggersRequestItemTypeStreak, nil
+	case "leaderboard":
+		return UpdateRewardTriggersRequestItemTypeLeaderboard, nil
+	}
+	var t UpdateRewardTriggersRequestItemType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpdateRewardTriggersRequestItemType) Ptr() *UpdateRewardTriggersRequestItemType {
+	return &u
+}
+
+var (
+	updateRewardTriggersRequestItemUserAttributesItemFieldAttributeId    = big.NewInt(1 << 0)
+	updateRewardTriggersRequestItemUserAttributesItemFieldAttributeValue = big.NewInt(1 << 1)
+)
+
+type UpdateRewardTriggersRequestItemUserAttributesItem struct {
+	AttributeId    string `json:"attributeId" url:"attributeId"`
+	AttributeValue string `json:"attributeValue" url:"attributeValue"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) GetAttributeId() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeId
+}
+
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) GetAttributeValue() string {
+	if u == nil {
+		return ""
+	}
+	return u.AttributeValue
+}
+
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAttributeId sets the AttributeId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) SetAttributeId(attributeId string) {
+	u.AttributeId = attributeId
+	u.require(updateRewardTriggersRequestItemUserAttributesItemFieldAttributeId)
+}
+
+// SetAttributeValue sets the AttributeValue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) SetAttributeValue(attributeValue string) {
+	u.AttributeValue = attributeValue
+	u.require(updateRewardTriggersRequestItemUserAttributesItemFieldAttributeValue)
+}
+
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateRewardTriggersRequestItemUserAttributesItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateRewardTriggersRequestItemUserAttributesItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) MarshalJSON() ([]byte, error) {
+	type embed UpdateRewardTriggersRequestItemUserAttributesItem
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateRewardTriggersRequestItemUserAttributesItem) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Response containing updated triggers and any issues encountered.
+var (
+	updateRewardTriggersResponseFieldUpdated = big.NewInt(1 << 0)
+	updateRewardTriggersResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type UpdateRewardTriggersResponse struct {
+	// Array of successfully updated triggers.
+	Updated []*AdminRewardTrigger `json:"updated" url:"updated"`
+	// Array of issues encountered during trigger updates.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateRewardTriggersResponse) GetUpdated() []*AdminRewardTrigger {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdateRewardTriggersResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdateRewardTriggersResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateRewardTriggersResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetUpdated sets the Updated field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersResponse) SetUpdated(updated []*AdminRewardTrigger) {
+	u.Updated = updated
+	u.require(updateRewardTriggersResponseFieldUpdated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardTriggersResponse) SetIssues(issues []*AdminIssue) {
+	u.Issues = issues
+	u.require(updateRewardTriggersResponseFieldIssues)
+}
+
+func (u *UpdateRewardTriggersResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateRewardTriggersResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateRewardTriggersResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateRewardTriggersResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateRewardTriggersResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateRewardTriggersResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// Request body for updating rewards.
+type UpdateRewardsRequest = []*UpdateRewardRequestItem
+
+// Response containing updated rewards and any per-item issues.
+var (
+	updateRewardsResponseFieldUpdated = big.NewInt(1 << 0)
+	updateRewardsResponseFieldIssues  = big.NewInt(1 << 1)
+)
+
+type UpdateRewardsResponse struct {
+	// Array of successfully updated rewards.
+	Updated []*AdminReward `json:"updated" url:"updated"`
+	// Array of issues encountered during update.
+	Issues []*AdminIssue `json:"issues" url:"issues"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateRewardsResponse) GetUpdated() []*AdminReward {
+	if u == nil {
+		return nil
+	}
+	return u.Updated
+}
+
+func (u *UpdateRewardsResponse) GetIssues() []*AdminIssue {
+	if u == nil {
+		return nil
+	}
+	return u.Issues
+}
+
+func (u *UpdateRewardsResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateRewardsResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetUpdated sets the Updated field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardsResponse) SetUpdated(updated []*AdminReward) {
+	u.Updated = updated
+	u.require(updateRewardsResponseFieldUpdated)
+}
+
+// SetIssues sets the Issues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateRewardsResponse) SetIssues(issues []*AdminIssue) {
+	u.Issues = issues
+	u.require(updateRewardsResponseFieldIssues)
+}
+
+func (u *UpdateRewardsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateRewardsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateRewardsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateRewardsResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateRewardsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateRewardsResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
 // Replacement freeze configuration. `startCount` and `maxCount` are required. Auto-earn is a pair: both `autoEarnInterval` and `autoEarnAmount` must be set to enable auto-earn, or both omitted/`null` to disable it.
 var (
 	updateStreakSettingsFreezesFieldStartCount       = big.NewInt(1 << 0)
@@ -20619,6 +25332,414 @@ func (u *UserAchievementResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	userRewardResponseFieldId         = big.NewInt(1 << 0)
+	userRewardResponseFieldAwardedAt  = big.NewInt(1 << 1)
+	userRewardResponseFieldRedeemed   = big.NewInt(1 << 2)
+	userRewardResponseFieldRedeemedAt = big.NewInt(1 << 3)
+	userRewardResponseFieldReward     = big.NewInt(1 << 4)
+	userRewardResponseFieldTrigger    = big.NewInt(1 << 5)
+)
+
+type UserRewardResponse struct {
+	// The ID of the reward redemption.
+	Id         string             `json:"id" url:"id"`
+	AwardedAt  time.Time          `json:"awardedAt" url:"awardedAt"`
+	Redeemed   bool               `json:"redeemed" url:"redeemed"`
+	RedeemedAt *time.Time         `json:"redeemedAt,omitempty" url:"redeemedAt,omitempty"`
+	Reward     *RewardSummary     `json:"reward" url:"reward"`
+	Trigger    *UserRewardTrigger `json:"trigger,omitempty" url:"trigger,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UserRewardResponse) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UserRewardResponse) GetAwardedAt() time.Time {
+	if u == nil {
+		return time.Time{}
+	}
+	return u.AwardedAt
+}
+
+func (u *UserRewardResponse) GetRedeemed() bool {
+	if u == nil {
+		return false
+	}
+	return u.Redeemed
+}
+
+func (u *UserRewardResponse) GetRedeemedAt() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.RedeemedAt
+}
+
+func (u *UserRewardResponse) GetReward() *RewardSummary {
+	if u == nil {
+		return nil
+	}
+	return u.Reward
+}
+
+func (u *UserRewardResponse) GetTrigger() *UserRewardTrigger {
+	if u == nil {
+		return nil
+	}
+	return u.Trigger
+}
+
+func (u *UserRewardResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UserRewardResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardResponse) SetId(id string) {
+	u.Id = id
+	u.require(userRewardResponseFieldId)
+}
+
+// SetAwardedAt sets the AwardedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardResponse) SetAwardedAt(awardedAt time.Time) {
+	u.AwardedAt = awardedAt
+	u.require(userRewardResponseFieldAwardedAt)
+}
+
+// SetRedeemed sets the Redeemed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardResponse) SetRedeemed(redeemed bool) {
+	u.Redeemed = redeemed
+	u.require(userRewardResponseFieldRedeemed)
+}
+
+// SetRedeemedAt sets the RedeemedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardResponse) SetRedeemedAt(redeemedAt *time.Time) {
+	u.RedeemedAt = redeemedAt
+	u.require(userRewardResponseFieldRedeemedAt)
+}
+
+// SetReward sets the Reward field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardResponse) SetReward(reward *RewardSummary) {
+	u.Reward = reward
+	u.require(userRewardResponseFieldReward)
+}
+
+// SetTrigger sets the Trigger field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardResponse) SetTrigger(trigger *UserRewardTrigger) {
+	u.Trigger = trigger
+	u.require(userRewardResponseFieldTrigger)
+}
+
+func (u *UserRewardResponse) UnmarshalJSON(data []byte) error {
+	type embed UserRewardResponse
+	var unmarshaler = struct {
+		embed
+		AwardedAt  *internal.DateTime `json:"awardedAt"`
+		RedeemedAt *internal.DateTime `json:"redeemedAt,omitempty"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*u = UserRewardResponse(unmarshaler.embed)
+	u.AwardedAt = unmarshaler.AwardedAt.Time()
+	u.RedeemedAt = unmarshaler.RedeemedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UserRewardResponse) MarshalJSON() ([]byte, error) {
+	type embed UserRewardResponse
+	var marshaler = struct {
+		embed
+		AwardedAt  *internal.DateTime `json:"awardedAt"`
+		RedeemedAt *internal.DateTime `json:"redeemedAt,omitempty"`
+	}{
+		embed:      embed(*u),
+		AwardedAt:  internal.NewDateTime(u.AwardedAt),
+		RedeemedAt: internal.NewOptionalDateTime(u.RedeemedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UserRewardResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+// The trigger that awarded the reward, as it is configured now. Only the fields for the trigger's current type are included.
+var (
+	userRewardTriggerFieldId                    = big.NewInt(1 << 0)
+	userRewardTriggerFieldType                  = big.NewInt(1 << 1)
+	userRewardTriggerFieldMetricId              = big.NewInt(1 << 2)
+	userRewardTriggerFieldMetricThreshold       = big.NewInt(1 << 3)
+	userRewardTriggerFieldAchievementId         = big.NewInt(1 << 4)
+	userRewardTriggerFieldStreakLengthThreshold = big.NewInt(1 << 5)
+	userRewardTriggerFieldLeaderboardId         = big.NewInt(1 << 6)
+	userRewardTriggerFieldRank                  = big.NewInt(1 << 7)
+)
+
+type UserRewardTrigger struct {
+	Id   string                `json:"id" url:"id"`
+	Type UserRewardTriggerType `json:"type" url:"type"`
+	// For metric triggers, the ID of the metric.
+	MetricId *string `json:"metricId,omitempty" url:"metricId,omitempty"`
+	// For metric triggers, the reward is awarded each time the user's total for the metric increases by this amount.
+	MetricThreshold *int `json:"metricThreshold,omitempty" url:"metricThreshold,omitempty"`
+	// For achievement triggers, the ID of the achievement.
+	AchievementId *string `json:"achievementId,omitempty" url:"achievementId,omitempty"`
+	// For streak triggers, the reward is awarded every this many periods of the user's streak.
+	StreakLengthThreshold *int `json:"streakLengthThreshold,omitempty" url:"streakLengthThreshold,omitempty"`
+	// For leaderboard triggers, the ID of the leaderboard.
+	LeaderboardId *string `json:"leaderboardId,omitempty" url:"leaderboardId,omitempty"`
+	// For leaderboard triggers, the rank a user must finish a leaderboard run at.
+	Rank *int `json:"rank,omitempty" url:"rank,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UserRewardTrigger) GetId() string {
+	if u == nil {
+		return ""
+	}
+	return u.Id
+}
+
+func (u *UserRewardTrigger) GetType() UserRewardTriggerType {
+	if u == nil {
+		return ""
+	}
+	return u.Type
+}
+
+func (u *UserRewardTrigger) GetMetricId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.MetricId
+}
+
+func (u *UserRewardTrigger) GetMetricThreshold() *int {
+	if u == nil {
+		return nil
+	}
+	return u.MetricThreshold
+}
+
+func (u *UserRewardTrigger) GetAchievementId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.AchievementId
+}
+
+func (u *UserRewardTrigger) GetStreakLengthThreshold() *int {
+	if u == nil {
+		return nil
+	}
+	return u.StreakLengthThreshold
+}
+
+func (u *UserRewardTrigger) GetLeaderboardId() *string {
+	if u == nil {
+		return nil
+	}
+	return u.LeaderboardId
+}
+
+func (u *UserRewardTrigger) GetRank() *int {
+	if u == nil {
+		return nil
+	}
+	return u.Rank
+}
+
+func (u *UserRewardTrigger) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UserRewardTrigger) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetId(id string) {
+	u.Id = id
+	u.require(userRewardTriggerFieldId)
+}
+
+// SetType sets the Type field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetType(type_ UserRewardTriggerType) {
+	u.Type = type_
+	u.require(userRewardTriggerFieldType)
+}
+
+// SetMetricId sets the MetricId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetMetricId(metricId *string) {
+	u.MetricId = metricId
+	u.require(userRewardTriggerFieldMetricId)
+}
+
+// SetMetricThreshold sets the MetricThreshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetMetricThreshold(metricThreshold *int) {
+	u.MetricThreshold = metricThreshold
+	u.require(userRewardTriggerFieldMetricThreshold)
+}
+
+// SetAchievementId sets the AchievementId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetAchievementId(achievementId *string) {
+	u.AchievementId = achievementId
+	u.require(userRewardTriggerFieldAchievementId)
+}
+
+// SetStreakLengthThreshold sets the StreakLengthThreshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetStreakLengthThreshold(streakLengthThreshold *int) {
+	u.StreakLengthThreshold = streakLengthThreshold
+	u.require(userRewardTriggerFieldStreakLengthThreshold)
+}
+
+// SetLeaderboardId sets the LeaderboardId field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetLeaderboardId(leaderboardId *string) {
+	u.LeaderboardId = leaderboardId
+	u.require(userRewardTriggerFieldLeaderboardId)
+}
+
+// SetRank sets the Rank field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserRewardTrigger) SetRank(rank *int) {
+	u.Rank = rank
+	u.require(userRewardTriggerFieldRank)
+}
+
+func (u *UserRewardTrigger) UnmarshalJSON(data []byte) error {
+	type unmarshaler UserRewardTrigger
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UserRewardTrigger(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UserRewardTrigger) MarshalJSON() ([]byte, error) {
+	type embed UserRewardTrigger
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UserRewardTrigger) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+type UserRewardTriggerType string
+
+const (
+	UserRewardTriggerTypeMetric      UserRewardTriggerType = "metric"
+	UserRewardTriggerTypeAchievement UserRewardTriggerType = "achievement"
+	UserRewardTriggerTypeStreak      UserRewardTriggerType = "streak"
+	UserRewardTriggerTypeLeaderboard UserRewardTriggerType = "leaderboard"
+)
+
+func NewUserRewardTriggerTypeFromString(s string) (UserRewardTriggerType, error) {
+	switch s {
+	case "metric":
+		return UserRewardTriggerTypeMetric, nil
+	case "achievement":
+		return UserRewardTriggerTypeAchievement, nil
+	case "streak":
+		return UserRewardTriggerTypeStreak, nil
+	case "leaderboard":
+		return UserRewardTriggerTypeLeaderboard, nil
+	}
+	var t UserRewardTriggerType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UserRewardTriggerType) Ptr() *UserRewardTriggerType {
+	return &u
 }
 
 // A user's data for a specific leaderboard including rank, value, and history.

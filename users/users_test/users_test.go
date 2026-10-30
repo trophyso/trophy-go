@@ -357,6 +357,47 @@ func TestUsersAchievementsWithWireMock(
     VerifyRequestCount(t, "TestUsersAchievementsWithWireMock", "GET", "/users/userId/achievements", map[string]interface{}{"includeIncomplete": "true"}, 1)
 }
 
+func TestUsersRewardsWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+        request := &trophygo.UsersRewardsRequest{
+            Redeemed: trophygo.Bool(
+                true,
+            ),
+            StartDate: trophygo.String(
+                "startDate",
+            ),
+            EndDate: trophygo.String(
+                "endDate",
+            ),
+            Skip: trophygo.Int(
+                1,
+            ),
+            Limit: trophygo.Int(
+                1,
+            ),
+        }
+    _, invocationErr :=     client.Users.Rewards(
+            context.TODO(),
+            "id",
+            request,
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestUsersRewardsWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestUsersRewardsWithWireMock", "GET", "/users/id/rewards", map[string]interface{}{"redeemed": "true", "startDate": "startDate", "endDate": "endDate", "skip": "1", "limit": "1"}, 1)
+}
+
 func TestUsersStreakWithWireMock(
     t *testing.T,
 ) {

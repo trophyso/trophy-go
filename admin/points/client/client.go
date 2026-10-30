@@ -25,7 +25,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.27.0"
+        options.SdkVersion = "1.28.0"
     }
     return &Client{
         Systems: systems.NewClient(options),

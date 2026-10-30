@@ -599,6 +599,68 @@ func (r *RawClient) Achievements(
     }, nil
 }
 
+func (r *RawClient) Rewards(
+    ctx context.Context,
+    // The ID of the user in your database.
+    id string,
+    request *trophygo.UsersRewardsRequest,
+    opts ...option.RequestOption,
+) (*core.Response[[]*trophygo.UserRewardResponse], error){
+    options := core.NewRequestOptions(opts...)
+    baseURL := internal.ResolveBaseURL(
+        options.BaseURL,
+        internal.ResolveEnvironmentBaseURL(
+            options.Environment,
+            "Api",
+        ),
+        r.baseURL,
+        internal.ResolveEnvironmentBaseURL(
+            r.options.Environment,
+            "Api",
+        ),
+        "https://api.trophy.so/v1",
+    )
+    endpointURL := internal.EncodeURL(
+        baseURL + "/users/%v/rewards",
+        id,
+    )
+    queryParams, err := internal.QueryValues(request)
+    if err != nil {
+        return nil, err
+    }
+    if len(queryParams) > 0 {
+        endpointURL += "?" + queryParams.Encode()
+    }
+    headers := internal.MergeHeaders(
+        r.options.ToHeader(),
+        options.ToHeader(),
+    )
+    var response []*trophygo.UserRewardResponse
+    raw, err := r.caller.Call(
+        ctx,
+        &internal.CallParams{
+            URL: endpointURL,
+            Method: http.MethodGet,
+            Headers: headers,
+            MaxAttempts: options.MaxAttempts,
+            DisableRetries: options.DisableRetries,
+            BodyProperties: options.BodyProperties,
+            QueryParameters: options.QueryParameters,
+            Client: options.HTTPClient,
+            Response: &response,
+            ErrorDecoder: internal.NewErrorDecoder(trophygo.ErrorCodes),
+        },
+    )
+    if err != nil {
+        return nil, err
+    }
+    return &core.Response[[]*trophygo.UserRewardResponse]{
+        StatusCode: raw.StatusCode,
+        Header: raw.Header,
+        Body: response,
+    }, nil
+}
+
 func (r *RawClient) Streak(
     ctx context.Context,
     // ID of the user.

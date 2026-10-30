@@ -86,6 +86,8 @@ var (
 	achievementCompletionResponseFieldCompletionId = big.NewInt(1 << 0)
 	achievementCompletionResponseFieldAchievement  = big.NewInt(1 << 1)
 	achievementCompletionResponseFieldPoints       = big.NewInt(1 << 2)
+	achievementCompletionResponseFieldLeaderboards = big.NewInt(1 << 3)
+	achievementCompletionResponseFieldRewards      = big.NewInt(1 << 4)
 )
 
 type AchievementCompletionResponse struct {
@@ -94,6 +96,10 @@ type AchievementCompletionResponse struct {
 	Achievement  *UserAchievementResponse `json:"achievement" url:"achievement"`
 	// A map of points systems by key that were affected by this achievement completion.
 	Points map[string]*MetricEventPointsResponse `json:"points" url:"points"`
+	// A map of leaderboards by key. Only contains leaderboards that were affected by this achievement completion.
+	Leaderboards map[string]*MetricEventLeaderboardResponse `json:"leaderboards" url:"leaderboards"`
+	// Rewards awarded as a result of this achievement completion.
+	Rewards []*UserRewardResponse `json:"rewards" url:"rewards"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -121,6 +127,20 @@ func (a *AchievementCompletionResponse) GetPoints() map[string]*MetricEventPoint
 		return nil
 	}
 	return a.Points
+}
+
+func (a *AchievementCompletionResponse) GetLeaderboards() map[string]*MetricEventLeaderboardResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Leaderboards
+}
+
+func (a *AchievementCompletionResponse) GetRewards() []*UserRewardResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Rewards
 }
 
 func (a *AchievementCompletionResponse) GetExtraProperties() map[string]interface{} {
@@ -156,6 +176,20 @@ func (a *AchievementCompletionResponse) SetAchievement(achievement *UserAchievem
 func (a *AchievementCompletionResponse) SetPoints(points map[string]*MetricEventPointsResponse) {
 	a.Points = points
 	a.require(achievementCompletionResponseFieldPoints)
+}
+
+// SetLeaderboards sets the Leaderboards field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AchievementCompletionResponse) SetLeaderboards(leaderboards map[string]*MetricEventLeaderboardResponse) {
+	a.Leaderboards = leaderboards
+	a.require(achievementCompletionResponseFieldLeaderboards)
+}
+
+// SetRewards sets the Rewards field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AchievementCompletionResponse) SetRewards(rewards []*UserRewardResponse) {
+	a.Rewards = rewards
+	a.require(achievementCompletionResponseFieldRewards)
 }
 
 func (a *AchievementCompletionResponse) UnmarshalJSON(data []byte) error {

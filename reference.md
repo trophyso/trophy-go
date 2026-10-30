@@ -144,6 +144,79 @@ client.Achievements.Complete(
 </dl>
 </details>
 
+## Rewards
+<details><summary><code>client.Rewards.Redeem(Key, request) -> *trophygo.RedeemRewardResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Redeem a reward for a user.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &trophygo.RewardsRedeemRequest{
+        User: &trophygo.UpsertedUser{
+            Id: "user-id",
+        },
+    }
+client.Rewards.Redeem(
+        context.TODO(),
+        "key",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**key:** `string` — The key of the reward to redeem.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**user:** `*trophygo.UpsertedUser` — The user redeeming the reward. The user must already exist.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Metrics
 <details><summary><code>client.Metrics.Event(Key, request) -> *trophygo.EventResponse</code></summary>
 <dl>
@@ -959,6 +1032,122 @@ client.Users.Achievements(
 <dd>
 
 **includeIncomplete:** `*string` — When set to 'true', returns both completed and incomplete achievements for the user. When omitted or set to any other value, returns only completed achievements.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Users.Rewards(Id) -> []*trophygo.UserRewardResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &trophygo.UsersRewardsRequest{
+        Redeemed: trophygo.Bool(
+            true,
+        ),
+        StartDate: trophygo.String(
+            "startDate",
+        ),
+        EndDate: trophygo.String(
+            "endDate",
+        ),
+        Skip: trophygo.Int(
+            1,
+        ),
+        Limit: trophygo.Int(
+            1,
+        ),
+    }
+client.Users.Rewards(
+        context.TODO(),
+        "id",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The ID of the user in your database.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**redeemed:** `*bool` — When set, only return rewards that have or have not been redeemed.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startDate:** `*string` — Inclusive start of the awarded-at range, as YYYY-MM-DD in UTC.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endDate:** `*string` — Inclusive end of the awarded-at range, as YYYY-MM-DD in UTC.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**skip:** `*int` — Number of rewards to skip. Defaults to 0.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int` — Maximum number of rewards to return. Defaults to 100 and cannot exceed 100.
     
 </dd>
 </dl>
@@ -2687,6 +2876,357 @@ client.Admin.Achievements.Get(
 <dd>
 
 **id:** `string` — The UUID of the achievement to retrieve.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Admin Rewards
+<details><summary><code>client.Admin.Rewards.List() -> trophygo.ListRewardsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List rewards.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &admin.RewardsListRequest{
+        Limit: trophygo.Int(
+            1,
+        ),
+        Skip: trophygo.Int(
+            1,
+        ),
+    }
+client.Admin.Rewards.List(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**limit:** `*int` — Number of records to return.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**skip:** `*int` — Number of records to skip from the start of the list.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Create(request) -> *trophygo.CreateRewardsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create rewards. Optionally include triggers in each reward payload to create them alongside the reward. A reward with any invalid trigger is not created.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.CreateRewardRequestItem{
+        &trophygo.CreateRewardRequestItem{
+            Name: "Welcome bonus",
+            Key: "welcome-bonus",
+            Description: trophygo.String(
+                "Points for finishing onboarding",
+            ),
+            Type: trophygo.CreateRewardRequestItemTypePoints,
+            PointsSystemId: trophygo.String(
+                "660f9500-f30c-42e5-b827-557766550001",
+            ),
+            Points: trophygo.Int(
+                100,
+            ),
+            MaxRedemptions: trophygo.Int(
+                1,
+            ),
+            Triggers: []*trophygo.CreateRewardTriggerRequestItem{
+                &trophygo.CreateRewardTriggerRequestItem{
+                    Type: trophygo.CreateRewardTriggerRequestItemTypeAchievement,
+                    Status: trophygo.CreateRewardTriggerRequestItemStatusActive.Ptr(),
+                    AchievementId: trophygo.String(
+                        "770a0600-a41d-43f6-c938-668877660002",
+                    ),
+                },
+            },
+        },
+    }
+client.Admin.Rewards.Create(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `trophygo.CreateRewardsRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Delete() -> *trophygo.DeleteRewardsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete rewards by ID. Maximum 100 reward IDs per request. A deleted reward's triggers are deleted too.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &admin.RewardsDeleteRequest{
+        Ids: []*string{
+            trophygo.String(
+                "550e8400-e29b-41d4-a716-446655440000",
+            ),
+        },
+    }
+client.Admin.Rewards.Delete(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**ids:** `*string` — Reward IDs to delete. Can be repeated or comma-separated.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Update(request) -> *trophygo.UpdateRewardsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update rewards by ID. Maximum 100 rewards per request. Only provided fields are updated; omitted fields are preserved. Use the reward triggers endpoints to change a reward's triggers.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.UpdateRewardRequestItem{
+        &trophygo.UpdateRewardRequestItem{
+            Id: "550e8400-e29b-41d4-a716-446655440000",
+            Status: trophygo.UpdateRewardRequestItemStatusActive.Ptr(),
+            Points: trophygo.Int(
+                150,
+            ),
+        },
+    }
+client.Admin.Rewards.Update(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `trophygo.UpdateRewardsRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Get(Id) -> *trophygo.AdminReward</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a reward by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Admin.Rewards.Get(
+        context.TODO(),
+        "550e8400-e29b-41d4-a716-446655440000",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The ID of the reward.
     
 </dd>
 </dl>
@@ -5739,6 +6279,382 @@ client.Admin.Points.Triggers.Get(
 <dd>
 
 **id:** `string` — The UUID of the points trigger.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Admin Rewards Triggers
+<details><summary><code>client.Admin.Rewards.Triggers.List(RewardId) -> trophygo.ListRewardTriggersResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List triggers for a reward. Active triggers are listed first.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &rewards.TriggersListRequest{
+        Limit: trophygo.Int(
+            1,
+        ),
+        Skip: trophygo.Int(
+            1,
+        ),
+    }
+client.Admin.Rewards.Triggers.List(
+        context.TODO(),
+        "550e8400-e29b-41d4-a716-446655440000",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**rewardId:** `string` — The UUID of the reward.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int` — Maximum number of results to return (1-100, default 10).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**skip:** `*int` — Number of results to skip for pagination (default 0).
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Triggers.Create(RewardId, request) -> *trophygo.CreateRewardTriggersResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create reward triggers in bulk. Maximum 100 triggers per request.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.CreateRewardTriggerRequestItem{
+        &trophygo.CreateRewardTriggerRequestItem{
+            Type: trophygo.CreateRewardTriggerRequestItemTypeMetric,
+            MetricId: trophygo.String(
+                "990c2800-c63f-45b8-e15a-88aa99880004",
+            ),
+            MetricThreshold: trophygo.Int(
+                10,
+            ),
+        },
+    }
+client.Admin.Rewards.Triggers.Create(
+        context.TODO(),
+        "550e8400-e29b-41d4-a716-446655440000",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**rewardId:** `string` — The UUID of the reward.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `trophygo.CreateRewardTriggersRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Triggers.Delete(RewardId) -> *trophygo.DeleteRewardTriggersResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete reward triggers by ID. Maximum 100 trigger IDs per request. A reward with no triggers is not awarded until a trigger is added.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &rewards.TriggersDeleteRequest{
+        Ids: []*string{
+            trophygo.String(
+                "880b1700-b52e-44a7-d049-779988770003",
+            ),
+        },
+    }
+client.Admin.Rewards.Triggers.Delete(
+        context.TODO(),
+        "550e8400-e29b-41d4-a716-446655440000",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**rewardId:** `string` — The UUID of the reward.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**ids:** `*string` — Trigger IDs to delete. Can be repeated or comma-separated.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Triggers.Update(RewardId, request) -> *trophygo.UpdateRewardTriggersResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update reward triggers in bulk. Maximum 100 triggers per request. Only provided fields are updated; omitted fields are preserved. A trigger keeps its ID when its criteria change.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := []*trophygo.UpdateRewardTriggersRequestItem{
+        &trophygo.UpdateRewardTriggersRequestItem{
+            Id: "880b1700-b52e-44a7-d049-779988770003",
+            Status: trophygo.UpdateRewardTriggersRequestItemStatusActive.Ptr(),
+        },
+    }
+client.Admin.Rewards.Triggers.Update(
+        context.TODO(),
+        "550e8400-e29b-41d4-a716-446655440000",
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**rewardId:** `string` — The UUID of the reward.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `trophygo.UpdateRewardTriggersRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Admin.Rewards.Triggers.Get(RewardId, Id) -> *trophygo.AdminRewardTrigger</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a single reward trigger by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Admin.Rewards.Triggers.Get(
+        context.TODO(),
+        "550e8400-e29b-41d4-a716-446655440000",
+        "880b1700-b52e-44a7-d049-779988770003",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**rewardId:** `string` — The UUID of the reward.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**id:** `string` — The UUID of the reward trigger.
     
 </dd>
 </dl>

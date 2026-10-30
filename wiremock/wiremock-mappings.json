@@ -56,12 +56,48 @@
       },
       "response": {
         "status": 201,
-        "body": "{\n  \"completionId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"achievement\": {\n    \"id\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n    \"name\": \"Finish onboarding\",\n    \"trigger\": \"api\",\n    \"description\": \"Complete the onboarding process.\",\n    \"badgeUrl\": \"https://example.com/badge.png\",\n    \"key\": \"finish-onboarding\",\n    \"streakLength\": 1,\n    \"anniversaryYears\": 1,\n    \"achievementIds\": [\n      \"achievementIds\"\n    ],\n    \"metricId\": \"metricId\",\n    \"metricValue\": 1.1,\n    \"metricName\": \"metricName\",\n    \"userAttributes\": [\n      {\n        \"key\": \"plan-type\",\n        \"value\": \"premium\"\n      }\n    ],\n    \"eventAttributes\": [\n      {\n        \"key\": \"source\",\n        \"value\": \"mobile-app\"\n      }\n    ],\n    \"achievedAt\": \"2021-01-01T00:00:00Z\"\n  },\n  \"points\": {\n    \"points-system-key\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"key\": \"points-system-key\",\n      \"name\": \"XP\",\n      \"description\": null,\n      \"badgeUrl\": null,\n      \"maxPoints\": 1.1,\n      \"total\": 10,\n      \"level\": {\n        \"id\": \"id\",\n        \"key\": \"key\",\n        \"name\": \"name\",\n        \"description\": \"description\",\n        \"badgeUrl\": null,\n        \"points\": 1\n      },\n      \"added\": 10,\n      \"awards\": [\n        {\n          \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n          \"awarded\": 10,\n          \"date\": \"2021-01-01T00:00:00Z\",\n          \"total\": 10,\n          \"trigger\": {\n            \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n            \"type\": \"achievement\",\n            \"points\": 10,\n            \"status\": \"active\",\n            \"achievementName\": \"Finish onboarding\",\n            \"userAttributes\": [\n              {\n                \"key\": \"plan-type\",\n                \"value\": \"premium\"\n              }\n            ],\n            \"eventAttributes\": [\n              {\n                \"key\": \"source\",\n                \"value\": \"mobile-app\"\n              }\n            ],\n            \"created\": \"2021-01-01T00:00:00Z\",\n            \"updated\": \"2021-01-01T00:00:00Z\"\n          }\n        }\n      ]\n    }\n  }\n}",
+        "body": "{\n  \"completionId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"achievement\": {\n    \"id\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n    \"name\": \"Finish onboarding\",\n    \"trigger\": \"api\",\n    \"description\": \"Complete the onboarding process.\",\n    \"badgeUrl\": \"https://example.com/badge.png\",\n    \"key\": \"finish-onboarding\",\n    \"streakLength\": 1,\n    \"anniversaryYears\": 1,\n    \"achievementIds\": [\n      \"achievementIds\"\n    ],\n    \"metricId\": \"metricId\",\n    \"metricValue\": 1.1,\n    \"metricName\": \"metricName\",\n    \"userAttributes\": [\n      {\n        \"key\": \"plan-type\",\n        \"value\": \"premium\"\n      }\n    ],\n    \"eventAttributes\": [\n      {\n        \"key\": \"source\",\n        \"value\": \"mobile-app\"\n      }\n    ],\n    \"achievedAt\": \"2021-01-01T00:00:00Z\"\n  },\n  \"points\": {\n    \"points-system-key\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"key\": \"points-system-key\",\n      \"name\": \"XP\",\n      \"description\": null,\n      \"badgeUrl\": null,\n      \"maxPoints\": 1.1,\n      \"total\": 10,\n      \"level\": {\n        \"id\": \"id\",\n        \"key\": \"key\",\n        \"name\": \"name\",\n        \"description\": \"description\",\n        \"badgeUrl\": null,\n        \"points\": 1\n      },\n      \"added\": 10,\n      \"awards\": [\n        {\n          \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n          \"awarded\": 10,\n          \"date\": \"2021-01-01T00:00:00Z\",\n          \"total\": 10,\n          \"trigger\": {\n            \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n            \"type\": \"achievement\",\n            \"points\": 10,\n            \"status\": \"active\",\n            \"achievementName\": \"Finish onboarding\",\n            \"userAttributes\": [\n              {\n                \"key\": \"plan-type\",\n                \"value\": \"premium\"\n              }\n            ],\n            \"eventAttributes\": [\n              {\n                \"key\": \"source\",\n                \"value\": \"mobile-app\"\n              }\n            ],\n            \"created\": \"2021-01-01T00:00:00Z\",\n            \"updated\": \"2021-01-01T00:00:00Z\"\n          }\n        }\n      ]\n    }\n  },\n  \"leaderboards\": {\n    \"points-leaderboard\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"name\": \"Points Leaderboard\",\n      \"key\": \"points-leaderboard\",\n      \"rankBy\": \"points\",\n      \"breakdownAttribute\": null,\n      \"breakdownAttributes\": [\n        \"country\"\n      ],\n      \"metricKey\": \"words-written\",\n      \"metricName\": \"Words Written\",\n      \"pointsSystemKey\": \"points-system-key\",\n      \"pointsSystemName\": \"XP\",\n      \"description\": null,\n      \"start\": \"2021-01-01\",\n      \"end\": null,\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"maxParticipants\": 100,\n      \"runUnit\": null,\n      \"runInterval\": null,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"rank\": 1,\n      \"previousRank\": null,\n      \"threshold\": 1,\n      \"breakdownAttributeValues\": [\n        {\n          \"key\": \"country\",\n          \"value\": \"USA\"\n        }\n      ]\n    }\n  },\n  \"rewards\": [\n    {\n      \"id\": \"7a3c1e52-9f1d-4c8e-a6b2-3d5e7f9a1b2c\",\n      \"awardedAt\": \"2021-01-01T00:00:00Z\",\n      \"redeemed\": false,\n      \"reward\": {\n        \"id\": \"2b4d6f81-3a5c-4e7f-9b1d-8c0e2a4f6b8d\",\n        \"key\": \"onboarding-gift\",\n        \"name\": \"Onboarding gift\",\n        \"description\": \"A thank you for finishing onboarding.\",\n        \"type\": \"custom\"\n      },\n      \"trigger\": {\n        \"id\": \"9e1f3a5c-7b9d-4f2a-8c6e-0d2b4f6a8c1e\",\n        \"type\": \"achievement\",\n        \"achievementId\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\"\n      }\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
       },
       "uuid": "cdc2f7a4-475f-47fa-9380-3a68f397893a",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "1b72f979-badb-42bb-8385-3b92b8da2193",
+      "name": "Redeem a reward - default",
+      "request": {
+        "urlPathTemplate": "/rewards/{key}/redeem",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "key": {
+            "equalTo": "key"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"reward\": {\n    \"id\": \"id\",\n    \"key\": \"key\",\n    \"name\": \"name\",\n    \"description\": \"description\",\n    \"type\": \"points\",\n    \"points\": 1,\n    \"pointsSystemId\": \"pointsSystemId\",\n    \"pointsSystemKey\": \"pointsSystemKey\"\n  },\n  \"redemptions\": [\n    {\n      \"id\": \"id\",\n      \"awardedAt\": \"2024-01-15T09:30:00Z\",\n      \"redeemedAt\": \"2024-01-15T09:30:00Z\"\n    }\n  ],\n  \"points\": {\n    \"key\": {\n      \"id\": \"id\",\n      \"key\": \"key\",\n      \"name\": \"name\",\n      \"description\": \"description\",\n      \"badgeUrl\": \"badgeUrl\",\n      \"maxPoints\": 1.1,\n      \"total\": 1,\n      \"level\": {\n        \"id\": \"id\",\n        \"key\": \"key\",\n        \"name\": \"name\",\n        \"description\": \"description\",\n        \"badgeUrl\": null,\n        \"points\": 1\n      },\n      \"added\": 10,\n      \"awards\": [\n        {\n          \"trigger\": {\n            \"id\": \"id\",\n            \"type\": \"metric\",\n            \"points\": 1,\n            \"status\": \"active\",\n            \"userAttributes\": [\n              {\n                \"key\": \"plan-type\",\n                \"value\": \"premium\"\n              }\n            ],\n            \"eventAttributes\": [\n              {\n                \"key\": \"source\",\n                \"value\": \"mobile-app\"\n              }\n            ],\n            \"created\": \"2024-01-15T09:30:00Z\",\n            \"updated\": \"2024-01-15T09:30:00Z\"\n          }\n        }\n      ]\n    }\n  },\n  \"leaderboards\": {\n    \"key\": {\n      \"id\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"name\": \"Weekly Word Count Challenge\",\n      \"key\": \"weekly-words\",\n      \"rankBy\": \"points\",\n      \"breakdownAttribute\": \"country\",\n      \"breakdownAttributes\": [\n        \"country\"\n      ],\n      \"metricKey\": \"words-written\",\n      \"metricName\": \"Words Written\",\n      \"pointsSystemKey\": \"xp-system\",\n      \"pointsSystemName\": \"Experience Points\",\n      \"description\": \"Compete weekly to see who writes the most words\",\n      \"start\": \"2025-01-01\",\n      \"end\": \"2025-12-31\",\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"maxParticipants\": 100,\n      \"runUnit\": \"day\",\n      \"runInterval\": 7,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"rank\": 100,\n      \"previousRank\": 100,\n      \"threshold\": 25000,\n      \"breakdownAttributeValues\": [\n        {\n          \"key\": \"country\",\n          \"value\": \"USA\"\n        }\n      ]\n    }\n  }\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "1b72f979-badb-42bb-8385-3b92b8da2193",
       "persistent": true,
       "priority": 3,
       "metadata": {
@@ -92,7 +128,7 @@
       },
       "response": {
         "status": 201,
-        "body": "{\n  \"eventId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"metricId\": \"d01dcbcb-d51e-4c12-b054-dc811dcdc623\",\n  \"total\": 750,\n  \"achievements\": [\n    {\n      \"id\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"name\": \"500 words written\",\n      \"trigger\": \"metric\",\n      \"description\": \"Write 500 words in the app.\",\n      \"badgeUrl\": \"badgeUrl\",\n      \"key\": \"key\",\n      \"streakLength\": 1,\n      \"anniversaryYears\": 1,\n      \"achievementIds\": [\n        \"achievementIds\"\n      ],\n      \"metricId\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"metricValue\": 500,\n      \"metricName\": \"words written\",\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"achievedAt\": \"2020-01-01T00:00:00Z\"\n    }\n  ],\n  \"currentStreak\": {\n    \"length\": 1,\n    \"frequency\": \"daily\",\n    \"started\": \"2025-04-02\",\n    \"periodStart\": \"2025-03-31\",\n    \"periodEnd\": \"2025-04-05\",\n    \"expires\": \"2025-04-12\",\n    \"freezes\": 1,\n    \"maxFreezes\": 1,\n    \"freezeAutoEarnInterval\": 1,\n    \"freezeAutoEarnAmount\": 1,\n    \"extended\": true\n  },\n  \"points\": {\n    \"xp\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"key\": \"xp\",\n      \"name\": \"XP\",\n      \"description\": null,\n      \"badgeUrl\": null,\n      \"maxPoints\": 1.1,\n      \"total\": 10,\n      \"level\": {\n        \"id\": \"1140fe51-6bce-4b44-b0ad-bddc4e123534\",\n        \"key\": \"bronze\",\n        \"name\": \"Bronze\",\n        \"description\": \"Starting level\",\n        \"badgeUrl\": null,\n        \"points\": 0\n      },\n      \"added\": 10,\n      \"awards\": [\n        {\n          \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n          \"awarded\": 10,\n          \"date\": \"2021-01-01T00:00:00Z\",\n          \"total\": 10,\n          \"trigger\": {\n            \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n            \"type\": \"metric\",\n            \"points\": 10,\n            \"status\": \"active\",\n            \"metricName\": \"words written\",\n            \"metricThreshold\": 100,\n            \"userAttributes\": [\n              {\n                \"key\": \"plan-type\",\n                \"value\": \"premium\"\n              }\n            ],\n            \"eventAttributes\": [\n              {\n                \"key\": \"source\",\n                \"value\": \"mobile-app\"\n              }\n            ],\n            \"created\": \"2021-01-01T00:00:00Z\",\n            \"updated\": \"2021-01-01T00:00:00Z\"\n          }\n        }\n      ]\n    }\n  },\n  \"leaderboards\": {\n    \"all-time\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"name\": \"All-Time Leaderboard\",\n      \"key\": \"all-time\",\n      \"rankBy\": \"metric\",\n      \"breakdownAttribute\": null,\n      \"breakdownAttributes\": [\n        \"country\"\n      ],\n      \"metricKey\": \"words-written\",\n      \"metricName\": \"words written\",\n      \"pointsSystemKey\": \"xp-system\",\n      \"pointsSystemName\": \"Experience Points\",\n      \"description\": null,\n      \"start\": \"2025-01-01\",\n      \"end\": null,\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"maxParticipants\": 100,\n      \"runUnit\": null,\n      \"runInterval\": null,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"rank\": 100,\n      \"previousRank\": null,\n      \"threshold\": 10,\n      \"breakdownAttributeValues\": [\n        {\n          \"key\": \"country\",\n          \"value\": \"USA\"\n        }\n      ]\n    }\n  },\n  \"idempotencyKey\": \"idempotencyKey\",\n  \"idempotentReplayed\": true\n}",
+        "body": "{\n  \"eventId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"metricId\": \"d01dcbcb-d51e-4c12-b054-dc811dcdc623\",\n  \"total\": 750,\n  \"achievements\": [\n    {\n      \"id\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"name\": \"500 words written\",\n      \"trigger\": \"metric\",\n      \"description\": \"Write 500 words in the app.\",\n      \"badgeUrl\": \"badgeUrl\",\n      \"key\": \"key\",\n      \"streakLength\": 1,\n      \"anniversaryYears\": 1,\n      \"achievementIds\": [\n        \"achievementIds\"\n      ],\n      \"metricId\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"metricValue\": 500,\n      \"metricName\": \"words written\",\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"achievedAt\": \"2020-01-01T00:00:00Z\"\n    }\n  ],\n  \"currentStreak\": {\n    \"length\": 1,\n    \"frequency\": \"daily\",\n    \"started\": \"2025-04-02\",\n    \"periodStart\": \"2025-03-31\",\n    \"periodEnd\": \"2025-04-05\",\n    \"expires\": \"2025-04-12\",\n    \"freezes\": 1,\n    \"maxFreezes\": 1,\n    \"freezeAutoEarnInterval\": 1,\n    \"freezeAutoEarnAmount\": 1,\n    \"extended\": true\n  },\n  \"points\": {\n    \"xp\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"key\": \"xp\",\n      \"name\": \"XP\",\n      \"description\": null,\n      \"badgeUrl\": null,\n      \"maxPoints\": 1.1,\n      \"total\": 10,\n      \"level\": {\n        \"id\": \"1140fe51-6bce-4b44-b0ad-bddc4e123534\",\n        \"key\": \"bronze\",\n        \"name\": \"Bronze\",\n        \"description\": \"Starting level\",\n        \"badgeUrl\": null,\n        \"points\": 0\n      },\n      \"added\": 10,\n      \"awards\": [\n        {\n          \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n          \"awarded\": 10,\n          \"date\": \"2021-01-01T00:00:00Z\",\n          \"total\": 10,\n          \"trigger\": {\n            \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n            \"type\": \"metric\",\n            \"points\": 10,\n            \"status\": \"active\",\n            \"metricName\": \"words written\",\n            \"metricThreshold\": 100,\n            \"userAttributes\": [\n              {\n                \"key\": \"plan-type\",\n                \"value\": \"premium\"\n              }\n            ],\n            \"eventAttributes\": [\n              {\n                \"key\": \"source\",\n                \"value\": \"mobile-app\"\n              }\n            ],\n            \"created\": \"2021-01-01T00:00:00Z\",\n            \"updated\": \"2021-01-01T00:00:00Z\"\n          }\n        }\n      ]\n    }\n  },\n  \"leaderboards\": {\n    \"all-time\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"name\": \"All-Time Leaderboard\",\n      \"key\": \"all-time\",\n      \"rankBy\": \"metric\",\n      \"breakdownAttribute\": null,\n      \"breakdownAttributes\": [\n        \"country\"\n      ],\n      \"metricKey\": \"words-written\",\n      \"metricName\": \"words written\",\n      \"pointsSystemKey\": \"xp-system\",\n      \"pointsSystemName\": \"Experience Points\",\n      \"description\": null,\n      \"start\": \"2025-01-01\",\n      \"end\": null,\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"maxParticipants\": 100,\n      \"runUnit\": null,\n      \"runInterval\": null,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"rank\": 100,\n      \"previousRank\": null,\n      \"threshold\": 10,\n      \"breakdownAttributeValues\": [\n        {\n          \"key\": \"country\",\n          \"value\": \"USA\"\n        }\n      ]\n    }\n  },\n  \"rewards\": [\n    {\n      \"id\": \"7a3c1e52-9f1d-4c8e-a6b2-3d5e7f9a1b2c\",\n      \"awardedAt\": \"2021-01-01T00:00:00Z\",\n      \"redeemed\": false,\n      \"reward\": {\n        \"id\": \"2b4d6f81-3a5c-4e7f-9b1d-8c0e2a4f6b8d\",\n        \"key\": \"bonus-xp\",\n        \"name\": \"Bonus XP\",\n        \"type\": \"points\",\n        \"points\": 50,\n        \"pointsSystemId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n        \"pointsSystemKey\": \"xp\"\n      },\n      \"trigger\": {\n        \"id\": \"9e1f3a5c-7b9d-4f2a-8c6e-0d2b4f6a8c1e\",\n        \"type\": \"metric\",\n        \"metricId\": \"d01dcbcb-d51e-4c12-b054-dc811dcdc623\",\n        \"metricThreshold\": 500\n      }\n    }\n  ],\n  \"idempotencyKey\": \"idempotencyKey\",\n  \"idempotentReplayed\": true\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -487,6 +523,59 @@
       }
     },
     {
+      "id": "b7570626-f419-4393-8929-44b406e62a63",
+      "name": "Get a user's rewards - default",
+      "request": {
+        "urlPathTemplate": "/users/{id}/rewards",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "id"
+          }
+        },
+        "queryParameters": {
+          "redeemed": {
+            "equalTo": "true"
+          },
+          "startDate": {
+            "equalTo": "startDate"
+          },
+          "endDate": {
+            "equalTo": "endDate"
+          },
+          "skip": {
+            "equalTo": "1"
+          },
+          "limit": {
+            "equalTo": "1"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "[\n  {\n    \"id\": \"id\",\n    \"awardedAt\": \"2024-01-15T09:30:00Z\",\n    \"redeemed\": true,\n    \"redeemedAt\": \"2024-01-15T09:30:00Z\",\n    \"reward\": {\n      \"id\": \"id\",\n      \"key\": \"key\",\n      \"name\": \"name\",\n      \"description\": \"description\",\n      \"type\": \"points\",\n      \"points\": 1,\n      \"pointsSystemId\": \"pointsSystemId\",\n      \"pointsSystemKey\": \"pointsSystemKey\"\n    },\n    \"trigger\": {\n      \"id\": \"id\",\n      \"type\": \"metric\",\n      \"metricId\": \"metricId\",\n      \"metricThreshold\": 1,\n      \"achievementId\": \"achievementId\",\n      \"streakLengthThreshold\": 1,\n      \"leaderboardId\": \"leaderboardId\",\n      \"rank\": 1\n    }\n  }\n]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "b7570626-f419-4393-8929-44b406e62a63",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
       "id": "9a369f44-e1fb-4f62-a51f-f2e59bb201ac",
       "name": "Get a user's streak status - Successful operation",
       "request": {
@@ -849,7 +938,7 @@
       },
       "response": {
         "status": 200,
-        "body": "{\n  \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"name\": \"XP System\",\n  \"description\": \"Experience points for user engagement\",\n  \"badgeUrl\": \"https://example.com/badge.png\",\n  \"maxPoints\": null,\n  \"triggers\": [\n    {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"type\": \"metric\",\n      \"points\": 10,\n      \"status\": \"active\",\n      \"achievementId\": \"achievementId\",\n      \"metricId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"metricName\": \"words written\",\n      \"metricThreshold\": 1000,\n      \"streakLengthThreshold\": 1,\n      \"achievementName\": \"achievementName\",\n      \"timeUnit\": \"hour\",\n      \"timeInterval\": 1,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        },\n        {\n          \"key\": \"region\",\n          \"value\": \"us-east\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        },\n        {\n          \"key\": \"plan\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"created\": \"2021-01-01T00:00:00Z\",\n      \"updated\": \"2021-01-01T00:00:00Z\"\n    },\n    {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123536\",\n      \"type\": \"streak\",\n      \"points\": 10,\n      \"status\": \"active\",\n      \"achievementId\": \"achievementId\",\n      \"metricId\": \"metricId\",\n      \"metricName\": \"metricName\",\n      \"metricThreshold\": 1,\n      \"streakLengthThreshold\": 7,\n      \"achievementName\": \"achievementName\",\n      \"timeUnit\": \"hour\",\n      \"timeInterval\": 1,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"created\": \"2021-01-01T00:00:00Z\",\n      \"updated\": \"2021-01-01T00:00:00Z\"\n    },\n    {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"type\": \"achievement\",\n      \"points\": 50,\n      \"status\": \"active\",\n      \"achievementId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"metricId\": \"metricId\",\n      \"metricName\": \"metricName\",\n      \"metricThreshold\": 1,\n      \"streakLengthThreshold\": 1,\n      \"achievementName\": \"finish onboarding\",\n      \"timeUnit\": \"hour\",\n      \"timeInterval\": 1,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"created\": \"2021-01-01T00:00:00Z\",\n      \"updated\": \"2021-01-01T00:00:00Z\"\n    }\n  ]\n}",
+        "body": "{\n  \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"name\": \"XP System\",\n  \"description\": \"Experience points for user engagement\",\n  \"badgeUrl\": \"https://example.com/badge.png\",\n  \"maxPoints\": null,\n  \"triggers\": [\n    {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"type\": \"metric\",\n      \"points\": 10,\n      \"status\": \"active\",\n      \"achievementId\": \"achievementId\",\n      \"metricId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"metricName\": \"words written\",\n      \"metricThreshold\": 1000,\n      \"streakLengthThreshold\": 1,\n      \"achievementName\": \"achievementName\",\n      \"rewardKey\": \"rewardKey\",\n      \"rewardName\": \"rewardName\",\n      \"timeUnit\": \"hour\",\n      \"timeInterval\": 1,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        },\n        {\n          \"key\": \"region\",\n          \"value\": \"us-east\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        },\n        {\n          \"key\": \"plan\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"created\": \"2021-01-01T00:00:00Z\",\n      \"updated\": \"2021-01-01T00:00:00Z\"\n    },\n    {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123536\",\n      \"type\": \"streak\",\n      \"points\": 10,\n      \"status\": \"active\",\n      \"achievementId\": \"achievementId\",\n      \"metricId\": \"metricId\",\n      \"metricName\": \"metricName\",\n      \"metricThreshold\": 1,\n      \"streakLengthThreshold\": 7,\n      \"achievementName\": \"achievementName\",\n      \"rewardKey\": \"rewardKey\",\n      \"rewardName\": \"rewardName\",\n      \"timeUnit\": \"hour\",\n      \"timeInterval\": 1,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"created\": \"2021-01-01T00:00:00Z\",\n      \"updated\": \"2021-01-01T00:00:00Z\"\n    },\n    {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"type\": \"achievement\",\n      \"points\": 50,\n      \"status\": \"active\",\n      \"achievementId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"metricId\": \"metricId\",\n      \"metricName\": \"metricName\",\n      \"metricThreshold\": 1,\n      \"streakLengthThreshold\": 1,\n      \"achievementName\": \"finish onboarding\",\n      \"rewardKey\": \"rewardKey\",\n      \"rewardName\": \"rewardName\",\n      \"timeUnit\": \"hour\",\n      \"timeInterval\": 1,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"created\": \"2021-01-01T00:00:00Z\",\n      \"updated\": \"2021-01-01T00:00:00Z\"\n    }\n  ]\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -1420,6 +1509,184 @@
         }
       },
       "uuid": "07a69ac8-82b6-43e0-9e05-6c2602e84fd0",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "24566bb1-388f-440b-ba65-3b80e47559b7",
+      "name": "List rewards - Rewards list",
+      "request": {
+        "urlPathTemplate": "/rewards",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "queryParameters": {
+          "limit": {
+            "equalTo": "1"
+          },
+          "skip": {
+            "equalTo": "1"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "[\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"name\": \"Welcome bonus\",\n    \"key\": \"welcome-bonus\",\n    \"description\": \"Points for finishing onboarding\",\n    \"status\": \"active\",\n    \"type\": \"points\",\n    \"pointsSystemId\": \"660f9500-f30c-42e5-b827-557766550001\",\n    \"points\": 100,\n    \"maxRedemptions\": 1,\n    \"userAttributes\": [\n      {\n        \"attributeId\": \"attributeId\",\n        \"attributeValue\": \"attributeValue\"\n      }\n    ]\n  }\n]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "24566bb1-388f-440b-ba65-3b80e47559b7",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      },
+      "postServeActions": []
+    },
+    {
+      "id": "fee43e2d-040e-40e1-96ee-c78e209297ae",
+      "name": "Create rewards - All requests had errors",
+      "request": {
+        "urlPathTemplate": "/rewards",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"name\": \"name\",\n      \"key\": \"key\",\n      \"description\": \"description\",\n      \"status\": \"active\",\n      \"type\": \"points\",\n      \"pointsSystemId\": \"pointsSystemId\",\n      \"points\": 1,\n      \"maxRedemptions\": 1,\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"triggers\": [\n        {\n          \"id\": \"id\",\n          \"type\": \"metric\",\n          \"status\": \"active\",\n          \"userAttributes\": [\n            {\n              \"attributeId\": \"attributeId\",\n              \"attributeValue\": \"attributeValue\"\n            }\n          ]\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"triggers[0]: achievementId is required for achievement triggers\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "fee43e2d-040e-40e1-96ee-c78e209297ae",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "55f44770-ef48-4874-9e6b-008bcad20e7e",
+      "name": "Delete rewards - Success with no issues",
+      "request": {
+        "urlPathTemplate": "/rewards",
+        "method": "DELETE",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "queryParameters": {
+          "ids": {
+            "hasExactly": [
+              {
+                "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "55f44770-ef48-4874-9e6b-008bcad20e7e",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "c9b0f78c-ad8c-47cc-8a50-6f9a76b18452",
+      "name": "Update rewards - Success",
+      "request": {
+        "urlPathTemplate": "/rewards",
+        "method": "PATCH",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"name\": \"Welcome bonus\",\n      \"key\": \"welcome-bonus\",\n      \"description\": \"Points for finishing onboarding\",\n      \"status\": \"active\",\n      \"type\": \"points\",\n      \"pointsSystemId\": \"660f9500-f30c-42e5-b827-557766550001\",\n      \"points\": 150,\n      \"maxRedemptions\": 1,\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ]\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "c9b0f78c-ad8c-47cc-8a50-6f9a76b18452",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "cda5e769-0925-4a68-8f35-828c455b301b",
+      "name": "Get a reward by ID - Reward",
+      "request": {
+        "urlPathTemplate": "/rewards/{id}",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"name\": \"Welcome bonus\",\n  \"key\": \"welcome-bonus\",\n  \"description\": \"Points for finishing onboarding\",\n  \"status\": \"active\",\n  \"type\": \"points\",\n  \"pointsSystemId\": \"660f9500-f30c-42e5-b827-557766550001\",\n  \"points\": 100,\n  \"maxRedemptions\": 1,\n  \"userAttributes\": [\n    {\n      \"attributeId\": \"attributeId\",\n      \"attributeValue\": \"attributeValue\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "cda5e769-0925-4a68-8f35-828c455b301b",
       "persistent": true,
       "priority": 3,
       "metadata": {
@@ -3009,6 +3276,206 @@
       }
     },
     {
+      "id": "4df233f4-dec7-48d1-b957-bda513bf3af9",
+      "name": "List reward triggers - Triggers list",
+      "request": {
+        "urlPathTemplate": "/rewards/{rewardId}/triggers",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "rewardId": {
+            "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "queryParameters": {
+          "limit": {
+            "equalTo": "1"
+          },
+          "skip": {
+            "equalTo": "1"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "[\n  {\n    \"id\": \"880b1700-b52e-44a7-d049-779988770003\",\n    \"type\": \"metric\",\n    \"status\": \"active\",\n    \"userAttributes\": [\n      {\n        \"attributeId\": \"attributeId\",\n        \"attributeValue\": \"attributeValue\"\n      }\n    ],\n    \"metricId\": \"990c2800-c63f-45b8-e15a-88aa99880004\",\n    \"metricThreshold\": 10,\n    \"eventAttributes\": [\n      {\n        \"attributeId\": \"attributeId\",\n        \"attributeValue\": \"attributeValue\"\n      }\n    ],\n    \"achievementId\": \"achievementId\",\n    \"streakLength\": 1,\n    \"leaderboardId\": \"leaderboardId\",\n    \"rank\": 1\n  }\n]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "4df233f4-dec7-48d1-b957-bda513bf3af9",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "d9769b45-1e38-49a5-ba8a-161a10f999eb",
+      "name": "Create reward triggers - All requests had errors",
+      "request": {
+        "urlPathTemplate": "/rewards/{rewardId}/triggers",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "rewardId": {
+            "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"created\": [\n    {\n      \"id\": \"id\",\n      \"type\": \"metric\",\n      \"status\": \"active\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"metricId\": \"metricId\",\n      \"metricThreshold\": 1,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"achievementId\": \"achievementId\",\n      \"streakLength\": 1,\n      \"leaderboardId\": \"leaderboardId\",\n      \"rank\": 1\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Metric not found\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "d9769b45-1e38-49a5-ba8a-161a10f999eb",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "059e6003-1bd2-482a-89df-8143c9e01fdb",
+      "name": "Delete reward triggers - Deleted triggers",
+      "request": {
+        "urlPathTemplate": "/rewards/{rewardId}/triggers",
+        "method": "DELETE",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "rewardId": {
+            "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "queryParameters": {
+          "ids": {
+            "hasExactly": [
+              {
+                "equalTo": "880b1700-b52e-44a7-d049-779988770003"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"deleted\": [\n    {\n      \"id\": \"880b1700-b52e-44a7-d049-779988770003\"\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "059e6003-1bd2-482a-89df-8143c9e01fdb",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "0c100645-63c2-4139-ad52-4233ecc8af83",
+      "name": "Update reward triggers - Updated triggers",
+      "request": {
+        "urlPathTemplate": "/rewards/{rewardId}/triggers",
+        "method": "PATCH",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "rewardId": {
+            "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"updated\": [\n    {\n      \"id\": \"880b1700-b52e-44a7-d049-779988770003\",\n      \"type\": \"metric\",\n      \"status\": \"active\",\n      \"userAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"metricId\": \"990c2800-c63f-45b8-e15a-88aa99880004\",\n      \"metricThreshold\": 10,\n      \"eventAttributes\": [\n        {\n          \"attributeId\": \"attributeId\",\n          \"attributeValue\": \"attributeValue\"\n        }\n      ],\n      \"achievementId\": \"achievementId\",\n      \"streakLength\": 1,\n      \"leaderboardId\": \"leaderboardId\",\n      \"rank\": 1\n    }\n  ],\n  \"issues\": [\n    {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"userId\": \"user-123\",\n      \"boostId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"index\": 0,\n      \"severity\": \"error\",\n      \"message\": \"Would exceed maximum freeze limit\"\n    }\n  ]\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "0c100645-63c2-4139-ad52-4233ecc8af83",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "7bb808d9-904e-42fa-960c-6c150b1f8dfc",
+      "name": "Get a reward trigger by ID - A single trigger",
+      "request": {
+        "urlPathTemplate": "/rewards/{rewardId}/triggers/{id}",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "rewardId": {
+            "equalTo": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "id": {
+            "equalTo": "880b1700-b52e-44a7-d049-779988770003"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"id\": \"880b1700-b52e-44a7-d049-779988770003\",\n  \"type\": \"leaderboard\",\n  \"status\": \"active\",\n  \"userAttributes\": [\n    {\n      \"attributeId\": \"attributeId\",\n      \"attributeValue\": \"attributeValue\"\n    }\n  ],\n  \"metricId\": \"metricId\",\n  \"metricThreshold\": 1,\n  \"eventAttributes\": [\n    {\n      \"attributeId\": \"attributeId\",\n      \"attributeValue\": \"attributeValue\"\n    }\n  ],\n  \"achievementId\": \"achievementId\",\n  \"streakLength\": 1,\n  \"leaderboardId\": \"aa0d3900-d74a-46c9-f26b-99bbaa990005\",\n  \"rank\": 1\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "7bb808d9-904e-42fa-960c-6c150b1f8dfc",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
       "id": "1e23a6a3-da9e-49a3-bdba-aa82b0f37c5f",
       "name": "Create streak freezes for multiple users - Success with warnings",
       "request": {
@@ -3178,6 +3645,6 @@
     }
   ],
   "meta": {
-    "total": 85
+    "total": 97
   }
 }

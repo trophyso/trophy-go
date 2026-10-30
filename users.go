@@ -191,6 +191,72 @@ func (u *UsersPointsEventSummaryRequest) SetEndDate(endDate string) {
 }
 
 var (
+	usersRewardsRequestFieldRedeemed  = big.NewInt(1 << 0)
+	usersRewardsRequestFieldStartDate = big.NewInt(1 << 1)
+	usersRewardsRequestFieldEndDate   = big.NewInt(1 << 2)
+	usersRewardsRequestFieldSkip      = big.NewInt(1 << 3)
+	usersRewardsRequestFieldLimit     = big.NewInt(1 << 4)
+)
+
+type UsersRewardsRequest struct {
+	// When set, only return rewards that have or have not been redeemed.
+	Redeemed *bool `json:"-" url:"redeemed,omitempty"`
+	// Inclusive start of the awarded-at range, as YYYY-MM-DD in UTC.
+	StartDate *string `json:"-" url:"startDate,omitempty"`
+	// Inclusive end of the awarded-at range, as YYYY-MM-DD in UTC.
+	EndDate *string `json:"-" url:"endDate,omitempty"`
+	// Number of rewards to skip. Defaults to 0.
+	Skip *int `json:"-" url:"skip,omitempty"`
+	// Maximum number of rewards to return. Defaults to 100 and cannot exceed 100.
+	Limit *int `json:"-" url:"limit,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UsersRewardsRequest) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetRedeemed sets the Redeemed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersRewardsRequest) SetRedeemed(redeemed *bool) {
+	u.Redeemed = redeemed
+	u.require(usersRewardsRequestFieldRedeemed)
+}
+
+// SetStartDate sets the StartDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersRewardsRequest) SetStartDate(startDate *string) {
+	u.StartDate = startDate
+	u.require(usersRewardsRequestFieldStartDate)
+}
+
+// SetEndDate sets the EndDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersRewardsRequest) SetEndDate(endDate *string) {
+	u.EndDate = endDate
+	u.require(usersRewardsRequestFieldEndDate)
+}
+
+// SetSkip sets the Skip field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersRewardsRequest) SetSkip(skip *int) {
+	u.Skip = skip
+	u.require(usersRewardsRequestFieldSkip)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersRewardsRequest) SetLimit(limit *int) {
+	u.Limit = limit
+	u.require(usersRewardsRequestFieldLimit)
+}
+
+var (
 	usersStreakRequestFieldHistoryPeriods = big.NewInt(1 << 0)
 )
 

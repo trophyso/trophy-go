@@ -11,6 +11,7 @@ import (
     metrics "github.com/trophyso/trophy-go/metrics"
     option "github.com/trophyso/trophy-go/option"
     points "github.com/trophyso/trophy-go/points"
+    rewards "github.com/trophyso/trophy-go/rewards"
     streaks "github.com/trophyso/trophy-go/streaks"
     users "github.com/trophyso/trophy-go/users"
 )
@@ -18,6 +19,7 @@ import (
 
 type Client struct {
     Achievements *achievements.Client
+    Rewards *rewards.Client
     Metrics *metrics.Client
     Users *users.Client
     Streaks *streaks.Client
@@ -33,10 +35,11 @@ type Client struct {
 func NewClient(opts ...option.RequestOption) *Client {
     options := core.NewRequestOptions(opts...)
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.27.0"
+        options.SdkVersion = "1.28.0"
     }
     return &Client{
         Achievements: achievements.NewClient(options),
+        Rewards: rewards.NewClient(options),
         Metrics: metrics.NewClient(options),
         Users: users.NewClient(options),
         Streaks: streaks.NewClient(options),

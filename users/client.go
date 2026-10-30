@@ -22,7 +22,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.27.0"
+        options.SdkVersion = "1.28.0"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -222,6 +222,26 @@ func (c *Client) Achievements(
     opts ...option.RequestOption,
 ) ([]*trophygo.UserAchievementWithStatsResponse, error){
     response, err := c.WithRawResponse.Achievements(
+        ctx,
+        id,
+        request,
+        opts...,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return response.Body, nil
+}
+
+// Get rewards awarded to a user. Filter by redeemed state and the date the reward was awarded.
+func (c *Client) Rewards(
+    ctx context.Context,
+    // The ID of the user in your database.
+    id string,
+    request *trophygo.UsersRewardsRequest,
+    opts ...option.RequestOption,
+) ([]*trophygo.UserRewardResponse, error){
+    response, err := c.WithRawResponse.Rewards(
         ctx,
         id,
         request,

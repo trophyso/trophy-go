@@ -31,6 +31,30 @@ func (b *BadRequestError) Unwrap() error {
 	return b.APIError
 }
 
+// The reward has already been redeemed.
+type ConflictError struct {
+	*core.APIError
+	Body *ErrorBody
+}
+
+func (c *ConflictError) UnmarshalJSON(data []byte) error {
+	var body *ErrorBody
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	c.StatusCode = 409
+	c.Body = body
+	return nil
+}
+
+func (c *ConflictError) MarshalJSON() ([]byte, error) {
+	return json.Marshal(c.Body)
+}
+
+func (c *ConflictError) Unwrap() error {
+	return c.APIError
+}
+
 // Streak customization is not enabled for this organisation
 type ForbiddenError struct {
 	*core.APIError
