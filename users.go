@@ -1856,17 +1856,18 @@ func (s *StreakResponseStreakHistoryItem) String() string {
 
 // A user of your application.
 var (
-	userFieldId                = big.NewInt(1 << 0)
-	userFieldEmail             = big.NewInt(1 << 1)
-	userFieldName              = big.NewInt(1 << 2)
-	userFieldTz                = big.NewInt(1 << 3)
-	userFieldSignUpDate        = big.NewInt(1 << 4)
-	userFieldDeviceTokens      = big.NewInt(1 << 5)
-	userFieldSubscribeToEmails = big.NewInt(1 << 6)
-	userFieldAttributes        = big.NewInt(1 << 7)
-	userFieldControl           = big.NewInt(1 << 8)
-	userFieldCreated           = big.NewInt(1 << 9)
-	userFieldUpdated           = big.NewInt(1 << 10)
+	userFieldId                      = big.NewInt(1 << 0)
+	userFieldEmail                   = big.NewInt(1 << 1)
+	userFieldName                    = big.NewInt(1 << 2)
+	userFieldTz                      = big.NewInt(1 << 3)
+	userFieldSignUpDate              = big.NewInt(1 << 4)
+	userFieldDeviceTokens            = big.NewInt(1 << 5)
+	userFieldSubscribeToEmails       = big.NewInt(1 << 6)
+	userFieldAttributes              = big.NewInt(1 << 7)
+	userFieldControl                 = big.NewInt(1 << 8)
+	userFieldAgenticMessagingEnabled = big.NewInt(1 << 9)
+	userFieldCreated                 = big.NewInt(1 << 10)
+	userFieldUpdated                 = big.NewInt(1 << 11)
 )
 
 type User struct {
@@ -1888,6 +1889,8 @@ type User struct {
 	Attributes map[string]string `json:"attributes" url:"attributes"`
 	// Whether the user is in the control group, meaning they do not receive emails or other communications from Trophy.
 	Control bool `json:"control" url:"control"`
+	// Whether the user is opted into Trophy's agentic messaging.
+	AgenticMessagingEnabled bool `json:"agenticMessagingEnabled" url:"agenticMessagingEnabled"`
 	// The date and time the user was created, in ISO 8601 format.
 	Created time.Time `json:"created" url:"created"`
 	// The date and time the user was last updated, in ISO 8601 format.
@@ -1961,6 +1964,13 @@ func (u *User) GetControl() bool {
 		return false
 	}
 	return u.Control
+}
+
+func (u *User) GetAgenticMessagingEnabled() bool {
+	if u == nil {
+		return false
+	}
+	return u.AgenticMessagingEnabled
 }
 
 func (u *User) GetCreated() time.Time {
@@ -2052,6 +2062,13 @@ func (u *User) SetAttributes(attributes map[string]string) {
 func (u *User) SetControl(control bool) {
 	u.Control = control
 	u.require(userFieldControl)
+}
+
+// SetAgenticMessagingEnabled sets the AgenticMessagingEnabled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *User) SetAgenticMessagingEnabled(agenticMessagingEnabled bool) {
+	u.AgenticMessagingEnabled = agenticMessagingEnabled
+	u.require(userFieldAgenticMessagingEnabled)
 }
 
 // SetCreated sets the Created field and marks it as non-optional;
