@@ -66935,6 +66935,13 @@ func TestEnumAdminFontFamily(t *testing.T) {
 		assert.Equal(t, AdminFontFamily("ROUNDED_SANS"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_SYSTEM_SANS", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewAdminFontFamilyFromString("SYSTEM_SANS")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, AdminFontFamily("SYSTEM_SANS"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_MODERN_SERIF", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewAdminFontFamilyFromString("MODERN_SERIF")

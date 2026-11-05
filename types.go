@@ -2076,6 +2076,7 @@ const (
 	AdminFontFamilyGeometricSans AdminFontFamily = "GEOMETRIC_SANS"
 	AdminFontFamilyHeavySans     AdminFontFamily = "HEAVY_SANS"
 	AdminFontFamilyRoundedSans   AdminFontFamily = "ROUNDED_SANS"
+	AdminFontFamilySystemSans    AdminFontFamily = "SYSTEM_SANS"
 	AdminFontFamilyModernSerif   AdminFontFamily = "MODERN_SERIF"
 	AdminFontFamilyBookSerif     AdminFontFamily = "BOOK_SERIF"
 	AdminFontFamilyMonospace     AdminFontFamily = "MONOSPACE"
@@ -2095,6 +2096,8 @@ func NewAdminFontFamilyFromString(s string) (AdminFontFamily, error) {
 		return AdminFontFamilyHeavySans, nil
 	case "ROUNDED_SANS":
 		return AdminFontFamilyRoundedSans, nil
+	case "SYSTEM_SANS":
+		return AdminFontFamilySystemSans, nil
 	case "MODERN_SERIF":
 		return AdminFontFamilyModernSerif, nil
 	case "BOOK_SERIF":
