@@ -682,6 +682,109 @@ func (l *LeaderboardEvent) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
+// The user's agentic messaging preferences: the channels its messages may use, and how many and what kinds of messages they want.
+var (
+	messagingPreferencesFieldChannels    = big.NewInt(1 << 0)
+	messagingPreferencesFieldTemperature = big.NewInt(1 << 1)
+)
+
+type MessagingPreferences struct {
+	// Channels agentic messages may use. An empty array turns agentic messages off for this user.
+	Channels []NotificationChannel `json:"channels,omitempty" url:"channels,omitempty"`
+	// How many and what kinds of agentic messages the user wants, from 1 (fewer: progress and celebrations only, at most one email and one push a week) to 5 (more).
+	Temperature *int `json:"temperature,omitempty" url:"temperature,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MessagingPreferences) GetChannels() []NotificationChannel {
+	if m == nil {
+		return nil
+	}
+	return m.Channels
+}
+
+func (m *MessagingPreferences) GetTemperature() *int {
+	if m == nil {
+		return nil
+	}
+	return m.Temperature
+}
+
+func (m *MessagingPreferences) GetExtraProperties() map[string]interface{} {
+	if m == nil {
+		return nil
+	}
+	return m.extraProperties
+}
+
+func (m *MessagingPreferences) require(field *big.Int) {
+	if m.explicitFields == nil {
+		m.explicitFields = big.NewInt(0)
+	}
+	m.explicitFields.Or(m.explicitFields, field)
+}
+
+// SetChannels sets the Channels field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MessagingPreferences) SetChannels(channels []NotificationChannel) {
+	m.Channels = channels
+	m.require(messagingPreferencesFieldChannels)
+}
+
+// SetTemperature sets the Temperature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MessagingPreferences) SetTemperature(temperature *int) {
+	m.Temperature = temperature
+	m.require(messagingPreferencesFieldTemperature)
+}
+
+func (m *MessagingPreferences) UnmarshalJSON(data []byte) error {
+	type unmarshaler MessagingPreferences
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MessagingPreferences(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MessagingPreferences) MarshalJSON() ([]byte, error) {
+	type embed MessagingPreferences
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*m),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, m.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (m *MessagingPreferences) String() string {
+	if m == nil {
+		return "<nil>"
+	}
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
+}
+
 var (
 	metricResponseFieldId           = big.NewInt(1 << 0)
 	metricResponseFieldKey          = big.NewInt(1 << 1)
@@ -3394,11 +3497,13 @@ func (u *UserLeaderboardResponseWithHistory) String() string {
 var (
 	userPreferencesResponseFieldNotifications = big.NewInt(1 << 0)
 	userPreferencesResponseFieldStreak        = big.NewInt(1 << 1)
+	userPreferencesResponseFieldMessaging     = big.NewInt(1 << 2)
 )
 
 type UserPreferencesResponse struct {
 	Notifications *NotificationPreferences `json:"notifications" url:"notifications"`
 	Streak        *StreakPreferences       `json:"streak,omitempty" url:"streak,omitempty"`
+	Messaging     *MessagingPreferences    `json:"messaging" url:"messaging"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3419,6 +3524,13 @@ func (u *UserPreferencesResponse) GetStreak() *StreakPreferences {
 		return nil
 	}
 	return u.Streak
+}
+
+func (u *UserPreferencesResponse) GetMessaging() *MessagingPreferences {
+	if u == nil {
+		return nil
+	}
+	return u.Messaging
 }
 
 func (u *UserPreferencesResponse) GetExtraProperties() map[string]interface{} {
@@ -3447,6 +3559,13 @@ func (u *UserPreferencesResponse) SetNotifications(notifications *NotificationPr
 func (u *UserPreferencesResponse) SetStreak(streak *StreakPreferences) {
 	u.Streak = streak
 	u.require(userPreferencesResponseFieldStreak)
+}
+
+// SetMessaging sets the Messaging field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserPreferencesResponse) SetMessaging(messaging *MessagingPreferences) {
+	u.Messaging = messaging
+	u.require(userPreferencesResponseFieldMessaging)
 }
 
 func (u *UserPreferencesResponse) UnmarshalJSON(data []byte) error {
@@ -5526,11 +5645,13 @@ func (u *UsersPointsEventSummaryResponseItem) String() string {
 var (
 	updateUserPreferencesRequestFieldNotifications = big.NewInt(1 << 0)
 	updateUserPreferencesRequestFieldStreak        = big.NewInt(1 << 1)
+	updateUserPreferencesRequestFieldMessaging     = big.NewInt(1 << 2)
 )
 
 type UpdateUserPreferencesRequest struct {
 	Notifications *NotificationPreferences `json:"notifications,omitempty" url:"-"`
 	Streak        *StreakPreferences       `json:"streak,omitempty" url:"-"`
+	Messaging     *MessagingPreferences    `json:"messaging,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5555,6 +5676,13 @@ func (u *UpdateUserPreferencesRequest) SetNotifications(notifications *Notificat
 func (u *UpdateUserPreferencesRequest) SetStreak(streak *StreakPreferences) {
 	u.Streak = streak
 	u.require(updateUserPreferencesRequestFieldStreak)
+}
+
+// SetMessaging sets the Messaging field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateUserPreferencesRequest) SetMessaging(messaging *MessagingPreferences) {
+	u.Messaging = messaging
+	u.require(updateUserPreferencesRequestFieldMessaging)
 }
 
 func (u *UpdateUserPreferencesRequest) UnmarshalJSON(data []byte) error {

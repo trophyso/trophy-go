@@ -625,7 +625,7 @@ client.Users.Update(
 <dl>
 <dd>
 
-Get a user's notification preferences.
+Get a user's notification, streak and agentic messaging preferences.
 </dd>
 </dl>
 </dd>
@@ -683,7 +683,7 @@ client.Users.GetPreferences(
 <dl>
 <dd>
 
-Update a user's notification and streak preferences. Streak preferences other than `streak.enabled` require streak customization to be enabled in your Trophy dashboard settings.
+Update a user's notification, streak and agentic messaging preferences. Streak preferences other than `streak.enabled` require streak customization to be enabled in your Trophy dashboard settings.
 </dd>
 </dl>
 </dd>
@@ -742,6 +742,14 @@ client.Users.UpdatePreferences(
 <dd>
 
 **streak:** `*trophygo.StreakPreferences` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**messaging:** `*trophygo.MessagingPreferences` 
     
 </dd>
 </dl>

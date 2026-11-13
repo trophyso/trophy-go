@@ -113,7 +113,7 @@ func (c *Client) Update(
     return response.Body, nil
 }
 
-// Get a user's notification preferences.
+// Get a user's notification, streak and agentic messaging preferences.
 func (c *Client) GetPreferences(
     ctx context.Context,
     // The user's ID in your database.
@@ -131,7 +131,7 @@ func (c *Client) GetPreferences(
     return response.Body, nil
 }
 
-// Update a user's notification and streak preferences. Streak preferences other than `streak.enabled` require streak customization to be enabled in your Trophy dashboard settings.
+// Update a user's notification, streak and agentic messaging preferences. Streak preferences other than `streak.enabled` require streak customization to be enabled in your Trophy dashboard settings.
 func (c *Client) UpdatePreferences(
     ctx context.Context,
     // The user's ID in your database.
