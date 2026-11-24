@@ -128,7 +128,7 @@
       },
       "response": {
         "status": 201,
-        "body": "{\n  \"eventId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"metricId\": \"d01dcbcb-d51e-4c12-b054-dc811dcdc623\",\n  \"total\": 750,\n  \"achievements\": [\n    {\n      \"id\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"name\": \"500 words written\",\n      \"trigger\": \"metric\",\n      \"description\": \"Write 500 words in the app.\",\n      \"badgeUrl\": \"badgeUrl\",\n      \"key\": \"key\",\n      \"streakLength\": 1,\n      \"anniversaryYears\": 1,\n      \"achievementIds\": [\n        \"achievementIds\"\n      ],\n      \"metricId\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"metricValue\": 500,\n      \"metricName\": \"words written\",\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"achievedAt\": \"2020-01-01T00:00:00Z\"\n    }\n  ],\n  \"currentStreak\": {\n    \"length\": 1,\n    \"frequency\": \"daily\",\n    \"started\": \"2025-04-02\",\n    \"periodStart\": \"2025-03-31\",\n    \"periodEnd\": \"2025-04-05\",\n    \"expires\": \"2025-04-12\",\n    \"freezes\": 1,\n    \"maxFreezes\": 1,\n    \"freezeAutoEarnInterval\": 1,\n    \"freezeAutoEarnAmount\": 1,\n    \"extended\": true\n  },\n  \"points\": {\n    \"xp\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"key\": \"xp\",\n      \"name\": \"XP\",\n      \"description\": null,\n      \"badgeUrl\": null,\n      \"maxPoints\": 1.1,\n      \"total\": 10,\n      \"level\": {\n        \"id\": \"1140fe51-6bce-4b44-b0ad-bddc4e123534\",\n        \"key\": \"bronze\",\n        \"name\": \"Bronze\",\n        \"description\": \"Starting level\",\n        \"badgeUrl\": null,\n        \"points\": 0\n      },\n      \"added\": 10,\n      \"awards\": [\n        {\n          \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n          \"awarded\": 10,\n          \"date\": \"2021-01-01T00:00:00Z\",\n          \"total\": 10,\n          \"trigger\": {\n            \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n            \"type\": \"metric\",\n            \"points\": 10,\n            \"status\": \"active\",\n            \"metricName\": \"words written\",\n            \"metricThreshold\": 100,\n            \"userAttributes\": [\n              {\n                \"key\": \"plan-type\",\n                \"value\": \"premium\"\n              }\n            ],\n            \"eventAttributes\": [\n              {\n                \"key\": \"source\",\n                \"value\": \"mobile-app\"\n              }\n            ],\n            \"created\": \"2021-01-01T00:00:00Z\",\n            \"updated\": \"2021-01-01T00:00:00Z\"\n          }\n        }\n      ]\n    }\n  },\n  \"leaderboards\": {\n    \"all-time\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"name\": \"All-Time Leaderboard\",\n      \"key\": \"all-time\",\n      \"rankBy\": \"metric\",\n      \"breakdownAttribute\": null,\n      \"breakdownAttributes\": [\n        \"country\"\n      ],\n      \"metricKey\": \"words-written\",\n      \"metricName\": \"words written\",\n      \"pointsSystemKey\": \"xp-system\",\n      \"pointsSystemName\": \"Experience Points\",\n      \"description\": null,\n      \"start\": \"2025-01-01\",\n      \"end\": null,\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"maxParticipants\": 100,\n      \"runUnit\": null,\n      \"runInterval\": null,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"rank\": 100,\n      \"previousRank\": null,\n      \"threshold\": 10,\n      \"breakdownAttributeValues\": [\n        {\n          \"key\": \"country\",\n          \"value\": \"USA\"\n        }\n      ]\n    }\n  },\n  \"rewards\": [\n    {\n      \"id\": \"7a3c1e52-9f1d-4c8e-a6b2-3d5e7f9a1b2c\",\n      \"awardedAt\": \"2021-01-01T00:00:00Z\",\n      \"redeemed\": false,\n      \"reward\": {\n        \"id\": \"2b4d6f81-3a5c-4e7f-9b1d-8c0e2a4f6b8d\",\n        \"key\": \"bonus-xp\",\n        \"name\": \"Bonus XP\",\n        \"type\": \"points\",\n        \"points\": 50,\n        \"pointsSystemId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n        \"pointsSystemKey\": \"xp\"\n      },\n      \"trigger\": {\n        \"id\": \"9e1f3a5c-7b9d-4f2a-8c6e-0d2b4f6a8c1e\",\n        \"type\": \"metric\",\n        \"metricId\": \"d01dcbcb-d51e-4c12-b054-dc811dcdc623\",\n        \"metricThreshold\": 500\n      }\n    }\n  ],\n  \"idempotencyKey\": \"idempotencyKey\",\n  \"idempotentReplayed\": true\n}",
+        "body": "{\n  \"eventId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n  \"metricId\": \"d01dcbcb-d51e-4c12-b054-dc811dcdc623\",\n  \"total\": 750,\n  \"achievements\": [\n    {\n      \"id\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"name\": \"500 words written\",\n      \"trigger\": \"metric\",\n      \"description\": \"Write 500 words in the app.\",\n      \"badgeUrl\": \"badgeUrl\",\n      \"key\": \"key\",\n      \"streakLength\": 1,\n      \"anniversaryYears\": 1,\n      \"achievementIds\": [\n        \"achievementIds\"\n      ],\n      \"metricId\": \"5100fe51-6bce-6j44-b0hs-bddc4e123682\",\n      \"metricValue\": 500,\n      \"metricName\": \"words written\",\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"eventAttributes\": [\n        {\n          \"key\": \"source\",\n          \"value\": \"mobile-app\"\n        }\n      ],\n      \"achievedAt\": \"2020-01-01T00:00:00Z\"\n    }\n  ],\n  \"currentStreak\": {\n    \"length\": 1,\n    \"frequency\": \"daily\",\n    \"started\": \"2025-04-02\",\n    \"periodStart\": \"2025-03-31\",\n    \"periodEnd\": \"2025-04-05\",\n    \"expires\": \"2025-04-12\",\n    \"freezes\": 1,\n    \"maxFreezes\": 1,\n    \"freezeAutoEarnInterval\": 1,\n    \"freezeAutoEarnAmount\": 1,\n    \"extended\": true\n  },\n  \"points\": {\n    \"xp\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n      \"key\": \"xp\",\n      \"name\": \"XP\",\n      \"description\": null,\n      \"badgeUrl\": null,\n      \"maxPoints\": 1.1,\n      \"total\": 10,\n      \"level\": {\n        \"id\": \"1140fe51-6bce-4b44-b0ad-bddc4e123534\",\n        \"key\": \"bronze\",\n        \"name\": \"Bronze\",\n        \"description\": \"Starting level\",\n        \"badgeUrl\": null,\n        \"points\": 0\n      },\n      \"added\": 10,\n      \"awards\": [\n        {\n          \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n          \"awarded\": 10,\n          \"date\": \"2021-01-01T00:00:00Z\",\n          \"total\": 10,\n          \"trigger\": {\n            \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n            \"type\": \"metric\",\n            \"points\": 10,\n            \"status\": \"active\",\n            \"metricName\": \"words written\",\n            \"metricThreshold\": 100,\n            \"userAttributes\": [\n              {\n                \"key\": \"plan-type\",\n                \"value\": \"premium\"\n              }\n            ],\n            \"eventAttributes\": [\n              {\n                \"key\": \"source\",\n                \"value\": \"mobile-app\"\n              }\n            ],\n            \"created\": \"2021-01-01T00:00:00Z\",\n            \"updated\": \"2021-01-01T00:00:00Z\"\n          }\n        }\n      ]\n    }\n  },\n  \"leaderboards\": {\n    \"all-time\": {\n      \"id\": \"0040fe51-6bce-4b44-b0ad-bddc4e123535\",\n      \"name\": \"All-Time Leaderboard\",\n      \"key\": \"all-time\",\n      \"rankBy\": \"metric\",\n      \"breakdownAttribute\": null,\n      \"breakdownAttributes\": [\n        \"country\"\n      ],\n      \"metricKey\": \"words-written\",\n      \"metricName\": \"words written\",\n      \"pointsSystemKey\": \"xp-system\",\n      \"pointsSystemName\": \"Experience Points\",\n      \"description\": null,\n      \"start\": \"2025-01-01\",\n      \"end\": null,\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\",\n      \"maxParticipants\": 100,\n      \"runUnit\": null,\n      \"runInterval\": null,\n      \"userAttributes\": [\n        {\n          \"key\": \"plan-type\",\n          \"value\": \"premium\"\n        }\n      ],\n      \"rank\": 100,\n      \"previousRank\": null,\n      \"threshold\": 10,\n      \"breakdownAttributeValues\": [\n        {\n          \"key\": \"country\",\n          \"value\": \"USA\"\n        }\n      ]\n    }\n  },\n  \"goals\": {\n    \"words-5000\": {\n      \"id\": \"3c7e9a1b-5d2f-4b8e-9a6c-1e3f5a7b9d2c\",\n      \"key\": \"words-5000\",\n      \"parent\": null,\n      \"label\": \"5,000 words this month\",\n      \"completion\": \"metric\",\n      \"dueAt\": \"2025-04-30T23:59:00Z\",\n      \"completedAt\": null,\n      \"status\": \"active\",\n      \"steps\": [],\n      \"done\": 0,\n      \"total\": 0,\n      \"metric\": \"words-written\",\n      \"target\": 5000,\n      \"start\": \"2025-04-01\",\n      \"current\": 750,\n      \"created\": \"2025-04-01T08:00:00Z\",\n      \"updated\": \"2025-04-01T08:00:00Z\"\n    }\n  },\n  \"rewards\": [\n    {\n      \"id\": \"7a3c1e52-9f1d-4c8e-a6b2-3d5e7f9a1b2c\",\n      \"awardedAt\": \"2021-01-01T00:00:00Z\",\n      \"redeemed\": false,\n      \"reward\": {\n        \"id\": \"2b4d6f81-3a5c-4e7f-9b1d-8c0e2a4f6b8d\",\n        \"key\": \"bonus-xp\",\n        \"name\": \"Bonus XP\",\n        \"type\": \"points\",\n        \"points\": 50,\n        \"pointsSystemId\": \"0040fe51-6bce-4b44-b0ad-bddc4e123534\",\n        \"pointsSystemKey\": \"xp\"\n      },\n      \"trigger\": {\n        \"id\": \"9e1f3a5c-7b9d-4f2a-8c6e-0d2b4f6a8c1e\",\n        \"type\": \"metric\",\n        \"metricId\": \"d01dcbcb-d51e-4c12-b054-dc811dcdc623\",\n        \"metricThreshold\": 500\n      }\n    }\n  ],\n  \"idempotencyKey\": \"idempotencyKey\",\n  \"idempotentReplayed\": true\n}",
         "headers": {
           "Content-Type": "application/json"
         }
@@ -564,6 +564,206 @@
         }
       },
       "uuid": "b7570626-f419-4393-8929-44b406e62a63",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "02c0d02b-03db-47c5-a2d8-3a40b64b96cb",
+      "name": "Get a user's goals - Successful operation",
+      "request": {
+        "urlPathTemplate": "/users/{id}/goals",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "user-123"
+          }
+        },
+        "queryParameters": {
+          "status": {
+            "equalTo": "active"
+          },
+          "skip": {
+            "equalTo": "1"
+          },
+          "limit": {
+            "equalTo": "1"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "[\n  {\n    \"id\": \"7d1c4e2a-3b5f-4a8e-9c6d-1e2f3a4b5c6d\",\n    \"key\": \"first-essay\",\n    \"parent\": null,\n    \"label\": \"First essay\",\n    \"completion\": \"manual\",\n    \"dueAt\": \"2026-11-12T17:00:00Z\",\n    \"completedAt\": \"2026-11-12T14:21:08Z\",\n    \"status\": \"completed\",\n    \"steps\": [],\n    \"done\": 0,\n    \"total\": 0,\n    \"metric\": \"lessons\",\n    \"target\": 50,\n    \"start\": \"2026-11-01\",\n    \"current\": 30,\n    \"created\": \"2026-11-02T08:30:00Z\",\n    \"updated\": \"2026-11-12T14:21:08Z\"\n  },\n  {\n    \"id\": \"0f9a5c1e-6c3b-4f43-9f63-2f3e3a7c9d10\",\n    \"key\": \"spanish-exam\",\n    \"parent\": null,\n    \"label\": \"Spanish B1 exam\",\n    \"completion\": \"none\",\n    \"dueAt\": \"2026-11-20T09:00:00Z\",\n    \"completedAt\": null,\n    \"status\": \"active\",\n    \"steps\": [],\n    \"done\": 1,\n    \"total\": 2,\n    \"metric\": \"lessons\",\n    \"target\": 50,\n    \"start\": \"2026-11-01\",\n    \"current\": 30,\n    \"created\": \"2026-11-01T10:15:00Z\",\n    \"updated\": \"2026-11-01T10:15:00Z\"\n  },\n  {\n    \"id\": \"5e6f7a8b-9c0d-4e1f-a2b3-c4d5e6f7a8b9\",\n    \"key\": \"lessons\",\n    \"parent\": null,\n    \"label\": \"50 lessons\",\n    \"completion\": \"metric\",\n    \"dueAt\": null,\n    \"completedAt\": null,\n    \"status\": \"active\",\n    \"steps\": [],\n    \"done\": 0,\n    \"total\": 0,\n    \"metric\": \"lessons\",\n    \"target\": 50,\n    \"start\": \"2026-11-01\",\n    \"current\": 30,\n    \"created\": \"2026-11-01T10:20:00Z\",\n    \"updated\": \"2026-11-01T10:20:00Z\"\n  }\n]",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "02c0d02b-03db-47c5-a2d8-3a40b64b96cb",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "b5280992-f651-4731-9067-66f628dc85b6",
+      "name": "Create a goal for a user - A date to work towards",
+      "request": {
+        "urlPathTemplate": "/users/{id}/goals",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "user-123"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": "{\n  \"id\": \"0f9a5c1e-6c3b-4f43-9f63-2f3e3a7c9d10\",\n  \"key\": \"spanish-exam\",\n  \"parent\": null,\n  \"label\": \"Spanish B1 exam\",\n  \"completion\": \"none\",\n  \"dueAt\": \"2026-11-20T09:00:00Z\",\n  \"completedAt\": null,\n  \"status\": \"active\",\n  \"steps\": [],\n  \"done\": 0,\n  \"total\": 0,\n  \"metric\": \"lessons\",\n  \"target\": 50,\n  \"start\": \"2026-11-01\",\n  \"current\": 30,\n  \"created\": \"2026-11-01T10:15:00Z\",\n  \"updated\": \"2026-11-01T10:15:00Z\"\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "b5280992-f651-4731-9067-66f628dc85b6",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "1a18be3f-b8da-4069-bcab-dde73d329d11",
+      "name": "Get a user's goal - Successful operation",
+      "request": {
+        "urlPathTemplate": "/users/{id}/goals/{key}",
+        "method": "GET",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "user-123"
+          },
+          "key": {
+            "equalTo": "spanish-exam"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"id\": \"0f9a5c1e-6c3b-4f43-9f63-2f3e3a7c9d10\",\n  \"key\": \"spanish-exam\",\n  \"parent\": null,\n  \"label\": \"Spanish B1 exam\",\n  \"completion\": \"none\",\n  \"dueAt\": \"2026-11-20T09:00:00Z\",\n  \"completedAt\": null,\n  \"status\": \"active\",\n  \"steps\": [],\n  \"done\": 1,\n  \"total\": 1,\n  \"metric\": \"lessons\",\n  \"target\": 50,\n  \"start\": \"2026-11-01\",\n  \"current\": 30,\n  \"created\": \"2026-11-01T10:15:00Z\",\n  \"updated\": \"2026-11-01T10:15:00Z\"\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "1a18be3f-b8da-4069-bcab-dde73d329d11",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "1d74c4d0-8500-4396-a8ab-277929db0dae",
+      "name": "Delete a user's goal - default",
+      "request": {
+        "urlPathTemplate": "/users/{id}/goals/{key}",
+        "method": "DELETE",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "user-123"
+          },
+          "key": {
+            "equalTo": "spanish-exam"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "\"\"",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "1d74c4d0-8500-4396-a8ab-277929db0dae",
+      "persistent": true,
+      "priority": 3,
+      "metadata": {
+        "mocklab": {
+          "created": {
+            "at": "2020-01-01T00:00:00.000Z",
+            "via": "SYSTEM"
+          }
+        }
+      }
+    },
+    {
+      "id": "6676cd5b-8990-43fe-a382-22ff11974be3",
+      "name": "Update a goal for a user - Mark it completed",
+      "request": {
+        "urlPathTemplate": "/users/{id}/goals/{key}",
+        "method": "PATCH",
+        "headers": {
+          "X-API-KEY": {
+            "matches": ".+"
+          }
+        },
+        "pathParameters": {
+          "id": {
+            "equalTo": "user-123"
+          },
+          "key": {
+            "equalTo": "first-essay"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "{\n  \"id\": \"7d1c4e2a-3b5f-4a8e-9c6d-1e2f3a4b5c6d\",\n  \"key\": \"first-essay\",\n  \"parent\": null,\n  \"label\": \"First essay\",\n  \"completion\": \"manual\",\n  \"dueAt\": \"2026-11-12T17:00:00Z\",\n  \"completedAt\": \"2026-11-12T14:21:08Z\",\n  \"status\": \"completed\",\n  \"steps\": [],\n  \"done\": 0,\n  \"total\": 0,\n  \"metric\": \"lessons\",\n  \"target\": 50,\n  \"start\": \"2026-11-01\",\n  \"current\": 30,\n  \"created\": \"2026-11-02T08:30:00Z\",\n  \"updated\": \"2026-11-12T14:21:08Z\"\n}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "uuid": "6676cd5b-8990-43fe-a382-22ff11974be3",
       "persistent": true,
       "priority": 3,
       "metadata": {
@@ -3645,6 +3845,6 @@
     }
   ],
   "meta": {
-    "total": 97
+    "total": 102
   }
 }

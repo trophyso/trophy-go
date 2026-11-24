@@ -398,6 +398,151 @@ func TestUsersRewardsWithWireMock(
     VerifyRequestCount(t, "TestUsersRewardsWithWireMock", "GET", "/users/id/rewards", map[string]interface{}{"redeemed": "true", "startDate": "startDate", "endDate": "endDate", "skip": "1", "limit": "1"}, 1)
 }
 
+func TestUsersGoalsWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+        request := &trophygo.UsersGoalsRequest{
+            Status: trophygo.GoalStatusActive.Ptr(),
+            Skip: trophygo.Int(
+                1,
+            ),
+            Limit: trophygo.Int(
+                1,
+            ),
+        }
+    _, invocationErr :=     client.Users.Goals(
+            context.TODO(),
+            "user-123",
+            request,
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestUsersGoalsWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestUsersGoalsWithWireMock", "GET", "/users/user-123/goals", map[string]interface{}{"status": "active", "skip": "1", "limit": "1"}, 1)
+}
+
+func TestUsersCreateGoalWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+        request := &trophygo.CreateGoalRequest{
+            Key: "spanish-exam",
+            Label: trophygo.String(
+                "Spanish B1 exam",
+            ),
+            Completion: trophygo.GoalCompletionNone.Ptr(),
+            DueAt: trophygo.String(
+                "2026-11-20T09:00:00Z",
+            ),
+        }
+    _, invocationErr :=     client.Users.CreateGoal(
+            context.TODO(),
+            "user-123",
+            request,
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestUsersCreateGoalWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestUsersCreateGoalWithWireMock", "POST", "/users/user-123/goals", nil, 1)
+}
+
+func TestUsersGetGoalWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+    _, invocationErr :=     client.Users.GetGoal(
+            context.TODO(),
+            "user-123",
+            "spanish-exam",
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestUsersGetGoalWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestUsersGetGoalWithWireMock", "GET", "/users/user-123/goals/spanish-exam", nil, 1)
+}
+
+func TestUsersDeleteGoalWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+    invocationErr :=     client.Users.DeleteGoal(
+            context.TODO(),
+            "user-123",
+            "spanish-exam",
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestUsersDeleteGoalWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestUsersDeleteGoalWithWireMock", "DELETE", "/users/user-123/goals/spanish-exam", nil, 1)
+}
+
+func TestUsersUpdateGoalWithWireMock(
+    t *testing.T,
+) {
+    WireMockBaseURL := os.Getenv("WIREMOCK_URL")
+    	if WireMockBaseURL == "" {
+    		WireMockBaseURL = "http://localhost:8080"
+    	}
+    client := client.NewClient(
+        option.WithBaseURL(WireMockBaseURL),
+        option.WithApiKey("test-value"),
+    )
+        request := &trophygo.UpdateGoalRequest{
+            CompletedAt: trophygo.String(
+                "2026-11-12T14:21:08Z",
+            ),
+        }
+    _, invocationErr :=     client.Users.UpdateGoal(
+            context.TODO(),
+            "user-123",
+            "first-essay",
+            request,
+            option.WithHTTPHeader(
+                http.Header{"X-Test-Id": []string{"TestUsersUpdateGoalWithWireMock"}},
+            ),
+        )
+
+    require.NoError(t, invocationErr, "Client method call should succeed")
+    VerifyRequestCount(t, "TestUsersUpdateGoalWithWireMock", "PATCH", "/users/user-123/goals/first-essay", nil, 1)
+}
+
 func TestUsersStreakWithWireMock(
     t *testing.T,
 ) {

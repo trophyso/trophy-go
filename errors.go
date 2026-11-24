@@ -55,7 +55,7 @@ func (c *ConflictError) Unwrap() error {
 	return c.APIError
 }
 
-// Streak customization is not enabled for this organisation
+// An application user's key, for a user other than its own
 type ForbiddenError struct {
 	*core.APIError
 	Body any

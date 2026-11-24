@@ -14602,6 +14602,437 @@ func (e *ErrorBody) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
+// How a goal is completed. `manual`: you mark it completed, for something the user finishes, like an essay. `none`: never completed, for a date the user works towards, like an exam. `metric`: completed when a metric's total since `start` reaches `target`, like 50 lessons.
+type GoalCompletion string
+
+const (
+	GoalCompletionManual GoalCompletion = "manual"
+	GoalCompletionNone   GoalCompletion = "none"
+	GoalCompletionMetric GoalCompletion = "metric"
+)
+
+func NewGoalCompletionFromString(s string) (GoalCompletion, error) {
+	switch s {
+	case "manual":
+		return GoalCompletionManual, nil
+	case "none":
+		return GoalCompletionNone, nil
+	case "metric":
+		return GoalCompletionMetric, nil
+	}
+	var t GoalCompletion
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (g GoalCompletion) Ptr() *GoalCompletion {
+	return &g
+}
+
+// A user's goal or step.
+var (
+	goalResponseFieldId          = big.NewInt(1 << 0)
+	goalResponseFieldKey         = big.NewInt(1 << 1)
+	goalResponseFieldParent      = big.NewInt(1 << 2)
+	goalResponseFieldLabel       = big.NewInt(1 << 3)
+	goalResponseFieldCompletion  = big.NewInt(1 << 4)
+	goalResponseFieldDueAt       = big.NewInt(1 << 5)
+	goalResponseFieldCompletedAt = big.NewInt(1 << 6)
+	goalResponseFieldStatus      = big.NewInt(1 << 7)
+	goalResponseFieldSteps       = big.NewInt(1 << 8)
+	goalResponseFieldDone        = big.NewInt(1 << 9)
+	goalResponseFieldTotal       = big.NewInt(1 << 10)
+	goalResponseFieldMetric      = big.NewInt(1 << 11)
+	goalResponseFieldTarget      = big.NewInt(1 << 12)
+	goalResponseFieldStart       = big.NewInt(1 << 13)
+	goalResponseFieldCurrent     = big.NewInt(1 << 14)
+	goalResponseFieldCreated     = big.NewInt(1 << 15)
+	goalResponseFieldUpdated     = big.NewInt(1 << 16)
+)
+
+type GoalResponse struct {
+	// The goal's unique ID. A goal deleted and created again with the same key gets a new one.
+	Id string `json:"id" url:"id"`
+	// The goal's key, unique per user.
+	Key string `json:"key" url:"key"`
+	// The key of the goal it's a step of, or null if it has no parent.
+	Parent *string `json:"parent,omitempty" url:"parent,omitempty"`
+	// What the goal is, as messages name it.
+	Label      *string        `json:"label,omitempty" url:"label,omitempty"`
+	Completion GoalCompletion `json:"completion" url:"completion"`
+	// When the goal is due, or null if it has no due time.
+	DueAt *time.Time `json:"dueAt,omitempty" url:"dueAt,omitempty"`
+	// When the user completed the goal, or null if they haven't.
+	CompletedAt *time.Time `json:"completedAt,omitempty" url:"completedAt,omitempty"`
+	Status      GoalStatus `json:"status" url:"status"`
+	// Its steps, in order. Empty for a goal without steps, and for a step.
+	Steps []*GoalResponse `json:"steps" url:"steps"`
+	// How many of its steps are completed.
+	Done int `json:"done" url:"done"`
+	// How many steps it has.
+	Total int `json:"total" url:"total"`
+	// `completion: metric` only. The metric's key.
+	Metric *string `json:"metric,omitempty" url:"metric,omitempty"`
+	// `completion: metric` only. The metric total that completes it.
+	Target *float64 `json:"target,omitempty" url:"target,omitempty"`
+	// `completion: metric` only. The date, in the user's timezone, the metric total counts from.
+	Start *string `json:"start,omitempty" url:"start,omitempty"`
+	// `completion: metric` only. The metric total since `start`.
+	Current *float64 `json:"current,omitempty" url:"current,omitempty"`
+	// When the goal was created.
+	Created time.Time `json:"created" url:"created"`
+	// When the goal was last changed.
+	Updated time.Time `json:"updated" url:"updated"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GoalResponse) GetId() string {
+	if g == nil {
+		return ""
+	}
+	return g.Id
+}
+
+func (g *GoalResponse) GetKey() string {
+	if g == nil {
+		return ""
+	}
+	return g.Key
+}
+
+func (g *GoalResponse) GetParent() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Parent
+}
+
+func (g *GoalResponse) GetLabel() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Label
+}
+
+func (g *GoalResponse) GetCompletion() GoalCompletion {
+	if g == nil {
+		return ""
+	}
+	return g.Completion
+}
+
+func (g *GoalResponse) GetDueAt() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.DueAt
+}
+
+func (g *GoalResponse) GetCompletedAt() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.CompletedAt
+}
+
+func (g *GoalResponse) GetStatus() GoalStatus {
+	if g == nil {
+		return ""
+	}
+	return g.Status
+}
+
+func (g *GoalResponse) GetSteps() []*GoalResponse {
+	if g == nil {
+		return nil
+	}
+	return g.Steps
+}
+
+func (g *GoalResponse) GetDone() int {
+	if g == nil {
+		return 0
+	}
+	return g.Done
+}
+
+func (g *GoalResponse) GetTotal() int {
+	if g == nil {
+		return 0
+	}
+	return g.Total
+}
+
+func (g *GoalResponse) GetMetric() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Metric
+}
+
+func (g *GoalResponse) GetTarget() *float64 {
+	if g == nil {
+		return nil
+	}
+	return g.Target
+}
+
+func (g *GoalResponse) GetStart() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Start
+}
+
+func (g *GoalResponse) GetCurrent() *float64 {
+	if g == nil {
+		return nil
+	}
+	return g.Current
+}
+
+func (g *GoalResponse) GetCreated() time.Time {
+	if g == nil {
+		return time.Time{}
+	}
+	return g.Created
+}
+
+func (g *GoalResponse) GetUpdated() time.Time {
+	if g == nil {
+		return time.Time{}
+	}
+	return g.Updated
+}
+
+func (g *GoalResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GoalResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetId sets the Id field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetId(id string) {
+	g.Id = id
+	g.require(goalResponseFieldId)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetKey(key string) {
+	g.Key = key
+	g.require(goalResponseFieldKey)
+}
+
+// SetParent sets the Parent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetParent(parent *string) {
+	g.Parent = parent
+	g.require(goalResponseFieldParent)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetLabel(label *string) {
+	g.Label = label
+	g.require(goalResponseFieldLabel)
+}
+
+// SetCompletion sets the Completion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetCompletion(completion GoalCompletion) {
+	g.Completion = completion
+	g.require(goalResponseFieldCompletion)
+}
+
+// SetDueAt sets the DueAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetDueAt(dueAt *time.Time) {
+	g.DueAt = dueAt
+	g.require(goalResponseFieldDueAt)
+}
+
+// SetCompletedAt sets the CompletedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetCompletedAt(completedAt *time.Time) {
+	g.CompletedAt = completedAt
+	g.require(goalResponseFieldCompletedAt)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetStatus(status GoalStatus) {
+	g.Status = status
+	g.require(goalResponseFieldStatus)
+}
+
+// SetSteps sets the Steps field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetSteps(steps []*GoalResponse) {
+	g.Steps = steps
+	g.require(goalResponseFieldSteps)
+}
+
+// SetDone sets the Done field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetDone(done int) {
+	g.Done = done
+	g.require(goalResponseFieldDone)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetTotal(total int) {
+	g.Total = total
+	g.require(goalResponseFieldTotal)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetMetric(metric *string) {
+	g.Metric = metric
+	g.require(goalResponseFieldMetric)
+}
+
+// SetTarget sets the Target field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetTarget(target *float64) {
+	g.Target = target
+	g.require(goalResponseFieldTarget)
+}
+
+// SetStart sets the Start field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetStart(start *string) {
+	g.Start = start
+	g.require(goalResponseFieldStart)
+}
+
+// SetCurrent sets the Current field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetCurrent(current *float64) {
+	g.Current = current
+	g.require(goalResponseFieldCurrent)
+}
+
+// SetCreated sets the Created field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetCreated(created time.Time) {
+	g.Created = created
+	g.require(goalResponseFieldCreated)
+}
+
+// SetUpdated sets the Updated field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalResponse) SetUpdated(updated time.Time) {
+	g.Updated = updated
+	g.require(goalResponseFieldUpdated)
+}
+
+func (g *GoalResponse) UnmarshalJSON(data []byte) error {
+	type embed GoalResponse
+	var unmarshaler = struct {
+		embed
+		DueAt       *internal.DateTime `json:"dueAt,omitempty"`
+		CompletedAt *internal.DateTime `json:"completedAt,omitempty"`
+		Created     *internal.DateTime `json:"created"`
+		Updated     *internal.DateTime `json:"updated"`
+	}{
+		embed: embed(*g),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*g = GoalResponse(unmarshaler.embed)
+	g.DueAt = unmarshaler.DueAt.TimePtr()
+	g.CompletedAt = unmarshaler.CompletedAt.TimePtr()
+	g.Created = unmarshaler.Created.Time()
+	g.Updated = unmarshaler.Updated.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GoalResponse) MarshalJSON() ([]byte, error) {
+	type embed GoalResponse
+	var marshaler = struct {
+		embed
+		DueAt       *internal.DateTime `json:"dueAt,omitempty"`
+		CompletedAt *internal.DateTime `json:"completedAt,omitempty"`
+		Created     *internal.DateTime `json:"created"`
+		Updated     *internal.DateTime `json:"updated"`
+	}{
+		embed:       embed(*g),
+		DueAt:       internal.NewOptionalDateTime(g.DueAt),
+		CompletedAt: internal.NewOptionalDateTime(g.CompletedAt),
+		Created:     internal.NewDateTime(g.Created),
+		Updated:     internal.NewDateTime(g.Updated),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GoalResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// `completed` when `completedAt` is set. Otherwise, once `dueAt` has passed, `missed` for a goal with `completion: manual` or `metric` and `ended` for one with `completion: none`. Otherwise `active`.
+type GoalStatus string
+
+const (
+	GoalStatusActive    GoalStatus = "active"
+	GoalStatusCompleted GoalStatus = "completed"
+	GoalStatusMissed    GoalStatus = "missed"
+	GoalStatusEnded     GoalStatus = "ended"
+)
+
+func NewGoalStatusFromString(s string) (GoalStatus, error) {
+	switch s {
+	case "active":
+		return GoalStatusActive, nil
+	case "completed":
+		return GoalStatusCompleted, nil
+	case "missed":
+		return GoalStatusMissed, nil
+	case "ended":
+		return GoalStatusEnded, nil
+	}
+	var t GoalStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (g GoalStatus) Ptr() *GoalStatus {
+	return &g
+}
+
 // A leaderboard with its configuration details.
 var (
 	leaderboardResponseFieldId                  = big.NewInt(1 << 0)

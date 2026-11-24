@@ -37,6 +37,189 @@ func (u *UsersAchievementsRequest) SetIncludeIncomplete(includeIncomplete *strin
 }
 
 var (
+	createGoalRequestFieldKey         = big.NewInt(1 << 0)
+	createGoalRequestFieldParent      = big.NewInt(1 << 1)
+	createGoalRequestFieldLabel       = big.NewInt(1 << 2)
+	createGoalRequestFieldCompletion  = big.NewInt(1 << 3)
+	createGoalRequestFieldDueAt       = big.NewInt(1 << 4)
+	createGoalRequestFieldCompletedAt = big.NewInt(1 << 5)
+	createGoalRequestFieldMetric      = big.NewInt(1 << 6)
+	createGoalRequestFieldTarget      = big.NewInt(1 << 7)
+	createGoalRequestFieldStart       = big.NewInt(1 << 8)
+	createGoalRequestFieldSteps       = big.NewInt(1 << 9)
+)
+
+type CreateGoalRequest struct {
+	// The goal's key, unique per user. 1–100 letters, numbers, hyphens or underscores, and not `plural` or `singular`.
+	Key string `json:"key" url:"-"`
+	// The key of a goal to add this to as a step, after its last. The parent can't be a step, can't have more than 100 steps, and the request can't have `steps`.
+	Parent *string `json:"parent,omitempty" url:"-"`
+	// What the goal is, as messages name it, e.g. "Spanish B1 exam".
+	Label *string `json:"label,omitempty" url:"-"`
+	// How the goal is completed. Defaults to `manual`.
+	Completion *GoalCompletion `json:"completion,omitempty" url:"-"`
+	// When the goal is due, as an ISO 8601 date and time. Without an offset, it's in the user's timezone. Required with `completion: none`.
+	DueAt *string `json:"dueAt,omitempty" url:"-"`
+	// When the user completed the goal, if they already have, as an ISO 8601 date and time. Without an offset, it's in the user's timezone, and a time after now is read as now. Not with `completion: none`, which is never completed, or `completion: metric`, which completes when its metric reaches the target.
+	CompletedAt *string `json:"completedAt,omitempty" url:"-"`
+	// The metric's key. Required with `completion: metric`, and only for it.
+	Metric *string `json:"metric,omitempty" url:"-"`
+	// The metric total that completes it. Required with `completion: metric`, and only for it.
+	Target *float64 `json:"target,omitempty" url:"-"`
+	// `completion: metric` only. The date, in the user's timezone, the metric total counts from. Defaults to today.
+	Start *string `json:"start,omitempty" url:"-"`
+	// The goal's steps, in order, each with its own key.
+	Steps []*GoalStepRequest `json:"steps,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CreateGoalRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetKey(key string) {
+	c.Key = key
+	c.require(createGoalRequestFieldKey)
+}
+
+// SetParent sets the Parent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetParent(parent *string) {
+	c.Parent = parent
+	c.require(createGoalRequestFieldParent)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetLabel(label *string) {
+	c.Label = label
+	c.require(createGoalRequestFieldLabel)
+}
+
+// SetCompletion sets the Completion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetCompletion(completion *GoalCompletion) {
+	c.Completion = completion
+	c.require(createGoalRequestFieldCompletion)
+}
+
+// SetDueAt sets the DueAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetDueAt(dueAt *string) {
+	c.DueAt = dueAt
+	c.require(createGoalRequestFieldDueAt)
+}
+
+// SetCompletedAt sets the CompletedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetCompletedAt(completedAt *string) {
+	c.CompletedAt = completedAt
+	c.require(createGoalRequestFieldCompletedAt)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetMetric(metric *string) {
+	c.Metric = metric
+	c.require(createGoalRequestFieldMetric)
+}
+
+// SetTarget sets the Target field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetTarget(target *float64) {
+	c.Target = target
+	c.require(createGoalRequestFieldTarget)
+}
+
+// SetStart sets the Start field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetStart(start *string) {
+	c.Start = start
+	c.require(createGoalRequestFieldStart)
+}
+
+// SetSteps sets the Steps field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateGoalRequest) SetSteps(steps []*GoalStepRequest) {
+	c.Steps = steps
+	c.require(createGoalRequestFieldSteps)
+}
+
+func (c *CreateGoalRequest) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateGoalRequest
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateGoalRequest(body)
+	return nil
+}
+
+func (c *CreateGoalRequest) MarshalJSON() ([]byte, error) {
+	type embed CreateGoalRequest
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	usersGoalsRequestFieldStatus = big.NewInt(1 << 0)
+	usersGoalsRequestFieldSkip   = big.NewInt(1 << 1)
+	usersGoalsRequestFieldLimit  = big.NewInt(1 << 2)
+)
+
+type UsersGoalsRequest struct {
+	// When set, only return goals with this status. A goal's steps come with it, whatever their own status.
+	Status *GoalStatus `json:"-" url:"status,omitempty"`
+	// Number of goals to skip. Defaults to 0.
+	Skip *int `json:"-" url:"skip,omitempty"`
+	// Maximum number of goals to return. Defaults to 100 and cannot exceed 100.
+	Limit *int `json:"-" url:"limit,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UsersGoalsRequest) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersGoalsRequest) SetStatus(status *GoalStatus) {
+	u.Status = status
+	u.require(usersGoalsRequestFieldStatus)
+}
+
+// SetSkip sets the Skip field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersGoalsRequest) SetSkip(skip *int) {
+	u.Skip = skip
+	u.require(usersGoalsRequestFieldSkip)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsersGoalsRequest) SetLimit(limit *int) {
+	u.Limit = limit
+	u.require(usersGoalsRequestFieldLimit)
+}
+
+var (
 	usersLeaderboardRequestFieldRun       = big.NewInt(1 << 0)
 	usersLeaderboardRequestFieldNumEvents = big.NewInt(1 << 1)
 )
@@ -489,6 +672,211 @@ func (g *GetUserPointsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetUserPointsResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// A step of a goal: a goal of its own, with its own key, one level deep. A step whose key the goal already has is updated, with fields left out staying as they are.
+var (
+	goalStepRequestFieldKey         = big.NewInt(1 << 0)
+	goalStepRequestFieldLabel       = big.NewInt(1 << 1)
+	goalStepRequestFieldCompletion  = big.NewInt(1 << 2)
+	goalStepRequestFieldDueAt       = big.NewInt(1 << 3)
+	goalStepRequestFieldCompletedAt = big.NewInt(1 << 4)
+	goalStepRequestFieldMetric      = big.NewInt(1 << 5)
+	goalStepRequestFieldTarget      = big.NewInt(1 << 6)
+	goalStepRequestFieldStart       = big.NewInt(1 << 7)
+)
+
+type GoalStepRequest struct {
+	// The step's key, unique per user like any goal's. 1–100 letters, numbers, hyphens or underscores, and not `plural` or `singular`.
+	Key string `json:"key" url:"key"`
+	// What the step is, as messages name it.
+	Label *string `json:"label,omitempty" url:"label,omitempty"`
+	// How the step is completed. Defaults to `manual`.
+	Completion *GoalCompletion `json:"completion,omitempty" url:"completion,omitempty"`
+	// When the step is due, as an ISO 8601 date and time. Without an offset, it's in the user's timezone.
+	DueAt *string `json:"dueAt,omitempty" url:"dueAt,omitempty"`
+	// When the user completed the step, as an ISO 8601 date and time. Without an offset, it's in the user's timezone, and a time after now is read as now. Null uncompletes it. Not with `completion: none`, which is never completed, or `completion: metric`, which completes when its metric reaches the target.
+	CompletedAt *string `json:"completedAt,omitempty" url:"completedAt,omitempty"`
+	// The metric's key. Required with `completion: metric`, and only for it.
+	Metric *string `json:"metric,omitempty" url:"metric,omitempty"`
+	// The metric total that completes it. Required with `completion: metric`, and only for it.
+	Target *float64 `json:"target,omitempty" url:"target,omitempty"`
+	// `completion: metric` only. The date, in the user's timezone, the metric total counts from. Defaults to today.
+	Start *string `json:"start,omitempty" url:"start,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GoalStepRequest) GetKey() string {
+	if g == nil {
+		return ""
+	}
+	return g.Key
+}
+
+func (g *GoalStepRequest) GetLabel() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Label
+}
+
+func (g *GoalStepRequest) GetCompletion() *GoalCompletion {
+	if g == nil {
+		return nil
+	}
+	return g.Completion
+}
+
+func (g *GoalStepRequest) GetDueAt() *string {
+	if g == nil {
+		return nil
+	}
+	return g.DueAt
+}
+
+func (g *GoalStepRequest) GetCompletedAt() *string {
+	if g == nil {
+		return nil
+	}
+	return g.CompletedAt
+}
+
+func (g *GoalStepRequest) GetMetric() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Metric
+}
+
+func (g *GoalStepRequest) GetTarget() *float64 {
+	if g == nil {
+		return nil
+	}
+	return g.Target
+}
+
+func (g *GoalStepRequest) GetStart() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Start
+}
+
+func (g *GoalStepRequest) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GoalStepRequest) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetKey(key string) {
+	g.Key = key
+	g.require(goalStepRequestFieldKey)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetLabel(label *string) {
+	g.Label = label
+	g.require(goalStepRequestFieldLabel)
+}
+
+// SetCompletion sets the Completion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetCompletion(completion *GoalCompletion) {
+	g.Completion = completion
+	g.require(goalStepRequestFieldCompletion)
+}
+
+// SetDueAt sets the DueAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetDueAt(dueAt *string) {
+	g.DueAt = dueAt
+	g.require(goalStepRequestFieldDueAt)
+}
+
+// SetCompletedAt sets the CompletedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetCompletedAt(completedAt *string) {
+	g.CompletedAt = completedAt
+	g.require(goalStepRequestFieldCompletedAt)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetMetric(metric *string) {
+	g.Metric = metric
+	g.require(goalStepRequestFieldMetric)
+}
+
+// SetTarget sets the Target field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetTarget(target *float64) {
+	g.Target = target
+	g.require(goalStepRequestFieldTarget)
+}
+
+// SetStart sets the Start field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GoalStepRequest) SetStart(start *string) {
+	g.Start = start
+	g.require(goalStepRequestFieldStart)
+}
+
+func (g *GoalStepRequest) UnmarshalJSON(data []byte) error {
+	type unmarshaler GoalStepRequest
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GoalStepRequest(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GoalStepRequest) MarshalJSON() ([]byte, error) {
+	type embed GoalStepRequest
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GoalStepRequest) String() string {
 	if g == nil {
 		return "<nil>"
 	}
@@ -5640,6 +6028,123 @@ func (u *UsersPointsEventSummaryResponseItem) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateGoalRequestFieldLabel       = big.NewInt(1 << 0)
+	updateGoalRequestFieldCompletion  = big.NewInt(1 << 1)
+	updateGoalRequestFieldDueAt       = big.NewInt(1 << 2)
+	updateGoalRequestFieldCompletedAt = big.NewInt(1 << 3)
+	updateGoalRequestFieldMetric      = big.NewInt(1 << 4)
+	updateGoalRequestFieldTarget      = big.NewInt(1 << 5)
+	updateGoalRequestFieldStart       = big.NewInt(1 << 6)
+	updateGoalRequestFieldSteps       = big.NewInt(1 << 7)
+)
+
+type UpdateGoalRequest struct {
+	// What the goal is, as messages name it. Null clears it.
+	Label *string `json:"label,omitempty" url:"-"`
+	// How the goal is completed. Changing it to `none` uncompletes the goal, and needs it to have a `dueAt`; changing it to `metric` needs a `metric` and `target`.
+	Completion *GoalCompletion `json:"completion,omitempty" url:"-"`
+	// When the goal is due, as an ISO 8601 date and time. Without an offset, it's in the user's timezone. Null clears it, except with `completion: none`.
+	DueAt *string `json:"dueAt,omitempty" url:"-"`
+	// When the user completed the goal, as an ISO 8601 date and time. Without an offset, it's in the user's timezone, and a time after now is read as now. Null uncompletes it. Not with `completion: none`, which is never completed, or `completion: metric`, which completes when its metric reaches the target.
+	CompletedAt *string `json:"completedAt,omitempty" url:"-"`
+	// `completion: metric` only. The metric's key. Changing the metric, target or start checks the goal against its target again, which can complete or uncomplete it; other changes leave a completed goal completed.
+	Metric *string `json:"metric,omitempty" url:"-"`
+	// `completion: metric` only. The metric total that completes it.
+	Target *float64 `json:"target,omitempty" url:"-"`
+	// `completion: metric` only. The date, in the user's timezone, the metric total counts from.
+	Start *string `json:"start,omitempty" url:"-"`
+	// Replaces the goal's steps, in order: a step whose key the goal has is updated, the others are added, and steps left out are deleted. Not for a step, since steps are one level deep.
+	Steps []*GoalStepRequest `json:"steps,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UpdateGoalRequest) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetLabel(label *string) {
+	u.Label = label
+	u.require(updateGoalRequestFieldLabel)
+}
+
+// SetCompletion sets the Completion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetCompletion(completion *GoalCompletion) {
+	u.Completion = completion
+	u.require(updateGoalRequestFieldCompletion)
+}
+
+// SetDueAt sets the DueAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetDueAt(dueAt *string) {
+	u.DueAt = dueAt
+	u.require(updateGoalRequestFieldDueAt)
+}
+
+// SetCompletedAt sets the CompletedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetCompletedAt(completedAt *string) {
+	u.CompletedAt = completedAt
+	u.require(updateGoalRequestFieldCompletedAt)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetMetric(metric *string) {
+	u.Metric = metric
+	u.require(updateGoalRequestFieldMetric)
+}
+
+// SetTarget sets the Target field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetTarget(target *float64) {
+	u.Target = target
+	u.require(updateGoalRequestFieldTarget)
+}
+
+// SetStart sets the Start field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetStart(start *string) {
+	u.Start = start
+	u.require(updateGoalRequestFieldStart)
+}
+
+// SetSteps sets the Steps field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateGoalRequest) SetSteps(steps []*GoalStepRequest) {
+	u.Steps = steps
+	u.require(updateGoalRequestFieldSteps)
+}
+
+func (u *UpdateGoalRequest) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateGoalRequest
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateGoalRequest(body)
+	return nil
+}
+
+func (u *UpdateGoalRequest) MarshalJSON() ([]byte, error) {
+	type embed UpdateGoalRequest
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (

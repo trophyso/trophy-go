@@ -22,7 +22,7 @@ type Client struct {
 
 func NewClient(options *core.RequestOptions) *Client {
     if options.SdkVersion == "" {
-        options.SdkVersion = "1.29.0"
+        options.SdkVersion = "1.32.0"
     }
     return &Client{
         WithRawResponse: NewRawClient(options),
@@ -244,6 +244,111 @@ func (c *Client) Rewards(
     response, err := c.WithRawResponse.Rewards(
         ctx,
         id,
+        request,
+        opts...,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return response.Body, nil
+}
+
+// Get a user's goals, each with its steps. Filter by status, and page through them with `skip` and `limit`.
+func (c *Client) Goals(
+    ctx context.Context,
+    // The user's ID in your database.
+    id string,
+    request *trophygo.UsersGoalsRequest,
+    opts ...option.RequestOption,
+) ([]*trophygo.GoalResponse, error){
+    response, err := c.WithRawResponse.Goals(
+        ctx,
+        id,
+        request,
+        opts...,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return response.Body, nil
+}
+
+// Create a goal for a user, or with `parent` a step at the end of that goal's steps.
+func (c *Client) CreateGoal(
+    ctx context.Context,
+    // The user's ID in your database.
+    id string,
+    request *trophygo.CreateGoalRequest,
+    opts ...option.RequestOption,
+) (*trophygo.GoalResponse, error){
+    response, err := c.WithRawResponse.CreateGoal(
+        ctx,
+        id,
+        request,
+        opts...,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return response.Body, nil
+}
+
+// Get a user's goal or step by its key, with a goal's steps.
+func (c *Client) GetGoal(
+    ctx context.Context,
+    // The user's ID in your database.
+    id string,
+    // The goal's or step's key.
+    key string,
+    opts ...option.RequestOption,
+) (*trophygo.GoalResponse, error){
+    response, err := c.WithRawResponse.GetGoal(
+        ctx,
+        id,
+        key,
+        opts...,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return response.Body, nil
+}
+
+// Delete a user's goal.
+func (c *Client) DeleteGoal(
+    ctx context.Context,
+    // The user's ID in your database.
+    id string,
+    // The goal's key.
+    key string,
+    opts ...option.RequestOption,
+) error{
+    _, err := c.WithRawResponse.DeleteGoal(
+        ctx,
+        id,
+        key,
+        opts...,
+    )
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
+// Update a goal for a user.
+func (c *Client) UpdateGoal(
+    ctx context.Context,
+    // The user's ID in your database.
+    id string,
+    // The goal's key.
+    key string,
+    request *trophygo.UpdateGoalRequest,
+    opts ...option.RequestOption,
+) (*trophygo.GoalResponse, error){
+    response, err := c.WithRawResponse.UpdateGoal(
+        ctx,
+        id,
+        key,
         request,
         opts...,
     )

@@ -94,9 +94,10 @@ var (
 	eventResponseFieldCurrentStreak      = big.NewInt(1 << 4)
 	eventResponseFieldPoints             = big.NewInt(1 << 5)
 	eventResponseFieldLeaderboards       = big.NewInt(1 << 6)
-	eventResponseFieldRewards            = big.NewInt(1 << 7)
-	eventResponseFieldIdempotencyKey     = big.NewInt(1 << 8)
-	eventResponseFieldIdempotentReplayed = big.NewInt(1 << 9)
+	eventResponseFieldGoals              = big.NewInt(1 << 7)
+	eventResponseFieldRewards            = big.NewInt(1 << 8)
+	eventResponseFieldIdempotencyKey     = big.NewInt(1 << 9)
+	eventResponseFieldIdempotentReplayed = big.NewInt(1 << 10)
 )
 
 type EventResponse struct {
@@ -114,6 +115,8 @@ type EventResponse struct {
 	Points map[string]*MetricEventPointsResponse `json:"points" url:"points"`
 	// A map of leaderboards by key. Only contains leaderboards that were affected by the event.
 	Leaderboards map[string]*MetricEventLeaderboardResponse `json:"leaderboards" url:"leaderboards"`
+	// A map of the user's metric goals and steps by key. Only contains those for the event's metric that weren't completed before the event and whose total it counted towards, including any it completed.
+	Goals map[string]*GoalResponse `json:"goals" url:"goals"`
 	// Rewards awarded as a result of this event.
 	Rewards []*UserRewardResponse `json:"rewards" url:"rewards"`
 	// The idempotency key used for the event, if one was provided.
@@ -175,6 +178,13 @@ func (e *EventResponse) GetLeaderboards() map[string]*MetricEventLeaderboardResp
 		return nil
 	}
 	return e.Leaderboards
+}
+
+func (e *EventResponse) GetGoals() map[string]*GoalResponse {
+	if e == nil {
+		return nil
+	}
+	return e.Goals
 }
 
 func (e *EventResponse) GetRewards() []*UserRewardResponse {
@@ -259,6 +269,13 @@ func (e *EventResponse) SetPoints(points map[string]*MetricEventPointsResponse) 
 func (e *EventResponse) SetLeaderboards(leaderboards map[string]*MetricEventLeaderboardResponse) {
 	e.Leaderboards = leaderboards
 	e.require(eventResponseFieldLeaderboards)
+}
+
+// SetGoals sets the Goals field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventResponse) SetGoals(goals map[string]*GoalResponse) {
+	e.Goals = goals
+	e.require(eventResponseFieldGoals)
 }
 
 // SetRewards sets the Rewards field and marks it as non-optional;
